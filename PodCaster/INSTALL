@@ -1,0 +1,7 @@
+Requirements
+------------
+
+java >= 1.6
+jakarta-commons-cli (1.0)
+ROME >= 1.0
+jaudiotagger >= 1.0.9

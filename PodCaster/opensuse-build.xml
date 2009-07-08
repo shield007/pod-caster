@@ -1,0 +1,155 @@
+<project name="podcaster" default="all" basedir=".">
+
+<!-- Path properties -->
+    <property name="src.dir" location="${basedir}/src" />
+    <property name="build.dir" location="${basedir}/bin" />
+    <property name="test.src.dir" location="${basedir}/tests" />
+    <property name="test.build.dir" location="${basedir}/tests-bin" />
+    <property name="dist.dir" location="${basedir}/dist" />
+    <property name="libs.dir" location="${basedir}/libs" />
+    <property name="etc.dir" location="${basedir}/etc" />
+    <property name="rpm.dir" location="${basedir}/rpm" />
+    <property name="docs.dir" location="${basedir}/docs"/>
+    <property name="api.docs.dir" location="${docs.dir}/api" />
+    <property name="userguide.dir" location="${docs.dir}/userguide" />
+    <property name="reports.dir" location="${basedir}/reports"/>
+    <property name="docbook.home"    value="/usr/share/xml/docbook"/>
+    <property name="fo.dir"          value="${basedir}/fo"/>
+    <property name="lib.dir" value="changeme"/>
+    <property name="fop.dir" value="changeme"/>
+
+    <!-- Compiler properties -->
+    <property name="javac.source" value="1.6" />
+    <property name="javac.target" value="1.6" />
+
+    <!-- Dist properties -->
+    <property name="project.version" value="changeme" />
+    <property name="project.author" value="John-Paul Stanford" />
+
+    <!-- Lib classpaths -->
+    <path id="run-time.libs.classpath">
+    	<pathelement location="${lib.dir}/jdom.jar"/>
+    	<pathelement location="${lib.dir}/ROME.jar"/>
+    	<pathelement location="${lib.dir}/jaudiotagger.jar"/>
+        <pathelement location="${lib.dir}/commons-logging.jar"/>
+        <pathelement location="${lib.dir}/commons-cli.jar"/>
+        <pathelement location="${lib.dir}/log4j.jar"/>
+    </path>
+
+    <path id="compile-time.libs.classpath">    	
+        <fileset dir="${fop.dir}">
+        	<include name="fop*.jar"/>
+        	<include name="avalon-framework*.jar"/>
+        	<include name="batik*.jar"/>        	
+        </fileset>        
+    </path>
+
+    <!-- Fop setup -->
+    <taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop">
+        <classpath refid="compile-time.libs.classpath"/>
+    </taskdef>
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp />
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build.dir}" />
+        <mkdir dir="${test.build.dir}" />
+        <mkdir dir="${dist.dir}" />
+        <mkdir dir="${api.docs.dir}" />
+        <mkdir dir="${reports.dir}"/>
+    </target>
+
+    <target name="compile" depends="init" description="compile the source ">
+        <property name="cp" refid="run-time.libs.classpath" />
+        <echo message="Classpath is ${cp}" />
+
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac debug="true" srcdir="${src.dir}" destdir="${build.dir}" target="${javac.target}" source="${javac.source}" encoding="UTF8">
+            <classpath>
+                <path refid="run-time.libs.classpath" />
+            </classpath>
+        </javac>
+
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}" excludes="**/*.java" />
+        </copy>
+    </target>
+
+    <target name="javadoc">
+        <delete dir="${api.docs.dir}"/>
+        <javadoc packagenames="org.stanwood.*"
+            sourcepath="src"
+            defaultexcludes="yes"
+            destdir="${api.docs.dir}"
+            author="true"
+            version="true"
+            use="true"
+            windowtitle="BBC Pod Caster">
+          <doctitle><![CDATA[<h1>BBC Pod Caster</h1>]]></doctitle>
+        </javadoc>
+    </target>
+
+    <target name="clean" description="clean up">
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete includeemptydirs="true" failonerror="false">
+            <fileset dir="${build.dir}" includes="**/*"/>
+            <fileset dir="${test.build.dir}" includes="**/*"/>
+        </delete>
+        <delete dir="${dist.dir}" failonerror="false"/>
+        <delete dir="${api.docs.dir}" failonerror="false"/>
+        <delete dir="${rpm.dir}" failonerror="false"/>
+        <delete dir="${cobertura.dir}" failonerror="false"/>
+        <delete dir="${reports.dir}" failonerror="false"/>
+        <delete file="cobertura.ser" failonerror="false"/>
+        <delete dir="${fo.dir}" failonerror="false"/>
+        <delete dir="${basedir}/docbook" failonerror="false"/>
+    </target>
+
+    <target name="jars" description="generate the distribution">
+        <echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
+
+        <jar jarfile="${dist.dir}/${ant.project.name}-${project.version}.jar" basedir="${build.dir}" />
+    </target>
+
+    <target name="docs" description="Converts docbook xml into pdf" >
+        <delete dir="${docbook.dir}/docbook"/>
+    	<delete dir="${fo.dir}"/>
+        <mkdir dir="${userguide.dir}/html"/>
+
+    	<property name="dtd" value="${docbook.home}/schema/dtd/4.4/docbookx.dtd"/>
+        <echo message="DTD: ${dtd}"/>
+		
+        <xmlcatalog id="dtds">                           
+            <dtd publicId="-//OASIS//DTD DocBook XML V4.1.2//EN"
+                 location="${dtd}"/>
+            <dtd publicId="-//OASIS//DTD DocBook XML V4.2//EN"
+                 location="${dtd}"/>
+            <dtd publicId="-//OASIS//DTD DocBook V3.1//EN"
+                 location="${dtd}"/>                 
+        </xmlcatalog>
+
+        <xslt  style="${docbook.home}/stylesheet/nwalsh/current/fo/docbook.xsl"
+                basedir="${userguide.dir}/xml"
+                extension=".fo"
+                destdir="${fo.dir}">
+                <xmlcatalog refid="dtds"/>
+        </xslt>
+
+        <xslt  style="${docbook.home}/stylesheet/nwalsh/current/html/docbook.xsl"
+                        basedir="${userguide.dir}/xml"
+                        extension=".html"
+                        destdir="${userguide.dir}/html">
+                <xmlcatalog refid="dtds"/>
+        </xslt>
+
+        <fop format="application/pdf"
+             fofile="${fo.dir}/docbook.fo"
+             outfile="${userguide.dir}/userguide.pdf" />
+
+        <delete dir="${fo.dir}"/>
+        <delete dir="${basedir}/docbook"/>
+    </target>
+
+    <target name="all" depends="clean,compile,javadoc,docs,jars"/>
+</project>
