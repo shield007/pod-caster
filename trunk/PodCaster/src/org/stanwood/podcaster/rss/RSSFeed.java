@@ -97,6 +97,7 @@ public class RSSFeed {
 	 * @param plainDescription The plain text description of the entry
 	 * @param author The author of the entry
 	 */
+	@SuppressWarnings("unchecked")
 	public void addEntry(String title, URL link, Date publishDate, String plainDescription, String author) {
 		SyndEntry entry = new SyndEntryImpl();
 		if (title != null) {
@@ -126,6 +127,7 @@ public class RSSFeed {
 	 * @param maxEntries Maximum number of entries
 	 * @param rssDir The directory containing the RSS directory
 	 */
+	@SuppressWarnings("unchecked")
 	public void setMaxEntries(long maxEntries, File rssDir) {
 		Iterator<SyndEntry> it = feed.getEntries().iterator();
 		int count = 0;
