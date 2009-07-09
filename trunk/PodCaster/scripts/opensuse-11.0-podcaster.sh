@@ -21,10 +21,11 @@ else
 fi
 
 # Launch application.
-CLASSPATH=/usr/share/java/PodCaster.jar
+CLASSPATH=/usr/share/java/podcaster.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/jaudiotagger.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/jdom.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/ROME.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/commons-logging.jar
+CLASSPATH=$CLASSPATH:/usr/share/java/commons-cli.jar
 CLASSPATH=$CLASSPATH:/usr/share/java/log4j.jar
 exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH org.stanwood.podcaster.PodCaster "$@"
