@@ -23,17 +23,18 @@ import org.stanwood.podcaster.launcher.AbstractLauncher;
 import org.stanwood.podcaster.launcher.DefaultExitHandler;
 import org.stanwood.podcaster.launcher.IExitHandler;
 import org.stanwood.podcaster.rss.RSSFeed;
+import org.stanwood.podcaster.util.FileHelper;
 
 /**
  * This class provides a tool for capturing audio streams and storing them as podcasts.
- * See the {@link PodCaster.main(String[])} method for more details. 
+ * See the {@link PodCaster.main(String[])} method for more details.
  */
 public class PodCaster extends AbstractLauncher{
 
 	/* package for test */ static IExitHandler exitHandler = null;
 	private final static Log log = LogFactory.getLog(PodCaster.class);
 
-	private final static DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH:mm:ss");
+	private final static DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss");
 
 	private static final List<Option> OPTIONS;
 	private final static String TIME_OPTION = "t";
@@ -130,8 +131,8 @@ public class PodCaster extends AbstractLauncher{
 	}
 
 	/**
-	 * The main method used to capture a stream to a audio file. 
-	 * 
+	 * The main method used to capture a stream to a audio file.
+	 *
 	 * The following command line syntax is passed to this method:
 	 * <pre>
 	 * podcaster [-a &lt;url&gt;] [-c &lt;string&gt;] [-ed &lt;string&gt;] -f &lt;format&gt; [-fa
@@ -306,7 +307,20 @@ public class PodCaster extends AbstractLauncher{
 				rss.parse();
 			}
 			else {
-				rss.createNewFeed(title, rssUrl, feedDescription,feedArtworkURL);
+				rss.createNewFeed();
+			}
+
+			rss.setTitle(title);
+			rss.setLink(rssUrl);
+			rss.setDescription(feedDescription);
+
+			if (feedArtworkURL!=null) {
+				File feedArtwork = new File(rssFile.getParentFile(),title.replaceAll(" ","-")+
+							                FileHelper.getExtension(feedArtworkURL.toExternalForm()));
+
+				FileHelper.downloadToFile(feedArtworkURL,feedArtwork );
+				URL artURL = new URL(baseUrl+"/"+feedArtwork.getName());
+				rss.setArtwork(artURL);
 			}
 
 			rss.addEntry(entryTitle, entryUrl, startDate, entryDescription,metaArtist);

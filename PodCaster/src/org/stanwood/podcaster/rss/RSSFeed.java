@@ -53,28 +53,57 @@ public class RSSFeed {
 
 	/**
 	 * Used to create a new feed
-	 * @param title The title of the feed
-	 * @param link The link to the feed
-	 * @param description A plain text description of the feeds contents
-	 * @param imageUrl A URL to the feeds cover artwork
 	 */
-	public void createNewFeed(String title, URL link, String description, URL imageUrl) {
+	public void createNewFeed() {
 		log.info("Creating new rss feed " + feedFile);
 		feed = new SyndFeedImpl();
 		feed.setFeedType(FEED_TYPE);
+	}
+
+	/**
+	 * Used to set the feeds title
+	 * @param title The title of the feed
+	 */
+	public void setTitle(String title) {
 		if (title != null) {
 			feed.setTitle(title);
 		}
+	}
+
+	/**
+	 * Used to set the feeds link
+	 * @param link The link to the feed
+	 */
+	public void setLink(URL link) {
 		if (link != null) {
 			feed.setLink(link.toExternalForm());
 		}
+	}
+
+	/**
+	 * Used to set the feeds description
+	 * @param description A plain text description of the feeds contents
+	 */
+	public void setDescription(String description) {
 		if (description != null) {
 			feed.setDescription(description);
 		}
+	}
 
+	/**
+	 * Used to set the feeds artwork
+	 * @param imageUrl A URL to the feeds cover artwork
+	 */
+	public void setArtwork(URL imageUrl) {
 		if (imageUrl != null) {
 			SyndImage image = new SyndImageImpl();
 			image.setUrl(imageUrl.toExternalForm());
+			if (feed.getTitle()!=null) {
+				image.setTitle(feed.getTitle());
+			}
+			else {
+				image.setTitle("No Title");
+			}
 			feed.setImage(image);
 		}
 	}

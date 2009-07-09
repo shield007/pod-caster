@@ -21,7 +21,7 @@ public class FileHelper {
 
 	public static String getExtension(File file) {
 		String name = file.getName();
-		return name.substring(name.indexOf('.'));
+		return name.substring(name.lastIndexOf('.'));
 	}
 
 	public static DownloadedFile downloadToFile(URL url,File target) throws IOException {
@@ -53,11 +53,16 @@ public class FileHelper {
 			} catch (IOException ioe) {
 			}
 		}
-
 	}
 
+	/**
+	 * Used to download a file from a URL to a file
+	 * @param url The url of the file to download
+	 * @return The downloaded file
+	 * @throws IOException Thrown if their is a problem downloading it
+	 */
 	public static DownloadedFile downloadToTempFile(URL url) throws IOException {
-		File file = File.createTempFile("artwork", getFileExtension(url.getPath()));
+		File file = File.createTempFile("artwork", getExtension(url.getPath()));
 		if (!file.delete()) {
 			throw new IOException("Unable to delete temp file " + file.getAbsolutePath());
 		}
@@ -66,19 +71,22 @@ public class FileHelper {
 		return downloadToFile(url,file);
 	}
 
-	private static String getFileExtension(String contentType) throws IOException {
-		if (contentType.equals("image/png")) {
-			return ".png";
-		}
-		else if (contentType.equals("image/jpeg")) {
-			return ".jpg";
-		}
-		else if (contentType.equals("image/gif")) {
-			return ".gif";
-		}
-		throw new IOException("Unknown content type '"+contentType+"'");
+	/**
+	 * Used to get the extension from the path. includeing the '.'
+	 * @param path The path
+	 * @return The extension
+	 */
+	public static String getExtension(String path) {
+		return path.substring(path.lastIndexOf('.'));
 	}
 
+	/**
+	 * Used to get a file in the next to a class
+	 * @param filename The filename to get
+	 * @param currentClass The class it is next to
+	 * @return The file
+	 * @throws IOException Thrown if their is a problem finding it
+	 */
     public static File getFile(String filename, Class<?> currentClass) throws IOException {
         URL url = currentClass.getResource(filename);
         if (url == null) {
@@ -86,7 +94,6 @@ public class FileHelper {
         }
         return getFile(filename,currentClass, url);
     }
-
 
     private static File getFile(String filename, Class<?> currentClass, URL url)
             throws  IOException, UnsupportedEncodingException {
@@ -124,5 +131,4 @@ public class FileHelper {
         out.close();
         in.close();
     }
-
 }

@@ -18,7 +18,7 @@ import org.stanwood.podcaster.config.Config;
 import org.stanwood.podcaster.util.AbstractExecutable;
 
 /**
- * This class is a wrapper around the mplayer application and is used to drive 
+ * This class is a wrapper around the mplayer application and is used to drive
  * mplayer in a more java friendly way
  */
 public class MPlayer extends AbstractExecutable {
@@ -51,7 +51,10 @@ public class MPlayer extends AbstractExecutable {
 			args.add("-playlist");
 		}
 		args.add(stream.getUrl());
-		executeWithTimeout(args,time);		
+		executeWithTimeout(args,time);
+		if (wavOutputFile.length()==0) {
+			throw new MPlayerException("Unable to caputre audio, the caputred audio file is empty. Try increasing the caputre time.");
+		}
 	}
 
 	/**
@@ -68,7 +71,7 @@ public class MPlayer extends AbstractExecutable {
 				return execute(args);
 			}
 		});
-		
+
 		ExecutorService es = Executors.newSingleThreadExecutor ();
 		es.submit (task);
 		try {
@@ -76,10 +79,10 @@ public class MPlayer extends AbstractExecutable {
 			log.error("Unable to execute mplayer command: " + getErrorStream());
 			throw new MPlayerException("Unexpected exit with exit code " + value);
 		}
-		catch (TimeoutException e) {			
-			kill();			
+		catch (TimeoutException e) {
+			kill();
 			log.debug(getOutputStream());
-			log.debug(getErrorStream());			
+			log.debug(getErrorStream());
 		} catch (InterruptedException e) {
 			throw new MPlayerException("Execution interrupted",e);
 		} catch (ExecutionException e) {
