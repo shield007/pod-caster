@@ -216,7 +216,8 @@
 			<fileset file="${basedir}/COPYING" />
 			<fileset file="${basedir}/scripts/**" />						
 		</copy>		
-
+		<copy file="${etc.dir}/defaultConfig.xml" tofile="${dist.dir}/bin/${ant.project.name}-${project.version}/podcaster-conf.xml"/>
+		
 		<zip file="${dist.dir}/${ant.project.name}-${project.version}-bin.zip" basedir="${dist.dir}/bin" compress="true"/>
 
 		<delete dir="${dist.dir}/bin" />				
