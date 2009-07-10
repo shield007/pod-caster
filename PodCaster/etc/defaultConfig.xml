@@ -1,0 +1,6 @@
+<config>
+	<global>
+		<var name="mplayer.path" value="/usr/bin/mplayer"/>
+		<var name="ffmpeg.path" value="/usr/bin/ffmpeg"/>
+	</global>
+</config>

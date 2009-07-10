@@ -1,6 +1,7 @@
 package org.stanwood.podcaster.config;
 
 import java.io.File;
+import java.util.Map;
 
 public class Config {
 
@@ -12,8 +13,7 @@ public class Config {
 	private File ffmpegPath = new File(DEFAULT_FFMPEG_PATH);
 	private File mplayerPath = new File(DEFAULT_MPLAYER_PATH);
 
-	private Config() {
-
+	private Config() {		
 	}
 
 	public static Config getInstance() {
@@ -27,15 +27,19 @@ public class Config {
 		return ffmpegPath;
 	}
 
-	public void setFfmpegPath(File ffmpegPath) {
-		this.ffmpegPath = ffmpegPath;
-	}
-
 	public File getMplayerPath() {
 		return mplayerPath;
 	}
-
-	public void setMplayerPath(File mplayerPath) {
-		this.mplayerPath = mplayerPath;
+	
+	public void loadConfig(File configFile) throws ConfigException {
+		ConfigReader reader = new ConfigReader(configFile);
+		reader.parse();
+		Map<String, String> vars = reader.getGlobalVars();
+		if (vars.containsKey("ffmpeg.path")) {
+			ffmpegPath = new File(vars.get("ffmpeg.path")); 
+		}
+		if (vars.containsKey("mplayer.path")) {
+			ffmpegPath = new File(vars.get("mplayer.path")); 
+		}
 	}
 }

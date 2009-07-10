@@ -10,6 +10,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.stanwood.podcaster.config.Config;
+import org.stanwood.podcaster.config.ConfigException;
 import org.stanwood.podcaster.logging.LogSetupHelper;
 
 /**
@@ -19,13 +21,17 @@ import org.stanwood.podcaster.logging.LogSetupHelper;
  */
 public abstract class AbstractLauncher {
 
+	
 	private IExitHandler exitHandler = null;
 	private final static String HELP_OPTION = "h";
 	private final static String LOG_CONFIG_OPTION = "l";
+	private final static String CONFIG_FILE_OPTION = "c";
 
 	private Options options;
 	private String name;
 
+	private File configFile = new File(File.separator+"etc"+File.separator+"podcaster-conf.xml");
+	
 	/**
 	 * Create a instance of the class
 	 * @param options The options that are to be added to the CLI
@@ -41,6 +47,7 @@ public abstract class AbstractLauncher {
 			this.options.addOption(o);
 		}			
 		this.options.addOption(new Option(LOG_CONFIG_OPTION,"log_config",true,"The log config mode [<INFO>|<DEBUG>|<log4j config file>]"));
+		this.options.addOption(new Option(CONFIG_FILE_OPTION,"config_file",true,"The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml"));
 	}
 
 	/**
@@ -91,15 +98,28 @@ public abstract class AbstractLauncher {
 	 */
 	protected abstract boolean processOptions(CommandLine cmd);
 
-	private boolean processOptionsInternal(CommandLine cmd) {
+	private boolean processOptionsInternal(CommandLine cmd) {		
 		String logConfig = null;
 		if (cmd.hasOption(LOG_CONFIG_OPTION)) {
 			logConfig = cmd.getOptionValue(LOG_CONFIG_OPTION);
-		}
+		}				
 		if (!initLogging(logConfig)) {
 			return false;
 		}
-
+		if (cmd.hasOption(CONFIG_FILE_OPTION)) {
+			configFile = new File(cmd.getOptionValue(CONFIG_FILE_OPTION));			
+		}
+		if (configFile!=null && configFile.exists()) {
+			warn("Unable to find config file '" +configFile+"' so using defaults.");		
+		}
+		else {
+			try {
+				Config.getInstance().loadConfig(configFile);
+			} catch (ConfigException e) {
+				warn(e.getMessage());
+			}			
+		}
+		
 		return processOptions(cmd);
 	}
 
