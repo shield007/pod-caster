@@ -110,6 +110,7 @@
         <echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
 
         <jar jarfile="${dist.dir}/${ant.project.name}-${project.version}.jar" basedir="${build.dir}" />
+    	<copy file="${etc.dir}/defaultConfig.xml" tofile="${dist.dir}/bin/${ant.project.name}-${project.version}/podcaster-conf.xml"/>
     </target>
 
     <target name="docs" description="Converts docbook xml into pdf" >
