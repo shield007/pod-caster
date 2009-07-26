@@ -114,7 +114,19 @@ public class RSSFeed {
 	 * @throws FeedException Thrown if their is a problem parsing the RSS feed
 	 */
 	public void write() throws IOException, FeedException {
+		if (feed==null) {
+			throw new FeedException("parse() or createNewFeed() must be called before writing the feed");
+		}
 		SyndFeedOutput output = new SyndFeedOutput();
+		if (feed.getTitle()==null) {
+			throw new FeedException("Unable to write feed, feed has no title");
+		}
+		if (feed.getDescription()==null) {
+			throw new FeedException("Unable to write feed, feed has no description");
+		}
+		if (feed.getLink()==null) {
+			throw new FeedException("Unable to write feed, feed has no link");
+		}
 		output.output(feed, feedFile);
 	}
 
