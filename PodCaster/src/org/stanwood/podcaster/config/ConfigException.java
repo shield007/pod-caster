@@ -5,13 +5,15 @@ package org.stanwood.podcaster.config;
  */
 public class ConfigException extends Exception {
 
+	private static final long serialVersionUID = -4700676846904304971L;
+
 	/**
      * Constructs a new exception with <code>null</code> as its detail message.
      * The cause is not initialised, and may subsequently be initialised by a
      * call to {@link #initCause}.
      */
 	public ConfigException() {
-		
+
 	}
 
 	/**
@@ -24,7 +26,7 @@ public class ConfigException extends Exception {
      */
 	public ConfigException(String message) {
 		super(message);
-		
+
 	}
 
    /**
@@ -42,7 +44,7 @@ public class ConfigException extends Exception {
      */
 	public ConfigException(Throwable cause) {
 		super(cause);
-	
+
 	}
 
 	/**
@@ -60,6 +62,6 @@ public class ConfigException extends Exception {
      */
 	public ConfigException(String message, Throwable cause) {
 		super(message, cause);
-	
+
 	}
 }
