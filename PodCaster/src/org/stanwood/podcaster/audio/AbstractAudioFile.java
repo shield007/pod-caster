@@ -3,6 +3,8 @@ package org.stanwood.podcaster.audio;
 import java.io.File;
 import java.net.URL;
 
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
 import org.stanwood.podcaster.cliutils.MetaDataException;
 
 public abstract class AbstractAudioFile implements IAudioFile {
@@ -82,5 +84,19 @@ public abstract class AbstractAudioFile implements IAudioFile {
 	public void writeMetaData() throws MetaDataException {
 		throw new UnsupportedOperationException("Unable to set metadata on "+getFormat().getName()+" format of file");
 	}
-
+	
+	/**
+	 * Gets the length in seconds of the audio
+	 * @return The length of the audio
+	 * @throws MetaDataException Thrown if their is a problem reading the audio
+	 */
+	public int getLengthAsSeconds() throws MetaDataException {
+		try {
+			AudioFile mp4 = AudioFileIO.read(getFile());
+			return mp4.getAudioHeader().getTrackLength();
+		}
+		catch (Exception e) {
+			throw new MetaDataException(e.getMessage(),e);
+		}
+	}
 }

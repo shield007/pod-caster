@@ -136,7 +136,5 @@ public class MP4File extends AbstractAudioFile {
 	@Override
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-
+	}	
 }

@@ -60,5 +60,10 @@ public interface IAudioFile {
 	 */
 	public void writeMetaData() throws MetaDataException;
 
-
+	/**
+	 * Gets the length in seconds of the audio
+	 * @return The length of the audio
+	 * @throws MetaDataException Thrown if their is a problem reading the audio
+	 */
+	public int getLengthAsSeconds() throws MetaDataException;
 }
