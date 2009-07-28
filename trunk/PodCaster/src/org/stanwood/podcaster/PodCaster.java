@@ -323,7 +323,7 @@ public class PodCaster extends AbstractLauncher{
 				rss.setArtwork(artURL);
 			}
 
-			rss.addEntry(entryTitle, entryUrl, startDate, entryDescription,metaArtist);
+			rss.addEntry(entryTitle, entryUrl, startDate, entryDescription,metaArtist,format);
 			rss.setMaxEntries(maxEntries,rssFile.getParentFile());
 			rss.write();
 		}

@@ -1,16 +1,23 @@
 package org.stanwood.podcaster.rss;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.podcaster.audio.Format;
 
+import com.sun.syndication.feed.rss.Enclosure;
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
+import com.sun.syndication.feed.synd.SyndEnclosure;
+import com.sun.syndication.feed.synd.SyndEnclosureImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -137,17 +144,27 @@ public class RSSFeed {
 	 * @param publishDate The date the entry was published
 	 * @param plainDescription The plain text description of the entry
 	 * @param author The author of the entry
+	 * @param format The format of the audio file
 	 */
 	@SuppressWarnings("unchecked")
-	public void addEntry(String title, URL link, Date publishDate, String plainDescription, String author) {
+	public void addEntry(String title, URL link, Date publishDate, String plainDescription, String author,Format format) {
 		SyndEntry entry = new SyndEntryImpl();
 		if (title != null) {
 			entry.setTitle(title);
-		}
-		if (link != null) {
-			entry.setLink(link.toExternalForm());
-		}
+		}		
+//		SyndContent content = new SyndContentImpl();
+//		content.s
+//		entry.setTitleEx(arg0)
+				
+		entry.setLink(link.toExternalForm());		
 		entry.setPublishedDate(publishDate);
+		
+		List<SyndEnclosure> es = new ArrayList<SyndEnclosure>();
+		SyndEnclosure e = new SyndEnclosureImpl();		
+		e.setType(format.getContentType());		
+		e.setUrl(link.toExternalForm());
+		es.add(e);
+		entry.setEnclosures(es);
 
 		if (plainDescription != null) {
 			SyndContent description = new SyndContentImpl();
