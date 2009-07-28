@@ -5,14 +5,16 @@ package org.stanwood.podcaster.audio;
  */
 public enum Format {
 
-	WAV("WAV",".wav"),MP3("MP3",".mp3"),MP4("MP4",".mp4");
+	WAV("WAV",".wav","audio/x-wav"),MP3("MP3",".mp3","audio/mpeg"),MP4("MP4",".mp4","audio/mpeg");
 
 	private String name;
 	private String extension;
+	private String contentType;
 	
-	private Format(String name,String extension) {
+	private Format(String name,String extension,String contentType) {
 		this.name = name;
 		this.extension = extension;
+		this.contentType = contentType;
 	}
 
 	/**
@@ -32,4 +34,7 @@ public enum Format {
 		return extension;
 	}
 
+	public String getContentType() {
+		return contentType;
+	}
 }
