@@ -115,6 +115,7 @@ public class PodCaster extends AbstractLauncher{
 
 		o = new Option(FEED_DESCRIPTION_OPTION,"feedDescription",true,"Description of the feed");
 		o.setArgName("sting");
+		o.setRequired(true);
 		OPTIONS.add(o);
 
 		o = new Option(ENTRY_DESCRIPTION_OPTION,"entryDescription",true,"Description of the entry");
