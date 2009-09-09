@@ -202,6 +202,22 @@
 						<para>This is used to supply the URL to the audio stream that is to be captured</para>
 					</sect3>
 				</sect2>
+				<sect2>
+					<title>Examples</title>
+					<para>
+						<example>
+							<title>Using &podcaster; in a cron job</title>
+							<para>
+							The following line is a example of using podcaster to record a radio show and insert it into a podcast.
+							This will record the Zane Lowe show from radio1 on a monday night and make a podcast out of it. It will
+							also add artwork and metadata to the mp4/podcast that is created.																								
+							<code>							
+							50 18 * * 1 /usr/bin/podcaster --metaArtworkUrl="http://node1.bbcimg.co.uk/iplayer/images/episode/b00lgm79_640_360.jpg" --metaCopyright="BBC" --entryDescription="Two hours of the best new and cutting-edge music." --format mp4 --feedArtwork="http://node1.bbcimg.co.uk/iplayer/images/episode/b00lgm79_640_360.jpg" --feedDescription="Two hours of the best new and cutting-edge music, including Passion Pit in" --metaTitle "Zane Lowe" --maxEntries 15 --metaArtist "Zane Lowe" --rssFile /srv/www/htdocs/podcasts/radio/zane-lowe.xml --rssUrl http://stanwood0.homeip.net/podcasts/radio/zane-lowe.xml --time 7200000 -u http://www.bbc.co.uk/radio1/realaudio/media/r1live.ram
+							</code>
+							</para>
+						</example>										
+					</para>
+				</sect2>
 		</sect1>
 		<sect1 id="capturestreamcmd">
 			<title id="capturestreamcmd.title">&capturestream;</title>
