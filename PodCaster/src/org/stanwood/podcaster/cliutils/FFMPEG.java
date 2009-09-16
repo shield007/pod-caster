@@ -83,14 +83,11 @@ public class FFMPEG extends AbstractExecutable {
 			args.add("-ab");
 			args.add(MP3_BITRATE);
 			args.add(targetFile.getAbsolutePath());
-			if (execute(args)!=0) {
+			execute(args);
+			if (!targetFile.exists() || targetFile.length()==0) {
 				log.info(getOutputStream());
 				log.error(getErrorStream());
 
-				throw new FFMPEGException("Unable to create mp3 file: " + targetFile);
-			}
-
-			if (!targetFile.exists()) {
 				throw new FFMPEGException("Unable to create mp3 file: " + targetFile);
 			}
 		} catch (IOException e) {
