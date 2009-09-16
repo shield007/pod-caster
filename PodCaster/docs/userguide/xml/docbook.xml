@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V3.1//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 	<!ENTITY apptitle "Pod Caster">	
-	<!ENTITY version "0.2">
+	<!ENTITY version "1.0">
 	<!ENTITY podcaster "podcaster">	
 	<!ENTITY capturestream "capture-stream">
 ]>
