@@ -1,2 +1,11 @@
+ Wed Sep 16 2009 John-Paul Stanford <dev@stanwood.org.uk> - v1.0
+- BUGFIX: Lots of bug fixes
+- BUGFIX: New unit tests
+* Tue Jul 07 2009 John-Paul.Stanford <dev@stanwood.org.uk> - v0.1
+- FEATURE: Capture Internet radio to audio files.
+- FEATURE: Create MP3, WAV and MP4 files.
+- FEATURE: Encodes metadata and cover art into the media files.
+- FEATURE: Create pod cast from captured radio stations.
+- FEATURE: Supports real audio and Microsoft ASF format.
 * Wed Jun 2 2009 John-Paul.Stanford <dev@stanwood.org.uk> - 
  - Project started
