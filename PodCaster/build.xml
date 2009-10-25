@@ -105,8 +105,8 @@
             author="true"
             version="true"
             use="true"
-            windowtitle="Media Renamer/Metadata Fetcher">
-          <doctitle><![CDATA[<h1>Media Renamer/Metadata Fetcher</h1>]]></doctitle>
+            windowtitle="Pod Caster">
+          <doctitle><![CDATA[<h1>Pod Caster</h1>]]></doctitle>
         </javadoc>
 	</target>
 
