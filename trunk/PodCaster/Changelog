@@ -1,3 +1,6 @@
+* Mon Jun 15 2009 John-Paul Stanford <dev@stanwood.org.uk> - v1.1
+- FEATURE: Added support for Flac and OGG audio files in podcasts.
+- Updated code to depened and use version 2.0.2 of jaudiotagger.
  Wed Sep 16 2009 John-Paul Stanford <dev@stanwood.org.uk> - v1.0
 - BUGFIX: Lots of bug fixes
 - BUGFIX: New unit tests
