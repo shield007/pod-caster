@@ -11,6 +11,8 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.id3.ID3v24Tag;
+import org.stanwood.podcaster.cliutils.FFMPEG;
+import org.stanwood.podcaster.cliutils.FFMPEGException;
 import org.stanwood.podcaster.cliutils.MetaDataException;
 import org.stanwood.podcaster.util.DownloadedFile;
 import org.stanwood.podcaster.util.FileHelper;
@@ -136,5 +138,17 @@ public class MP3File extends AbstractAudioFile {
 		catch (Exception e) {
 			throw new MetaDataException(e.getMessage(),e);
 		}
+	}
+	
+	/**
+	 * Used to convert a wave file to a MP3 file. The file
+	 * is then stored as {@link #getFile()}, leaving the original wav intact.
+	 * @param wav The wav file to convert
+	 * @throws FFMPEGException Thrown if their is a problem converting the file
+	 */
+	@Override
+	public void fromWav(WavFile wav) throws FFMPEGException {
+		FFMPEG ffmpeg = new FFMPEG();
+		ffmpeg.wav2mp3(wav.getFile(),getFile());
 	}
 }

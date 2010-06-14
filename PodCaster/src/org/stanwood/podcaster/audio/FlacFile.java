@@ -11,6 +11,7 @@ import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.flac.FlacTag;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.stanwood.podcaster.cliutils.FFMPEG;
 import org.stanwood.podcaster.cliutils.FFMPEGException;
@@ -19,11 +20,11 @@ import org.stanwood.podcaster.util.DownloadedFile;
 import org.stanwood.podcaster.util.FileHelper;
 
 /**
- * This class is used to write metadata to MP4 format files
+ * This class is used to write metadata to Flac format files
  */
-public class MP4File extends AbstractAudioFile {
+public class FlacFile extends AbstractAudioFile {
 
-	private final static Log log = LogFactory.getLog(MP4File.class);
+	private final static Log log = LogFactory.getLog(FlacFile.class);
 
 	public URL podcastUrl;
 	public String title;
@@ -33,20 +34,20 @@ public class MP4File extends AbstractAudioFile {
 	public String description;
 
 	/**
-	 * Used to construct a {@link MP4File} instance
+	 * Used to construct a {@link FlacFile} instance
 	 * @param file The file object pointing to the actual file
 	 */
-	public MP4File(File file) {
+	public FlacFile(File file) {
 		super(file);
 	}
 	
 	/**
 	 * Used to get the format of the file. 
-	 * @return This will return {@link Format.MP4}
+	 * @return This will return {@link Format.FLAC}
 	 */
 	@Override
 	public Format getFormat() {
-		return Format.MP4;
+		return Format.FLAC;
 	}
 
 	/**
@@ -60,8 +61,8 @@ public class MP4File extends AbstractAudioFile {
 		}
 		log.info("Writing metadata to file '"+getFile().getAbsolutePath()+"'");
 		try {
-			AudioFile mp4 = AudioFileIO.read(getFile());
-			Tag tag = mp4.getTag();
+			AudioFile flac = AudioFileIO.read(getFile());
+			Tag tag = flac.getTag();
 
 			if (artist!=null) {
 				tag.setField(FieldKey.ARTIST,artist);
@@ -76,19 +77,18 @@ public class MP4File extends AbstractAudioFile {
 				tag.setField(FieldKey.COMMENT,description);
 			}
 
-			if (artworkURL!=null) {
-
-				DownloadedFile coverArt = FileHelper.downloadToTempFile(artworkURL);
-				RandomAccessFile imageFile = new RandomAccessFile(coverArt.getFile(), "r");
-				byte[] imagedata = new byte[(int) imageFile.length()];
-				if (imageFile.read(imagedata)!=imagedata.length) {
-					throw new MetaDataException("Unable to read cover art " + artworkURL.toExternalForm());
-				}
-				tag.addField(((Mp4Tag)tag).createArtworkField(imagedata));
-			}
+//			if (artworkURL!=null) {
+//				DownloadedFile coverArt = FileHelper.downloadToTempFile(artworkURL);
+//				RandomAccessFile imageFile = new RandomAccessFile(coverArt.getFile(), "r");
+//				byte[] imagedata = new byte[(int) imageFile.length()];
+//				if (imageFile.read(imagedata)!=imagedata.length) {
+//					throw new MetaDataException("Unable to read cover art " + artworkURL.toExternalForm());
+//				}				
+//				tag.addField(((FlacTag)tag).createArtworkField(imagedata));
+//			}
 
 			tag.setField(FieldKey.YEAR,String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));					
-			mp4.commit();
+			flac.commit();
 		}
 		catch (Exception e) {
 			throw new MetaDataException(e.getMessage(),e);
@@ -149,6 +149,6 @@ public class MP4File extends AbstractAudioFile {
 	@Override
 	public void fromWav(WavFile wav) throws FFMPEGException {
 		FFMPEG ffmpeg = new FFMPEG();
-		ffmpeg.wav2mp4(wav.getFile(),getFile());		
+		ffmpeg.wav2flac(wav.getFile(),getFile());		
 	}
 }
