@@ -1,28 +1,14 @@
 package org.stanwood.podcaster.audio;
 
 import java.io.File;
-
-import org.stanwood.podcaster.cliutils.FFMPEG;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Used to convert audio files from one format to another
  */
 public class AudioFileConverter {
-
-	private static MP3File wav2mp3(WavFile wav,File targetFile) throws AudioConvertException {
-		FFMPEG ffmpeg = new FFMPEG();
-		ffmpeg.wav2mp3(wav.getFile(),targetFile);
-		MP3File mp3File = new MP3File(targetFile);
-		return mp3File;
-	}
-
-	private static MP4File wav2mp4(WavFile wav,File targetFile) throws AudioConvertException {
-		FFMPEG ffmpeg = new FFMPEG();
-		ffmpeg.wav2mp4(wav.getFile(),targetFile);
-		MP4File mp4File = new MP4File(targetFile);
-		return mp4File;
-	}
-
+	
 	/**
 	 * This will convert a {@link Format.WAV} file into a different format. The original will
 	 * be deleted and the new one returned with the correct extension.
@@ -34,14 +20,27 @@ public class AudioFileConverter {
 	 */
 	public static IAudioFile wav2Format(WavFile wav,Format format,File targetFile) throws AudioConvertException {
 		IAudioFile audioFile = null;
-		if (format == Format.MP3) {
-			audioFile = AudioFileConverter.wav2mp3(wav,targetFile);
-		}
-		else if (format == Format.MP4){
-			audioFile = AudioFileConverter.wav2mp4(wav,targetFile);
-		}
-		else {
+		if (format == Format.WAV) {
 			audioFile = wav;
+		}
+		else {						
+			try {
+				Constructor<? extends IAudioFile> con = format.getAudioFileClass().getConstructor(File.class);
+				audioFile = con.newInstance(targetFile);				
+			} catch (SecurityException e) {
+				throw new AudioConvertException("Unable to create format handler class",e);
+			} catch (NoSuchMethodException e) {
+				throw new AudioConvertException("Unable to create format handler class",e);
+			} catch (IllegalArgumentException e) {
+				throw new AudioConvertException("Unable to create format handler class",e);
+			} catch (InstantiationException e) {
+				throw new AudioConvertException("Unable to create format handler class",e);
+			} catch (IllegalAccessException e) {
+				throw new AudioConvertException("Unable to create format handler class",e);
+			} catch (InvocationTargetException e) {
+				throw new AudioConvertException("Unable to create format handler class",e);
+			}
+			audioFile.fromWav(wav);
 		}
 
 		if (!audioFile.getFile().equals(wav.getFile())) {								

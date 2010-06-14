@@ -3,6 +3,7 @@ package org.stanwood.podcaster.audio;
 import java.io.File;
 import java.net.URL;
 
+import org.stanwood.podcaster.cliutils.FFMPEGException;
 import org.stanwood.podcaster.cliutils.MetaDataException;
 
 /**
@@ -66,4 +67,12 @@ public interface IAudioFile {
 	 * @throws MetaDataException Thrown if their is a problem reading the audio
 	 */
 	public int getLengthAsSeconds() throws MetaDataException;
+
+	/**
+	 * Used to convert a wave file to the a the correct format. The file
+	 * is then stored as {@link #getFile()}, leaving the original wav intact.
+	 * @param wav The wav file to conveert
+	 * @throws FFMPEGException Thrown if their is a problem converting the file
+	 */
+	public void fromWav(WavFile wav) throws FFMPEGException;
 }

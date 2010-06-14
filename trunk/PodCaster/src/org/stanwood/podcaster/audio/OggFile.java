@@ -19,11 +19,11 @@ import org.stanwood.podcaster.util.DownloadedFile;
 import org.stanwood.podcaster.util.FileHelper;
 
 /**
- * This class is used to write metadata to MP4 format files
+ * This class is used to write metadata to Ogg format files
  */
-public class MP4File extends AbstractAudioFile {
+public class OggFile extends AbstractAudioFile {
 
-	private final static Log log = LogFactory.getLog(MP4File.class);
+	private final static Log log = LogFactory.getLog(OggFile.class);
 
 	public URL podcastUrl;
 	public String title;
@@ -33,20 +33,20 @@ public class MP4File extends AbstractAudioFile {
 	public String description;
 
 	/**
-	 * Used to construct a {@link MP4File} instance
+	 * Used to construct a {@link OggFile} instance
 	 * @param file The file object pointing to the actual file
 	 */
-	public MP4File(File file) {
+	public OggFile(File file) {
 		super(file);
 	}
 	
 	/**
 	 * Used to get the format of the file. 
-	 * @return This will return {@link Format.MP4}
+	 * @return This will return {@link Format.OGG}
 	 */
 	@Override
 	public Format getFormat() {
-		return Format.MP4;
+		return Format.OGG;
 	}
 
 	/**
@@ -60,8 +60,8 @@ public class MP4File extends AbstractAudioFile {
 		}
 		log.info("Writing metadata to file '"+getFile().getAbsolutePath()+"'");
 		try {
-			AudioFile mp4 = AudioFileIO.read(getFile());
-			Tag tag = mp4.getTag();
+			AudioFile ogg = AudioFileIO.read(getFile());
+			Tag tag = ogg.getTag();
 
 			if (artist!=null) {
 				tag.setField(FieldKey.ARTIST,artist);
@@ -76,19 +76,19 @@ public class MP4File extends AbstractAudioFile {
 				tag.setField(FieldKey.COMMENT,description);
 			}
 
-			if (artworkURL!=null) {
-
-				DownloadedFile coverArt = FileHelper.downloadToTempFile(artworkURL);
-				RandomAccessFile imageFile = new RandomAccessFile(coverArt.getFile(), "r");
-				byte[] imagedata = new byte[(int) imageFile.length()];
-				if (imageFile.read(imagedata)!=imagedata.length) {
-					throw new MetaDataException("Unable to read cover art " + artworkURL.toExternalForm());
-				}
-				tag.addField(((Mp4Tag)tag).createArtworkField(imagedata));
-			}
+//			if (artworkURL!=null) {
+//
+//				DownloadedFile coverArt = FileHelper.downloadToTempFile(artworkURL);
+//				RandomAccessFile imageFile = new RandomAccessFile(coverArt.getFile(), "r");
+//				byte[] imagedata = new byte[(int) imageFile.length()];
+//				if (imageFile.read(imagedata)!=imagedata.length) {
+//					throw new MetaDataException("Unable to read cover art " + artworkURL.toExternalForm());
+//				}				
+//				tag.addField(((OggTag)tag).createArtworkField(imagedata));
+//			}
 
 			tag.setField(FieldKey.YEAR,String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));					
-			mp4.commit();
+			ogg.commit();
 		}
 		catch (Exception e) {
 			throw new MetaDataException(e.getMessage(),e);
@@ -149,6 +149,6 @@ public class MP4File extends AbstractAudioFile {
 	@Override
 	public void fromWav(WavFile wav) throws FFMPEGException {
 		FFMPEG ffmpeg = new FFMPEG();
-		ffmpeg.wav2mp4(wav.getFile(),getFile());		
+		ffmpeg.wav2ogg(wav.getFile(),getFile());		
 	}
 }

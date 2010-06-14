@@ -20,6 +20,7 @@ public class FFMPEG extends AbstractExecutable {
 
 	private static final String MP3_BITRATE = "112k";
 	private static final String MP4_BITRATE = "112k";
+	private static final String OGG_BITRATE = "112k";
 
 	/**
 	 * Convert a WAV file to a MP4 file
@@ -82,6 +83,60 @@ public class FFMPEG extends AbstractExecutable {
 			args.add("-y");
 			args.add("-ab");
 			args.add(MP3_BITRATE);
+			args.add(targetFile.getAbsolutePath());
+			execute(args);
+			if (!targetFile.exists() || targetFile.length()==0) {
+				log.info(getOutputStream());
+				log.error(getErrorStream());
+
+				throw new FFMPEGException("Unable to create mp3 file: " + targetFile);
+			}
+		} catch (IOException e) {
+			throw new FFMPEGException("Unable to create mp3 file: " + e.getMessage(),e);
+		} catch (InterruptedException e) {
+			throw new FFMPEGException("Unable to create mp3 file: " + e.getMessage(),e);
+		}
+	}
+
+	public void wav2ogg(File wavFile,File targetFile) throws FFMPEGException {
+		try {
+			List<String> args = new ArrayList<String>();
+			args.add(Config.getInstance().getFfmpegPath().getAbsolutePath());
+			args.add("-i");
+			args.add(wavFile.getAbsolutePath());
+			args.add("-acodec");
+			args.add("vorbis");
+			args.add("-ac");
+			args.add("2");
+			args.add("-y");
+			args.add("-ab");
+			args.add(OGG_BITRATE);
+			args.add(targetFile.getAbsolutePath());
+			execute(args);
+			if (!targetFile.exists() || targetFile.length()==0) {
+				log.info(getOutputStream());
+				log.error(getErrorStream());
+
+				throw new FFMPEGException("Unable to create mp3 file: " + targetFile);
+			}
+		} catch (IOException e) {
+			throw new FFMPEGException("Unable to create mp3 file: " + e.getMessage(),e);
+		} catch (InterruptedException e) {
+			throw new FFMPEGException("Unable to create mp3 file: " + e.getMessage(),e);
+		}		
+	}
+	
+	public void wav2flac(File wavFile,File targetFile) throws FFMPEGException {
+		try {
+			List<String> args = new ArrayList<String>();
+			args.add(Config.getInstance().getFfmpegPath().getAbsolutePath());
+			args.add("-i");
+			args.add(wavFile.getAbsolutePath());
+			args.add("-acodec");
+			args.add("flac");
+			args.add("-ac");
+			args.add("2");
+			args.add("-y");		
 			args.add(targetFile.getAbsolutePath());
 			execute(args);
 			if (!targetFile.exists() || targetFile.length()==0) {
