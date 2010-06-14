@@ -49,13 +49,13 @@
 	<property name="build.instrumented.dir" value="${cobertura.dir}/instrumented-classes"/>
 	<taskdef resource="tasks.properties" >
     	  <classpath refid="compile-time.libs.classpath"/>	                    
-    	  <classpath refid="run-time-time.libs.classpath"/>	                    
+    	  <classpath refid="run-time.libs.classpath"/>	                    
 	</taskdef>
 
 	<!-- Fop setup -->
   	<taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop">        
     	<classpath refid="compile-time.libs.classpath"/>	                    
-    	<classpath refid="run-time-time.libs.classpath"/>	                    
+    	<classpath refid="run-time.libs.classpath"/>	                    
     </taskdef>
 	
 	<target name="init">
