@@ -9,6 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.stanwood.podcaster.cliutils.MetaDataException;
@@ -61,16 +62,16 @@ public class MP4File extends AbstractAudioFile {
 			Tag tag = mp4.getTag();
 
 			if (artist!=null) {
-				tag.setArtist(artist);
+				tag.setField(FieldKey.ARTIST,artist);
 			}
 			if (copyright!=null) {
-				tag.setAlbum(copyright);
+				tag.setField(FieldKey.ALBUM, copyright);				
 			}
 			if (title!=null) {
-				tag.setTitle(title);
+				tag.setField(FieldKey.TITLE,title);
 			}
 			if (description!=null) {
-				tag.setComment(description);
+				tag.setField(FieldKey.COMMENT,description);
 			}
 
 			if (artworkURL!=null) {
@@ -81,11 +82,10 @@ public class MP4File extends AbstractAudioFile {
 				if (imageFile.read(imagedata)!=imagedata.length) {
 					throw new MetaDataException("Unable to read cover art " + artworkURL.toExternalForm());
 				}
-				tag.add(((Mp4Tag)tag).createArtworkField(imagedata));
+				tag.addField(((Mp4Tag)tag).createArtworkField(imagedata));
 			}
 
-
-			tag.setYear(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+			tag.setField(FieldKey.YEAR,String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));					
 			mp4.commit();
 		}
 		catch (Exception e) {

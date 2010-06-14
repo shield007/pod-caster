@@ -8,6 +8,7 @@ import java.util.Calendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.id3.ID3v24Tag;
 import org.stanwood.podcaster.cliutils.MetaDataException;
@@ -104,16 +105,16 @@ public class MP3File extends AbstractAudioFile {
 			Tag tag = mp3.getTag();
 
 			if (artist!=null) {
-				tag.setArtist(artist);
+				tag.setField(FieldKey.ARTIST,artist);
 			}
 			if (copyright!=null) {
-				tag.setAlbum(copyright);
+				tag.setField(FieldKey.ALBUM, copyright);				
 			}
 			if (title!=null) {
-				tag.setTitle(title);
+				tag.setField(FieldKey.TITLE,title);
 			}
 			if (description!=null) {
-				tag.setComment(description);
+				tag.setField(FieldKey.COMMENT,description);
 			}
 
 			if (artworkURL!=null) {
@@ -124,10 +125,10 @@ public class MP3File extends AbstractAudioFile {
 				if (imageFile.read(imagedata)!=imagedata.length) {
 					throw new MetaDataException("Unable to read cover art " + artworkURL.toExternalForm());
 				}
-				v2tag.add(v2tag.createArtworkField(imagedata,coverArt.getContentType()));
+				v2tag.addField(v2tag.createArtworkField(imagedata,coverArt.getContentType()));				
 			}
 
-			tag.setYear(String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
+			tag.setField(FieldKey.YEAR,String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));			
 			mp3.commit();
 
 //			AudioFileIO.write(mp3);
