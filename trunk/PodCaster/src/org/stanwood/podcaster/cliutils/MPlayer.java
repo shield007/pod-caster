@@ -39,6 +39,8 @@ public class MPlayer extends AbstractExecutable {
 		log.info("Capturing audio from stream: " + stream.getUrl() + " to " + wavOutputFile.getAbsolutePath());
 		List<String> args = new ArrayList<String>();
 		args.add(Config.getInstance().getMplayerPath().getAbsolutePath());
+		args.add("-nojoystick");
+		args.add("-nolirc");
 		args.add("-cache");
 		args.add(String.valueOf(CACHE_SIZE));
 		args.add("-vc");
