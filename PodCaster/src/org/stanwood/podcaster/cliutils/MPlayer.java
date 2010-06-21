@@ -48,7 +48,7 @@ public class MPlayer extends AbstractExecutable {
 		args.add("-vo");
 		args.add("null");
 		args.add("-ao");
-		args.add("pcm:file=\""+wavOutputFile.getAbsolutePath()+"\"");
+		args.add("pcm:waveheader:fast:file=\""+wavOutputFile.getAbsolutePath()+"\"");
 		if (stream.isPlaylist()) {
 			args.add("-playlist");
 		}
