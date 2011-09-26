@@ -15,6 +15,7 @@ import org.stanwood.podcaster.audio.AudioFileConverter;
 import org.stanwood.podcaster.audio.Format;
 import org.stanwood.podcaster.audio.IAudioFile;
 import org.stanwood.podcaster.audio.WavFile;
+import org.stanwood.podcaster.cliutils.ICaptureStream;
 import org.stanwood.podcaster.cliutils.MPlayer;
 import org.stanwood.podcaster.launcher.AbstractLauncher;
 import org.stanwood.podcaster.launcher.DefaultExitHandler;
@@ -35,6 +36,7 @@ public class CaptureStream extends AbstractLauncher{
 	private final static String TIME_OPTION = "t";
 	private final static String FORMAT_OPTION = "f";
 	private final static String URL_OPTION = "u";
+	private final static String TYPE_OPTION = "y";
 
 	private final static String META_TITLE_OPTION = "i";
 	private final static String META_ARTWORK_URL_OPTION = "a";
@@ -51,6 +53,7 @@ public class CaptureStream extends AbstractLauncher{
 	private String metaCopyright = null;
 	private String metaArtist = null;
 	private String metaDescription = null;
+	private Type type = null;	
 
 	static {
 		OPTIONS = new ArrayList<Option>();
@@ -72,17 +75,25 @@ public class CaptureStream extends AbstractLauncher{
 		OPTIONS.add(o);
 		o = new Option(META_DESCRIPTION_OPTION,"metaDescription",true,"Set the description meta data");
 		o.setArgName("description");
-		OPTIONS.add(o);		
+		OPTIONS.add(o);
+		
 		o = new Option(URL_OPTION,"url",true,"Radio url");
 		o.setArgName("url");
-		o.setRequired(true);
+		o.setRequired(true);		
 		OPTIONS.add(o);
+		
 		o = new Option(OUTPUT_FILE_OPTION,"output",true,"Audio Output file");
 		o.setArgName("file");
 		o.setRequired(true);
 		OPTIONS.add(o);
+		
 		o = new Option(TIME_OPTION,"time",true,"Capture time (msecs)");
 		o.setArgName("msecs");
+		o.setRequired(true);
+		OPTIONS.add(o);
+		
+		o = new Option(TYPE_OPTION,"type",true,"Type of stream downloader (stream | iplayer_dl)");
+		o.setArgName("type");
 		o.setRequired(true);
 		OPTIONS.add(o);
 	}
@@ -135,14 +146,23 @@ public class CaptureStream extends AbstractLauncher{
 			URLFetcher urlFetcher = new URLFetcher(new URL(url));
 			urlFetcher.getMediaUrl();
 			
-			MPlayer mplayer = new MPlayer();
-			File wavOutputFile = File.createTempFile("captured", ".wav");			
-			mplayer.captureLiveAudioStream(wavOutputFile, urlFetcher.getMediaUrl(), time);
-			if (log.isDebugEnabled()) {
-				log.debug("Captured " + wavOutputFile + " with size " +wavOutputFile.length());
+			ICaptureStream streamCapture;
+			switch (type) {
+				case STREAM: streamCapture = new MPlayer();
+							 break;
+				case IPLAYER_DL: streamCapture = new IPlayerDownloader();
+				 			 break;
+				default:
+					log.error("Unkown type");
+					return false;
 			}
+			IAudioFile audioFile = streamCapture.captureLiveAudioStream(urlFetcher.getMediaUrl(), time);
+			if (log.isDebugEnabled()) {
+				log.debug("Captured " + audioFile.getFile() + " with size " +audioFile.getFile().length());
+			}
+			
 			log.info("Converting stream to " + format.getName());
-			IAudioFile audio = AudioFileConverter.wav2Format(new WavFile(wavOutputFile), format,outputFile);
+			IAudioFile audio = AudioFileConverter.convertAudio(audioFile, format,outputFile);
 			if (format!=Format.WAV) {
 				if (metaTitle!=null) {
 					audio.setTitle(metaTitle);
@@ -195,6 +215,17 @@ public class CaptureStream extends AbstractLauncher{
 			log.error("Output file " + outputFile.getAbsolutePath()+" already exsits");
 			return false;
 		}
+		if (cmd.getOptionValue(TYPE_OPTION).toLowerCase().equals("stream")) {
+			type = Type.STREAM;
+		}
+		if (cmd.getOptionValue(TYPE_OPTION).toLowerCase().equals("iplayer_dl")) {
+			type = Type.IPLAYER_DL;
+		}
+		else {
+			log.error("Unknown type, possible values are: stream, iplayer_dl");
+			return false;
+		}
+		
 		url = cmd.getOptionValue(URL_OPTION);
 		String sformat = cmd.getOptionValue(FORMAT_OPTION);
 		if (sformat!=null) {

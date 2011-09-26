@@ -3,7 +3,7 @@ package org.stanwood.podcaster.cliutils;
 /**
  * Thrown if their is a problem driving MPlayer application
  */
-public class MPlayerException extends Exception {
+public class MPlayerException extends CatpureException {
 
 	private static final long serialVersionUID = -8024263389978825505L;
 

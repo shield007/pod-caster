@@ -1,6 +1,7 @@
 package org.stanwood.podcaster.cliutils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -14,6 +15,8 @@ import java.util.concurrent.TimeoutException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.podcaster.StreamReference;
+import org.stanwood.podcaster.audio.IAudioFile;
+import org.stanwood.podcaster.audio.WavFile;
 import org.stanwood.podcaster.config.Config;
 import org.stanwood.podcaster.util.AbstractExecutable;
 
@@ -21,7 +24,7 @@ import org.stanwood.podcaster.util.AbstractExecutable;
  * This class is a wrapper around the mplayer application and is used to drive
  * mplayer in a more java friendly way
  */
-public class MPlayer extends AbstractExecutable {
+public class MPlayer extends AbstractExecutable implements ICaptureStream {
 
 	private final static Log log = LogFactory.getLog(MPlayer.class);
 
@@ -34,8 +37,15 @@ public class MPlayer extends AbstractExecutable {
 	 * @param time The time in milliseconds to capture the stream
 	 * @throws MPlayerException Thrown if their is a problem with mplayer
 	 */
-	public void captureLiveAudioStream(File wavOutputFile,StreamReference stream,long time) throws  MPlayerException
-	{
+	public IAudioFile captureLiveAudioStream(StreamReference stream,long time) throws  MPlayerException
+	{		
+		File wavOutputFile;
+		try {
+			wavOutputFile = File.createTempFile("captured", ".wav");
+		} catch (IOException e) {
+			throw new MPlayerException("Unable to create temp file",e);
+		}
+				
 		log.info("Capturing audio from stream: " + stream.getUrl() + " to " + wavOutputFile.getAbsolutePath());
 		List<String> args = new ArrayList<String>();
 		args.add(Config.getInstance().getMplayerPath().getAbsolutePath());
@@ -57,6 +67,8 @@ public class MPlayer extends AbstractExecutable {
 		if (wavOutputFile.length()==0) {
 			throw new MPlayerException("Unable to caputre audio, the caputred audio file is empty. Try increasing the caputre time.");
 		}
+		WavFile result = new WavFile(wavOutputFile);
+		return result;
 	}
 
 	/**
@@ -91,4 +103,5 @@ public class MPlayer extends AbstractExecutable {
 			throw new MPlayerException(e.getMessage(),e);
 		}
 	}
+	
 }

@@ -18,6 +18,7 @@ import org.stanwood.podcaster.audio.AudioFileConverter;
 import org.stanwood.podcaster.audio.Format;
 import org.stanwood.podcaster.audio.IAudioFile;
 import org.stanwood.podcaster.audio.WavFile;
+import org.stanwood.podcaster.cliutils.ICaptureStream;
 import org.stanwood.podcaster.cliutils.MPlayer;
 import org.stanwood.podcaster.launcher.AbstractLauncher;
 import org.stanwood.podcaster.launcher.DefaultExitHandler;
@@ -34,7 +35,7 @@ public class PodCaster extends AbstractLauncher{
 	/* package for test */ static IExitHandler exitHandler = null;
 	private final static Log log = LogFactory.getLog(PodCaster.class);
 
-	private final static DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss");
+	private final DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss");
 
 	private static final List<Option> OPTIONS;
 	private final static String TIME_OPTION = "t";
@@ -43,6 +44,7 @@ public class PodCaster extends AbstractLauncher{
 	private static final String RSS_FILE_OPTION ="rf";
 	private static final String RSS_URL_OPTION ="ru";
 	private static final String FEED_ARTWORK_OPTION="fa";
+	private final static String TYPE_OPTION = "y";
 
 	private final static String META_TITLE_OPTION = "i";
 	private final static String META_ARTWORK_URL_OPTION = "a";
@@ -67,6 +69,7 @@ public class PodCaster extends AbstractLauncher{
 	private File rssFile = null;
 	private URL rssUrl;
 	private URL feedArtworkURL;
+	private Type type = null;	
 
 	static {
 		OPTIONS = new ArrayList<Option>();
@@ -129,6 +132,11 @@ public class PodCaster extends AbstractLauncher{
 		o = new Option(FEED_ARTWORK_OPTION,"feedArtwork",true,"The URL to the feeds artwork");
 		o.setArgName("url");
 		OPTIONS.add(o);
+		
+		o = new Option(TYPE_OPTION,"type",true,"Type of stream downloader (stream | iplayer_dl)");
+		o.setArgName("type");
+		o.setRequired(true);
+		OPTIONS.add(o);
 	}
 
 	/**
@@ -187,6 +195,14 @@ public class PodCaster extends AbstractLauncher{
 			log.error("Unable to parse time from '"+cmd.getOptionValue(TIME_OPTION)+"'");
 			return false;
 		}
+		if (cmd.getOptionValue(TYPE_OPTION).toLowerCase().equals("iplayer_dl")) {
+			type = Type.IPLAYER_DL;
+		}
+		else {
+			log.error("Unknown type, possible values are: stream, iplayer_dl");
+			return false;
+		}
+		
 		radioURL = cmd.getOptionValue(URL_OPTION);
 		String sformat = cmd.getOptionValue(FORMAT_OPTION);
 		if (sformat!=null) {
@@ -266,11 +282,19 @@ public class PodCaster extends AbstractLauncher{
 			URLFetcher urlFetcher = new URLFetcher(new URL(radioURL));
 			urlFetcher.getMediaUrl();
 
-			MPlayer mplayer = new MPlayer();
-			File wavOutputFile = File.createTempFile("captured", ".wav");
-			mplayer.captureLiveAudioStream(wavOutputFile, urlFetcher.getMediaUrl(), time);
+			ICaptureStream streamCapture;
+			switch (type) {
+				case STREAM: streamCapture = new MPlayer();
+							 break;
+				case IPLAYER_DL: streamCapture = new IPlayerDownloader();
+				 			 break;
+				default:
+					log.error("Unkown type");
+					return false;
+			}
+			IAudioFile audioFile = streamCapture.captureLiveAudioStream(urlFetcher.getMediaUrl(), time);
 			if (log.isDebugEnabled()) {
-				log.debug("Captured " + wavOutputFile + " with size " +wavOutputFile.length());
+				log.debug("Captured " + audioFile.getFile() + " with size " +audioFile.getFile().length());
 			}
 			log.info("Converting stream to " + format.getName());
 			File outputFile = new File(rssFile.getParentFile(),entryTitle.replaceAll(" ","-")+format.getExtension());
@@ -279,7 +303,7 @@ public class PodCaster extends AbstractLauncher{
 			baseUrl = baseUrl.substring(0,baseUrl.lastIndexOf('/'));
 			URL entryUrl = new URL(baseUrl+"/"+outputFile.getName());
 
-			IAudioFile audio = AudioFileConverter.wav2Format(new WavFile(wavOutputFile), format,outputFile);
+			IAudioFile audio = AudioFileConverter.convertAudio(audioFile, format,outputFile);
 			if (format!=Format.WAV) {
 				if (title!=null) {
 					audio.setTitle(entryTitle);
