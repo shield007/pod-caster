@@ -4,6 +4,8 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.sound.sampled.AudioFormat;
+
 /**
  * Used to convert audio files from one format to another
  */
@@ -49,5 +51,17 @@ public class AudioFileConverter {
 			}
 		}
 		return audioFile;
+	}
+
+	public static IAudioFile convertAudio(IAudioFile audioFile, Format format,File outputFile) throws AudioConvertException {
+		if (audioFile.getFormat().equals(format)) {
+			return audioFile;
+		}
+		else if (audioFile.getFormat().equals(Format.WAV)) {
+			return wav2Format((WavFile)audioFile, format, outputFile);
+		}
+		else {
+			throw new AudioConvertException("Unsupported conversion " + audioFile.getFormat() +" -> " + format);
+		}		
 	}
 }

@@ -13,6 +13,8 @@ public class Config {
 	private File ffmpegPath = new File(DEFAULT_FFMPEG_PATH);
 	private File mplayerPath = new File(DEFAULT_MPLAYER_PATH);
 
+	private File iplayerDlPath;
+
 	private Config() {		
 	}
 
@@ -41,5 +43,12 @@ public class Config {
 		if (vars.containsKey("mplayer.path")) {
 			ffmpegPath = new File(vars.get("mplayer.path")); 
 		}
+		if (vars.containsKey("iplayerdl.path")) {
+			iplayerDlPath = new File(vars.get("iplayerdl.path"));
+		}
+	}
+
+	public File getIPlayerDl() {	
+		return iplayerDlPath;
 	}
 }
