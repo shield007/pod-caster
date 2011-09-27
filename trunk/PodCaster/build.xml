@@ -24,7 +24,7 @@
 	<property name="javac.target" value="1.6" />
 
 	<!-- Dist properties -->
-	<property name="project.version" value="1.1" />
+	<property name="project.version" value="1.0.1" />
 	<property name="project.author" value="John-Paul Stanford" />
 	<property name="project.email" value="dev@stanwood.org.uk" />
 	<property name="project.summary" value="A application for correcting the name of TV shows and films, using information from the internet."/>
@@ -186,7 +186,7 @@
 	</target>
 
 	<target name="jars" description="generate the distribution">
-		<echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
+		<echo message="${ant.project.name} ${project.version}" file="${basedir}/src/org/stanwood/podcaster/VERSION" />
 
 		<jar jarfile="${dist.dir}/${ant.project.name}-${project.version}-src.jar" compress="true">
 			<fileset dir="${src.dir}" />
@@ -199,8 +199,7 @@
 			<zipfileset dir="${etc.dir}" prefix="${ant.project.name}-${project.version}/etc"/>
 			<zipfileset dir="scripts" prefix="${ant.project.name}-${project.version}/scripts"/>
 			<zipfileset dir="${docs.dir}" prefix="${ant.project.name}-${project.version}/docs" includes ="**/*.xml"/>
-			<zipfileset file="${basedir}/TODO" prefix="${ant.project.name}-${project.version}"/>
-			<zipfileset file="${basedir}/VERSION" prefix="${ant.project.name}-${project.version}"/>
+			<zipfileset file="${basedir}/TODO" prefix="${ant.project.name}-${project.version}"/>			
 			<zipfileset file="${basedir}/COPYING" prefix="${ant.project.name}-${project.version}"/>
 			<zipfileset file="${basedir}/Changelog" prefix="${ant.project.name}-${project.version}"/>
 			<zipfileset file="${basedir}/Description" prefix="${ant.project.name}-${project.version}"/>
