@@ -1,4 +1,4 @@
-package org.stanwood.podcaster.cliutils;
+package org.stanwood.podcaster.capture;
 
 public class CatpureException extends Exception {
 

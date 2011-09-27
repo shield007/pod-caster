@@ -1,4 +1,4 @@
-package org.stanwood.bbcpodcaster.rss;
+package org.stanwood.podcaster.rss;
 
 
 import java.io.File;
@@ -10,10 +10,10 @@ import java.text.SimpleDateFormat;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.stanwood.bbcpodcaster.audio.TestAudioConversion;
 import org.stanwood.podcaster.audio.Format;
 import org.stanwood.podcaster.audio.MP3File;
 import org.stanwood.podcaster.audio.MP4File;
+import org.stanwood.podcaster.audio.TestAudioConversion;
 import org.stanwood.podcaster.rss.RSSFeed;
 import org.stanwood.podcaster.util.FileHelper;
 

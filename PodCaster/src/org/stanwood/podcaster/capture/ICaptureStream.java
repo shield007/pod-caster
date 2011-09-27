@@ -1,4 +1,4 @@
-package org.stanwood.podcaster.cliutils;
+package org.stanwood.podcaster.capture;
 
 import org.stanwood.podcaster.StreamReference;
 import org.stanwood.podcaster.audio.IAudioFile;

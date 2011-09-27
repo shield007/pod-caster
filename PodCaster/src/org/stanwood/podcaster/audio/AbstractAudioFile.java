@@ -5,7 +5,6 @@ import java.net.URL;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.stanwood.podcaster.cliutils.MetaDataException;
 
 public abstract class AbstractAudioFile implements IAudioFile {
 

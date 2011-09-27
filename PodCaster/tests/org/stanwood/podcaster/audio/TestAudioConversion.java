@@ -1,4 +1,4 @@
-package org.stanwood.bbcpodcaster.audio;
+package org.stanwood.podcaster.audio;
 
 import java.io.File;
 import java.io.IOException;

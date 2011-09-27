@@ -1,4 +1,4 @@
-package org.stanwood.bbcpodcaster.util;
+package org.stanwood.podcaster.util;
 
 import java.io.File;
 

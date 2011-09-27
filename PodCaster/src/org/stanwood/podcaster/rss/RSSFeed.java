@@ -13,7 +13,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.podcaster.audio.Format;
 import org.stanwood.podcaster.audio.IAudioFile;
-import org.stanwood.podcaster.cliutils.MetaDataException;
+import org.stanwood.podcaster.audio.MetaDataException;
 
 import com.sun.syndication.feed.rss.Enclosure;
 import com.sun.syndication.feed.synd.SyndContent;

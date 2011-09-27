@@ -13,7 +13,6 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.id3.ID3v24Tag;
 import org.stanwood.podcaster.cliutils.FFMPEG;
 import org.stanwood.podcaster.cliutils.FFMPEGException;
-import org.stanwood.podcaster.cliutils.MetaDataException;
 import org.stanwood.podcaster.util.DownloadedFile;
 import org.stanwood.podcaster.util.FileHelper;
 
