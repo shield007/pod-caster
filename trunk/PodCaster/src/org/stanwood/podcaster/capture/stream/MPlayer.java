@@ -1,4 +1,4 @@
-package org.stanwood.podcaster.cliutils;
+package org.stanwood.podcaster.capture.stream;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.podcaster.StreamReference;
 import org.stanwood.podcaster.audio.IAudioFile;
 import org.stanwood.podcaster.audio.WavFile;
+import org.stanwood.podcaster.capture.ICaptureStream;
 import org.stanwood.podcaster.config.Config;
 import org.stanwood.podcaster.util.AbstractExecutable;
 

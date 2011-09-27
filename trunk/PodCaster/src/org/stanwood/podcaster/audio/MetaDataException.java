@@ -1,4 +1,4 @@
-package org.stanwood.podcaster.cliutils;
+package org.stanwood.podcaster.audio;
 
 /**
  * This is thrown if their is a audio file metadata related problem

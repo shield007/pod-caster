@@ -1,4 +1,6 @@
-package org.stanwood.podcaster.cliutils;
+package org.stanwood.podcaster.capture.stream;
+
+import org.stanwood.podcaster.capture.CatpureException;
 
 /**
  * Thrown if their is a problem driving MPlayer application

@@ -1,4 +1,4 @@
-package org.stanwood.bbcpodcaster.logging;
+package org.stanwood.podcaster.logging;
 
 import java.net.URL;
 

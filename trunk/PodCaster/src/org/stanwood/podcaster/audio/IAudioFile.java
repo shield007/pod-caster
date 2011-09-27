@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 
 import org.stanwood.podcaster.cliutils.FFMPEGException;
-import org.stanwood.podcaster.cliutils.MetaDataException;
 
 /**
  * This interface should be extended by classes used to represent audio files.

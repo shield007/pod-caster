@@ -15,7 +15,6 @@ import org.jaudiotagger.tag.flac.FlacTag;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.stanwood.podcaster.cliutils.FFMPEG;
 import org.stanwood.podcaster.cliutils.FFMPEGException;
-import org.stanwood.podcaster.cliutils.MetaDataException;
 import org.stanwood.podcaster.util.DownloadedFile;
 import org.stanwood.podcaster.util.FileHelper;
 
