@@ -15,11 +15,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public class FileHelper {
+
+	private final static Log log = LogFactory.getLog(FileHelper.class);
 	
 	/** A Line separator property value */
 	public final static String LS = System.getProperty("line.separator");
@@ -57,10 +63,8 @@ public class FileHelper {
 			in = conn.getInputStream();
 			byte[] buffer = new byte[1024];
 			int numRead;
-			long numWritten = 0;
 			while ((numRead = in.read(buffer)) != -1) {
 				out.write(buffer, 0, numRead);
-				numWritten += numRead;
 			}
 			return new DownloadedFile(target,contentType);
 		} finally {
@@ -287,4 +291,99 @@ public class FileHelper {
 		}
 		return result;
 	}
+	
+	/**
+	 * Used a temporary file that will be deleted when the JVM exits
+	 * @param name name of file
+	 * @param ext extension of the file
+	 * @return The file
+	 * @throws IOException Thrown if their is a problem creating the file
+	 */
+	public static File createTempFile(String name,String ext) throws IOException {
+		final File file = File.createTempFile(name, ext);
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				if (file.exists()) {
+					try {
+						FileHelper.delete(file);
+					} catch (IOException e) {
+						log.error(MessageFormat.format("Unable to delete temp file ''{0}''",file),e); //$NON-NLS-1$
+					}
+				}
+			}
+		});
+		return file;
+	}
+
+
+	/**
+	 * Used to create a temporary file with the give contents
+	 * @param testConfig The contents to put in the file
+	 * @return A reference to the file
+	 * @throws IOException Thrown if their are any problems
+	 */
+	public static File createTmpFileWithContents(StringBuilder testConfig)  throws IOException {
+		File configFile = createTempFile("config", ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
+		configFile.deleteOnExit();
+		FileHelper.appendContentsToFile(configFile, testConfig);
+		return configFile;
+	}
+	
+	/**
+	 * Used to add contents to a file
+	 * @param file The file to add contetns to
+	 * @param contents The contents
+	 * @throws IOException Thrown if their is a IO problem
+	 */
+	public static void appendContentsToFile(File file,StringBuilder contents) throws IOException {
+		PrintStream ps = null;
+		try {
+			FileOutputStream os = new FileOutputStream(file);
+			ps = new PrintStream(os);
+			ps.print(contents.toString());
+		}
+		finally {
+			ps.close();
+		}
+	}
+
+	/**
+	 * Used to delete a file or a directory tree. If a directory is given, then all it's contents are also deleted recusrsivly.
+	 * @param file The file or directory to delete
+	 * @throws IOException Thrown if their are any problems
+	 */
+	public static void delete(File file) throws IOException {
+		if (file.isDirectory()) {
+			FileHelper.deleteDir(file);
+		}
+		else {
+			if (!file.delete() && file.exists()) {
+				throw new IOException(MessageFormat.format("Unable to delete file ''{0}''",file)); //$NON-NLS-1$
+			}
+		}
+	}
+	
+	/**
+	 * Used to delete a directory and all it's children
+	 *
+	 * @param dir The directory to delete
+	 * @return True if successful, otherwise false
+	 */
+	private static boolean deleteDir(File dir) {
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			for (int i = 0; i < children.length; i++) {
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+
+		// The directory is now empty so delete it
+		return dir.delete();
+	}
+
 }

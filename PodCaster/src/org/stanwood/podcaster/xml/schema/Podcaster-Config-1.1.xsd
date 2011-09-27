@@ -2,18 +2,24 @@
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
 	<xs:element name="podcaster">  
   		<xs:complexType>
-  			<xs:sequence>
+  			<xs:choice minOccurs="0" maxOccurs="unbounded">
   				<xs:element name="global" minOccurs="0" maxOccurs="1">
   					<xs:complexType>  							  				
-  						<xs:sequence>
+  						<xs:choice minOccurs="0" maxOccurs="unbounded">
   							<xs:element name="configDirectory" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
-  						    <xs:element name="mplayerPath" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>	  						     					
-  						    <xs:element name="iplayerdlPath" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
+  						    <xs:element name="mplayerPath" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>	  						     					  						    
   						    <xs:element name="ffmpegPath" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
-  						</xs:sequence>  						
+  						    <xs:element name="iplayerdlPath" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
+  						</xs:choice>						
   					</xs:complexType>
   				</xs:element>	  					  	
-		  	</xs:sequence>
+		  	</xs:choice>
   		</xs:complexType>    	
   	</xs:element>	
+  	<xs:complexType name="pathElement">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+			</xs:extension>
+		</xs:simpleContent>													
+	</xs:complexType>	
 </xs:schema>

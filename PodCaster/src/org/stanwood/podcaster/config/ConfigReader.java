@@ -63,7 +63,7 @@ public class ConfigReader extends XMLParser {
 	}
 	
 	private void parseGlobal(Document configNode) throws XMLParserException {
-		Element node = (Element) selectSingleNode(configNode, "/mediaManager/global"); //$NON-NLS-1$
+		Element node = (Element) selectSingleNode(configNode, "/podcaster/global"); //$NON-NLS-1$
 		if (node!=null) {
 			try {
 				String dir = parseString(getStringFromXML(node, "configDirectory/text()")); //$NON-NLS-1$
