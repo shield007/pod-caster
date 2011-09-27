@@ -1,6 +1,8 @@
 package org.stanwood.podcaster;
 
 import java.io.File;
+import java.io.PrintStream;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -21,9 +23,9 @@ import org.stanwood.podcaster.audio.WavFile;
 import org.stanwood.podcaster.capture.ICaptureStream;
 import org.stanwood.podcaster.capture.IPlayerDownloader;
 import org.stanwood.podcaster.capture.stream.MPlayer;
-import org.stanwood.podcaster.launcher.AbstractLauncher;
-import org.stanwood.podcaster.launcher.DefaultExitHandler;
-import org.stanwood.podcaster.launcher.IExitHandler;
+import org.stanwood.podcaster.cli.AbstractLauncher;
+import org.stanwood.podcaster.cli.DefaultExitHandler;
+import org.stanwood.podcaster.cli.IExitHandler;
 import org.stanwood.podcaster.rss.RSSFeed;
 import org.stanwood.podcaster.util.FileHelper;
 
@@ -35,6 +37,9 @@ public class PodCaster extends AbstractLauncher{
 
 	/* package for test */ static IExitHandler exitHandler = null;
 	private final static Log log = LogFactory.getLog(PodCaster.class);
+	
+	private static PrintStream stdout = System.out;
+	private static PrintStream stderr = System.err;
 
 	private final DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss");
 
@@ -179,7 +184,7 @@ public class PodCaster extends AbstractLauncher{
 	 * @param exitHandler The exit handler to use
 	 */
 	private PodCaster(IExitHandler exitHandler) {
-		super("podcaster",OPTIONS,exitHandler);
+		super("podcaster",OPTIONS,exitHandler,stdout,stderr);
 	}
 
 	/**
@@ -188,7 +193,7 @@ public class PodCaster extends AbstractLauncher{
 	 * @return true if valid, otherwise false.
 	 */
 	@Override
-	protected boolean processOptions(CommandLine cmd) {
+	protected boolean processOptions(String[] args, CommandLine cmd) {
 		try {
 			time = parseLongOption(cmd.getOptionValue(TIME_OPTION));
 		}
@@ -285,9 +290,9 @@ public class PodCaster extends AbstractLauncher{
 
 			ICaptureStream streamCapture;
 			switch (type) {
-				case STREAM: streamCapture = new MPlayer();
+				case STREAM: streamCapture = new MPlayer(getConfig());
 							 break;
-				case IPLAYER_DL: streamCapture = new IPlayerDownloader();
+				case IPLAYER_DL: streamCapture = new IPlayerDownloader(getConfig());
 				 			 break;
 				default:
 					log.error("Unkown type");
@@ -304,7 +309,7 @@ public class PodCaster extends AbstractLauncher{
 			baseUrl = baseUrl.substring(0,baseUrl.lastIndexOf('/'));
 			URL entryUrl = new URL(baseUrl+"/"+outputFile.getName());
 
-			IAudioFile audio = AudioFileConverter.convertAudio(audioFile, format,outputFile);
+			IAudioFile audio = AudioFileConverter.convertAudio(getConfig(),audioFile, format,outputFile);
 			if (format!=Format.WAV) {
 				if (title!=null) {
 					audio.setTitle(entryTitle);
@@ -361,5 +366,6 @@ public class PodCaster extends AbstractLauncher{
 		log.debug("Audio captured and rss Updated successfully");
 		return true;
 	}
+
 
 }

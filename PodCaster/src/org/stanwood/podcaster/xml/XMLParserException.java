@@ -1,36 +1,24 @@
-package org.stanwood.podcaster.audio;
+package org.stanwood.podcaster.xml;
 
 import org.stanwood.podcaster.logging.StanwoodException;
 
 /**
- * This is thrown if their is a audio file metadata related problem
+ * Thrown if their are problems parsing XML
  */
-public class MetaDataException extends StanwoodException {
+public class XMLParserException extends StanwoodException {
 
-	private static final long serialVersionUID = -8181011412608095004L;
+	private static final long serialVersionUID = -917103512979185034L;
 
 	/**
      * Constructs a new exception with <code>null</code> as its detail message.
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public MetaDataException() {
-	super();
-    }
+	public XMLParserException() {
+		super();
+	}
 
-    /**
-     * Constructs a new exception with the specified detail message.  The
-     * cause is not initialized, and may subsequently be initialized by
-     * a call to {@link #initCause}.
-     *
-     * @param   message   the detail message. The detail message is saved for 
-     *          later retrieval by the {@link #getMessage()} method.
-     */
-    public MetaDataException(String message) {
-	super(message);
-    }
-
-    /**
+	/**
      * Constructs a new exception with the specified detail message and
      * cause.  <p>Note that the detail message associated with
      * <code>cause</code> is <i>not</i> automatically incorporated in
@@ -43,11 +31,23 @@ public class MetaDataException extends StanwoodException {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      */
-    public MetaDataException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public XMLParserException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
-    /**
+	/**
+     * Constructs a new exception with the specified detail message.  The
+     * cause is not initialized, and may subsequently be initialized by
+     * a call to {@link #initCause}.
+     *
+     * @param   message   the detail message. The detail message is saved for
+     *          later retrieval by the {@link #getMessage()} method.
+     */
+	public XMLParserException(String message) {
+		super(message);
+	}
+
+	/**
      * Constructs a new exception with the specified cause and a detail
      * message of <tt>(cause==null ? null : cause.toString())</tt> (which
      * typically contains the class and detail message of <tt>cause</tt>).
@@ -60,8 +60,8 @@ public class MetaDataException extends StanwoodException {
      *         permitted, and indicates that the cause is nonexistent or
      *         unknown.)
      */
-    public MetaDataException(Throwable cause) {
-        super(cause);
-    }
+	public XMLParserException(Throwable cause) {
+		super(cause);
+	}
 
 }

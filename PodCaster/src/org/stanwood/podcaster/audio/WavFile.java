@@ -3,6 +3,7 @@ package org.stanwood.podcaster.audio;
 import java.io.File;
 
 import org.stanwood.podcaster.cliutils.FFMPEGException;
+import org.stanwood.podcaster.config.ConfigReader;
 
 /**
  * This class is used to represent WAV Files, as metadata can't be stored in these files,
@@ -32,7 +33,7 @@ public class WavFile extends AbstractAudioFile {
 	 * @param wav the wav file
 	 */
 	@Override
-	public void fromWav(WavFile wav)  {
+	public void fromWav(ConfigReader config,WavFile wav)  {
 	}
 
 	

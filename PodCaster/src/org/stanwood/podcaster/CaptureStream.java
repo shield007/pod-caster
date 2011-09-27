@@ -1,6 +1,7 @@
 package org.stanwood.podcaster;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -18,19 +19,22 @@ import org.stanwood.podcaster.audio.WavFile;
 import org.stanwood.podcaster.capture.ICaptureStream;
 import org.stanwood.podcaster.capture.IPlayerDownloader;
 import org.stanwood.podcaster.capture.stream.MPlayer;
-import org.stanwood.podcaster.launcher.AbstractLauncher;
-import org.stanwood.podcaster.launcher.DefaultExitHandler;
-import org.stanwood.podcaster.launcher.IExitHandler;
+import org.stanwood.podcaster.cli.AbstractLauncher;
+import org.stanwood.podcaster.cli.DefaultExitHandler;
+import org.stanwood.podcaster.cli.IExitHandler;
 
 /**
  * This class provides a entry point for capturing audio and storing meta data about.
  * See the {@link CaptureStream.main(String[])} method for more details. 
  */
-public class CaptureStream extends AbstractLauncher{
+public class CaptureStream extends AbstractLauncher {
 
 	/* package for test */ static IExitHandler exitHandler = null;
 	private final static Log log = LogFactory.getLog(CaptureStream.class);
 
+	private static PrintStream stdout = System.out;
+	private static PrintStream stderr = System.err;
+	
 	private static final List<Option> OPTIONS;
 	
 	private final static String OUTPUT_FILE_OPTION = "o";
@@ -134,7 +138,7 @@ public class CaptureStream extends AbstractLauncher{
 	 * @param exitHandler The exit handler to use
 	 */
 	private CaptureStream(IExitHandler exitHandler) {
-		super("stream-capture",OPTIONS,exitHandler);
+		super("stream-capture",OPTIONS,exitHandler,stdout,stderr);
 	}
 
 	/**
@@ -149,9 +153,9 @@ public class CaptureStream extends AbstractLauncher{
 			
 			ICaptureStream streamCapture;
 			switch (type) {
-				case STREAM: streamCapture = new MPlayer();
+				case STREAM: streamCapture = new MPlayer(getConfig());
 							 break;
-				case IPLAYER_DL: streamCapture = new IPlayerDownloader();
+				case IPLAYER_DL: streamCapture = new IPlayerDownloader(getConfig());
 				 			 break;
 				default:
 					log.error("Unkown type");
@@ -163,7 +167,7 @@ public class CaptureStream extends AbstractLauncher{
 			}
 			
 			log.info("Converting stream to " + format.getName());
-			IAudioFile audio = AudioFileConverter.convertAudio(audioFile, format,outputFile);
+			IAudioFile audio = AudioFileConverter.convertAudio(getConfig(),audioFile, format,outputFile);
 			if (format!=Format.WAV) {
 				if (metaTitle!=null) {
 					audio.setTitle(metaTitle);
@@ -203,7 +207,8 @@ public class CaptureStream extends AbstractLauncher{
 	 * @return true if valid, otherwise false.
 	 */
 	@Override
-	protected boolean processOptions(CommandLine cmd) {				
+	protected boolean processOptions(String[] args, CommandLine cmd) {
+				
 		try {
 			time = parseLongOption(cmd.getOptionValue(TIME_OPTION));
 		}

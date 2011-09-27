@@ -13,6 +13,7 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.id3.ID3v24Tag;
 import org.stanwood.podcaster.cliutils.FFMPEG;
 import org.stanwood.podcaster.cliutils.FFMPEGException;
+import org.stanwood.podcaster.config.ConfigReader;
 import org.stanwood.podcaster.util.DownloadedFile;
 import org.stanwood.podcaster.util.FileHelper;
 
@@ -146,8 +147,8 @@ public class MP3File extends AbstractAudioFile {
 	 * @throws FFMPEGException Thrown if their is a problem converting the file
 	 */
 	@Override
-	public void fromWav(WavFile wav) throws FFMPEGException {
-		FFMPEG ffmpeg = new FFMPEG();
+	public void fromWav(ConfigReader config,WavFile wav) throws FFMPEGException {
+		FFMPEG ffmpeg = new FFMPEG(config);
 		ffmpeg.wav2mp3(wav.getFile(),getFile());
 	}
 }

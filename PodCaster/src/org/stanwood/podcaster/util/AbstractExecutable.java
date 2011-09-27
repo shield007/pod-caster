@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.stanwood.podcaster.config.ConfigReader;
 
 
 /**
@@ -37,6 +38,16 @@ public class AbstractExecutable {
 	private StreamGobbler outputGobbler;
 	private Process proc;
 
+	private ConfigReader config;
+
+	public AbstractExecutable(ConfigReader config) {
+		this.config = config;
+	}
+	
+	public ConfigReader getConfig() {
+		return config;
+	}
+	
 	/**
 	 * Execute the command with a list of arguments. The this argument should be the application.
 	 * @param args The arguments. The first is the application been executed.

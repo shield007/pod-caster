@@ -11,10 +11,14 @@ import org.stanwood.podcaster.StreamReference;
 import org.stanwood.podcaster.audio.IAudioFile;
 import org.stanwood.podcaster.audio.WavFile;
 import org.stanwood.podcaster.capture.stream.MPlayerException;
-import org.stanwood.podcaster.config.Config;
+import org.stanwood.podcaster.config.ConfigReader;
 import org.stanwood.podcaster.util.AbstractExecutable;
 
 public class IPlayerDownloader extends AbstractExecutable implements ICaptureStream {
+
+	public IPlayerDownloader(ConfigReader config) {
+		super(config);
+	}
 
 	private final static Log log = LogFactory.getLog(IPlayerDownloader.class);
 	
@@ -29,7 +33,7 @@ public class IPlayerDownloader extends AbstractExecutable implements ICaptureStr
 				
 		log.info("Capturing audio from stream: " + stream.getUrl() + " to " + wavOutputFile.getAbsolutePath());
 		List<String> args = new ArrayList<String>();
-		args.add(Config.getInstance().getIPlayerDl().getAbsolutePath());		
+		args.add(getConfig().getIPlayerDLPath());		
 		args.add("-f");
 		args.add(wavOutputFile.getAbsolutePath());		
 		args.add(stream.getUrl());

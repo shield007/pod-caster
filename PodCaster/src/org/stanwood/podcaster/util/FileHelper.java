@@ -8,16 +8,24 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class FileHelper {
-
+	
+	/** A Line separator property value */
 	public final static String LS = System.getProperty("line.separator");
+	
+	/** Stores the current users home directory */
+	public final static File HOME_DIR = new File(System.getProperty("user.home")); //$NON-NLS-1$
 
 	public static String getName(File file) {
 		String name = file.getName();
@@ -189,5 +197,94 @@ public class FileHelper {
 		}
 		in.close();
 		return results.toString();
+	}
+	
+	/**
+	 * Used to read the contents of a stream into a string
+	 *
+	 * @param inputStream The input stream
+	 * @return The contents of the file
+	 * @throws IOException Thrown if their is a problem reading the file
+	 */
+	public static String readFileContents(InputStream inputStream) throws IOException {
+		if (inputStream==null) {
+			throw new IOException("Input stream is null");
+		}
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(inputStream));
+			StringBuilder results = new StringBuilder();
+			String str;
+			while ((str = in.readLine()) != null) {
+				results.append(str + LS);
+			}
+			return results.toString();
+		}
+		finally {
+			if (in!=null) {
+				in.close();
+			}
+		}
+	}
+
+	/**
+	 * Used to display the contents of a file
+	 * @param file The file to display
+	 * @param startLine The line to start displaying from
+	 * @param endLine The line to finish displaying from
+	 * @param os The output stream used to print the file to
+	 * @throws IOException Thrown if their is a problem reading the file
+	 */
+	public static void displayFile(File file,int startLine, int endLine, OutputStream os)throws IOException {
+		PrintStream ps = new PrintStream(os);
+		if (startLine<0) {
+			startLine = 0;
+		}
+		int line = 1;
+		BufferedReader in = new BufferedReader(new FileReader(file));
+		String str;
+		while ((str = in.readLine()) != null) {
+			if (line>=startLine && line <=endLine) {
+				ps.println(line + ": " + str); //$NON-NLS-1$
+			}
+			line++;
+		}
+		in.close();
+	}
+	
+	/**
+	 * Used to get the current working directory
+	 * @return the current working directory
+	 */
+	public static File getWorkingDirectory() {
+		return new File( System.getProperty("user.dir")); //$NON-NLS-1$
+	}
+
+	/**
+	 * Used to convert relative paths to absolute paths. This will remove .. from the path
+	 * @param path The relative path
+	 * @return The absolute path
+	 */
+	public static File resolveRelativePaths(File path) {
+		String segments[] = path.getAbsolutePath().split(Pattern.quote(File.separator));
+		List<String>newSegments = new ArrayList<String>();
+		for (String seg : segments) {
+			if (seg.equals("..")) { //$NON-NLS-1$
+				newSegments.remove(newSegments.size()-1);
+			}
+			else {
+				newSegments.add(seg);
+			}
+		}
+		File result = null;
+		for (String seg : newSegments) {
+			if (result == null) {
+				result = new File(seg);
+			}
+			else {
+				result = new File(result,seg);
+			}
+		}
+		return result;
 	}
 }
