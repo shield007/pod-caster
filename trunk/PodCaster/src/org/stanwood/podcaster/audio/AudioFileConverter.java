@@ -6,6 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 
 import javax.sound.sampled.AudioFormat;
 
+import org.stanwood.podcaster.config.ConfigReader;
+
 /**
  * Used to convert audio files from one format to another
  */
@@ -20,7 +22,7 @@ public class AudioFileConverter {
 	 * @return The newly converted wav file
 	 * @throws AudioConvertException Thrown if their is a problem converting the file
 	 */
-	public static IAudioFile wav2Format(WavFile wav,Format format,File targetFile) throws AudioConvertException {
+	public static IAudioFile wav2Format(ConfigReader config,WavFile wav,Format format,File targetFile) throws AudioConvertException {
 		IAudioFile audioFile = null;
 		if (format == Format.WAV) {
 			audioFile = wav;
@@ -42,7 +44,7 @@ public class AudioFileConverter {
 			} catch (InvocationTargetException e) {
 				throw new AudioConvertException("Unable to create format handler class",e);
 			}
-			audioFile.fromWav(wav);
+			audioFile.fromWav(config,wav);
 		}
 
 		if (!audioFile.getFile().equals(wav.getFile())) {								
@@ -53,12 +55,12 @@ public class AudioFileConverter {
 		return audioFile;
 	}
 
-	public static IAudioFile convertAudio(IAudioFile audioFile, Format format,File outputFile) throws AudioConvertException {
+	public static IAudioFile convertAudio(ConfigReader config,IAudioFile audioFile, Format format,File outputFile) throws AudioConvertException {
 		if (audioFile.getFormat().equals(format)) {
 			return audioFile;
 		}
 		else if (audioFile.getFormat().equals(Format.WAV)) {
-			return wav2Format((WavFile)audioFile, format, outputFile);
+			return wav2Format(config,(WavFile)audioFile, format, outputFile);
 		}
 		else {
 			throw new AudioConvertException("Unsupported conversion " + audioFile.getFormat() +" -> " + format);

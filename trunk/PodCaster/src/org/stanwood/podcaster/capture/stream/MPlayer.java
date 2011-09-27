@@ -18,7 +18,7 @@ import org.stanwood.podcaster.StreamReference;
 import org.stanwood.podcaster.audio.IAudioFile;
 import org.stanwood.podcaster.audio.WavFile;
 import org.stanwood.podcaster.capture.ICaptureStream;
-import org.stanwood.podcaster.config.Config;
+import org.stanwood.podcaster.config.ConfigReader;
 import org.stanwood.podcaster.util.AbstractExecutable;
 
 /**
@@ -31,6 +31,10 @@ public class MPlayer extends AbstractExecutable implements ICaptureStream {
 
 	private final static int CACHE_SIZE = 500;
 
+	public MPlayer(ConfigReader config) {
+		super(config);
+	}
+	
 	/**
 	 * This will capture a audio stream from using mplayer for the given amount of time
 	 * @param wavOutputFile The WAV file to create from the audio stream
@@ -49,7 +53,7 @@ public class MPlayer extends AbstractExecutable implements ICaptureStream {
 				
 		log.info("Capturing audio from stream: " + stream.getUrl() + " to " + wavOutputFile.getAbsolutePath());
 		List<String> args = new ArrayList<String>();
-		args.add(Config.getInstance().getMplayerPath().getAbsolutePath());
+		args.add(getConfig().getMPlayerPath());
 		args.add("-nojoystick");
 		args.add("-nolirc");
 		args.add("-cache");

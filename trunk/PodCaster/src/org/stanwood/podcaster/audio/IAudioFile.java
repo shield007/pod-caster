@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URL;
 
 import org.stanwood.podcaster.cliutils.FFMPEGException;
+import org.stanwood.podcaster.config.ConfigReader;
 
 /**
  * This interface should be extended by classes used to represent audio files.
@@ -73,5 +74,5 @@ public interface IAudioFile {
 	 * @param wav The wav file to conveert
 	 * @throws FFMPEGException Thrown if their is a problem converting the file
 	 */
-	public void fromWav(WavFile wav) throws FFMPEGException;
+	public void fromWav(ConfigReader config,WavFile wav) throws FFMPEGException;
 }

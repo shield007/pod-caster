@@ -1,9 +1,11 @@
 package org.stanwood.podcaster.audio;
 
+import org.stanwood.podcaster.logging.StanwoodException;
+
 /**
  * This exception is thrown if their is a problem converting audio files from one format to another
  */
-public class AudioConvertException extends Exception {
+public class AudioConvertException extends StanwoodException {
 
 	private static final long serialVersionUID = 3730532545440021847L;
 

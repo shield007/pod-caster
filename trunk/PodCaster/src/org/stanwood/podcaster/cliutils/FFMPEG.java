@@ -1,5 +1,6 @@
 package org.stanwood.podcaster.cliutils;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,7 +8,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.stanwood.podcaster.config.Config;
+import org.stanwood.podcaster.config.ConfigReader;
 import org.stanwood.podcaster.util.AbstractExecutable;
 
 /**
@@ -15,13 +16,17 @@ import org.stanwood.podcaster.util.AbstractExecutable;
  * tasks.
  */
 public class FFMPEG extends AbstractExecutable {
-
+	
 	private final static Log log = LogFactory.getLog(FFMPEG.class);
 
 	private static final String MP3_BITRATE = "112k";
 	private static final String MP4_BITRATE = "112k";
 	private static final String OGG_BITRATE = "112k";
 
+	public FFMPEG(ConfigReader config) {
+		super(config);
+	}
+	
 	/**
 	 * Convert a WAV file to a MP4 file
 	 * @param wavFile The WAV file to convert
@@ -33,7 +38,7 @@ public class FFMPEG extends AbstractExecutable {
 		try {
 
 			List<String> args = new ArrayList<String>();
-			args.add(Config.getInstance().getFfmpegPath().getAbsolutePath());
+			args.add(getConfig().getFFMpegPath());
 			args.add("-i");
 			args.add(wavFile.getAbsolutePath());
 			args.add("-acodec");
@@ -73,7 +78,7 @@ public class FFMPEG extends AbstractExecutable {
 	{
 		try {
 			List<String> args = new ArrayList<String>();
-			args.add(Config.getInstance().getFfmpegPath().getAbsolutePath());
+			args.add(getConfig().getFFMpegPath());
 			args.add("-i");
 			args.add(wavFile.getAbsolutePath());
 			args.add("-acodec");
@@ -101,7 +106,7 @@ public class FFMPEG extends AbstractExecutable {
 	public void wav2ogg(File wavFile,File targetFile) throws FFMPEGException {
 		try {
 			List<String> args = new ArrayList<String>();
-			args.add(Config.getInstance().getFfmpegPath().getAbsolutePath());
+			args.add(getConfig().getFFMpegPath());
 			args.add("-i");
 			args.add(wavFile.getAbsolutePath());
 			args.add("-acodec");
@@ -129,7 +134,7 @@ public class FFMPEG extends AbstractExecutable {
 	public void wav2flac(File wavFile,File targetFile) throws FFMPEGException {
 		try {
 			List<String> args = new ArrayList<String>();
-			args.add(Config.getInstance().getFfmpegPath().getAbsolutePath());
+			args.add(getConfig().getFFMpegPath());
 			args.add("-i");
 			args.add(wavFile.getAbsolutePath());
 			args.add("-acodec");
