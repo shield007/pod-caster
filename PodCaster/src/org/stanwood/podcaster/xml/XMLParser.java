@@ -59,9 +59,9 @@ import com.sun.org.apache.xpath.internal.XPathAPI;
 public class XMLParser {
 
 	/** The (@link {@link XMLStore2 } schema */
-	public final static String DTD_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/dtd"; //$NON-NLS-1$
+	public final static String DTD_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/podcaster/xml/dtd"; //$NON-NLS-1$
 	/** The application configuration schema */
-	public final static String SCHEMA_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/media/xml/schema"; //$NON-NLS-1$
+	public final static String SCHEMA_WEB_LOCATION = "http://tv-and-movies-meta-data-fetcher.googlecode.com/svn/trunk/tv-and-movies-meta-data-fetcher/src/org/stanwood/podcaster/xml/schema"; //$NON-NLS-1$
 
 	/**
 	 * Used to read a integer from the XML
@@ -362,16 +362,7 @@ public class XMLParser {
 		    			throw new IOException (MessageFormat.format(Messages.getString("XMLParser.UNABLE_FIND_SCHEMA"),schemaName)); //$NON-NLS-1$
 		    		}
 		    		return new InputSource(stream);
-		    	}
-		    	else if (publicId!=null) {
-			    	if (publicId.equals("-//STANWOOD//DTD XMLStore 2.0//EN")) { //$NON-NLS-1$
-			    		InputStream stream = XMLParser.class.getResourceAsStream("dtd/MediaManager-XmlStore-2.0.dtd"); //$NON-NLS-1$
-			    		if (stream==null) {
-			    			throw new IOException ("Unable to find dtd"); //$NON-NLS-1$
-			    		}
-			    		return new InputSource(stream);
-			        }
-		    	}
+		    	}		    	
 		        return null;
 		    }
 		});
