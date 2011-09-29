@@ -12,7 +12,57 @@
   						    <xs:element name="iplayerdlPath" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
   						</xs:choice>						
   					</xs:complexType>
-  				</xs:element>	  					  	
+  					</xs:element>
+  					<xs:element name="podcast" maxOccurs="unbounded">
+			  			<xs:complexType>			  							  			
+			  				<xs:choice minOccurs="0" maxOccurs="unbounded">
+			  					<xs:element name="metadata" minOccurs="0" maxOccurs="1">
+			  						<xs:complexType>
+			  							<xs:choice minOccurs="0" maxOccurs="unbounded">
+			  								<xs:element name="feed" minOccurs="0" maxOccurs="1">
+			  									<xs:complexType>
+			  										<xs:choice minOccurs="0" maxOccurs="unbounded">
+			  											<xs:element name="title" type="textElement" minOccurs="0" maxOccurs="1"/>
+			  											<xs:element name="copyright" type="textElement" minOccurs="0" maxOccurs="1"/>
+			  											<xs:element name="artist" type="textElement" minOccurs="0" maxOccurs="1"/>
+			  											<xs:element name="description" type="textElement" minOccurs="0" maxOccurs="1"/>
+			  											<xs:element name="image" minOccurs="0" maxOccurs="1">
+			  												<xs:complexType>
+			  													<xs:attribute name="url" type="xs:string" use="required"/>
+			  												</xs:complexType>
+			  											</xs:element>
+			  										</xs:choice>
+			  									</xs:complexType>
+			  								</xs:element>
+			  								<xs:element name="entry" minOccurs="0" maxOccurs="1">
+			  									<xs:complexType>
+			  										<xs:choice minOccurs="0" maxOccurs="unbounded">
+			  											<xs:element name="description" type="textElement" minOccurs="0" maxOccurs="1"/>
+			  										</xs:choice>
+			  									</xs:complexType>
+			  								</xs:element>
+			  							</xs:choice>
+			  						</xs:complexType>
+			  					</xs:element>
+			  					<xs:element name="radioStream">
+			  						<xs:complexType>
+				  						<xs:attribute name="url" type="xs:string" use="required"/>		  						  			
+				  						<xs:attribute name="caputureTime" type="xs:integer" use="required"/>			  			
+				  					</xs:complexType>
+			  					</xs:element>
+			  					<xs:element name="iplayer">
+			  						<xs:complexType>
+			  							<xs:attribute name="episode" type="xs:string" use="required"/>
+			  						</xs:complexType>		  						  						  									  		
+			  					</xs:element>
+			  				</xs:choice>
+			  				<xs:attribute name="id" type="xs:string" use="required"/>		  						  			
+			  				<xs:attribute name="rssFile" type="xs:string" use="required"/>
+			  				<xs:attribute name="rssUrl" type="xs:string" use="required"/>
+			  				<xs:attribute name="format" type="xs:string" default="mp3"/>			  				
+			  				<xs:attribute name="maxEntries" type="xs:positiveInteger" default="20"/>
+			  			</xs:complexType>
+  					</xs:element>  									  	
 		  	</xs:choice>
   		</xs:complexType>    	
   	</xs:element>	
@@ -21,5 +71,12 @@
 			<xs:extension base="xs:string">
 			</xs:extension>
 		</xs:simpleContent>													
+	</xs:complexType>
+	  	<xs:complexType name="textElement">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+			</xs:extension>
+		</xs:simpleContent>													
 	</xs:complexType>	
+		
 </xs:schema>

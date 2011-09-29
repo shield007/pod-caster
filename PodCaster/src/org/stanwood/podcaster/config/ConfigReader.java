@@ -3,7 +3,10 @@ package org.stanwood.podcaster.config;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,12 +14,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.stanwood.podcaster.audio.Format;
 import org.stanwood.podcaster.util.FileHelper;
 import org.stanwood.podcaster.xml.XMLParser;
 import org.stanwood.podcaster.xml.XMLParserException;
 import org.stanwood.podcaster.xml.XMLParserNotFoundException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -40,6 +45,8 @@ public class ConfigReader extends XMLParser {
 	private String ffmpegPath = "ffmpeg";
 	private String mplayerPath = "mplayer";
 	private String iplayerdlPath = "iplayer-dl";
+
+	private Map<String, AbstractPodcast> podcasts;
 	
 	/**
 	 * The constructor used to create a instance of the configuration reader
@@ -56,10 +63,103 @@ public class ConfigReader extends XMLParser {
 	public void parse() throws ConfigException {
 		try {
 			Document doc = XMLParser.parse(is, SCHEMA_NAME);
-			parseGlobal(doc);			
+			parseGlobal(doc);		
+			parsePodcasts(doc);
 		} catch (XMLParserException e) {
 			throw new ConfigException("Unable to parse configuration file",e); 
 		}		
+	}
+	
+	private void parsePodcasts(Document rootNode) throws XMLParserException, ConfigException {
+		podcasts=new HashMap<String,AbstractPodcast>();
+		Element podcasterNode = getElement(rootNode, "podcaster");
+		if (podcasterNode!=null) {
+			for (Element podcastNode : selectChildNodes(podcasterNode, "podcast")) {
+				AbstractPodcast genericPodcast = null;
+				Element typeNode = (Element) selectSingleNode(podcastNode, "radioStream");
+				if (typeNode!=null) {
+					StreamPodcast podcast = new StreamPodcast(podcastNode.getAttribute("id"));
+					String sURL = typeNode.getAttribute("url");
+					if (sURL==null || sURL.length()==0) {
+						throw new ConfigException(MessageFormat.format("No stream URL for for podcast ''{0}''",podcast.getId()));
+					}
+					try { 
+						podcast.setStreamURL(new URL(sURL));
+					} catch (MalformedURLException e) {
+						throw new ConfigException(MessageFormat.format("Unable to create URL ''{0}''",sURL),e);
+					}
+					String sTime = typeNode.getAttribute("caputureTime");
+					if (sTime==null || sTime.length()==0) {
+						throw new ConfigException(MessageFormat.format("No capture time for for podcast ''{0}''",podcast.getId()));
+					}
+					try {
+						podcast.setCaptureTime(Long.parseLong(sTime));
+					}
+					catch (NumberFormatException e) {
+						throw new ConfigException(MessageFormat.format("Capture time ''{0}'' is invalid.",podcast.getId()));
+					}
+					genericPodcast = podcast;
+				}
+				else {
+					typeNode = (Element) selectSingleNode(podcastNode, "iplayer");				
+					if (typeNode!=null) {
+						IPlayerPodcast podcast = new IPlayerPodcast(podcastNode.getAttribute("id"));
+						String episodeId = typeNode.getAttribute("episode");
+						if (episodeId==null || episodeId.length()==0) {
+							throw new ConfigException(MessageFormat.format("No episode id given for iplayer podcast ''{0}''",podcast.getId()));
+						}
+						podcast.setEpisodeId(episodeId);
+						
+						genericPodcast = podcast;
+					}
+				}
+				
+				if (genericPodcast==null) {
+					throw new ConfigException("Missing podcast node of name <iplayer> or <radioStream>");
+				}	
+				
+				genericPodcast.setEntryDescription(parseString(getStringFromXMLOrNull(podcastNode, "metadata/entry/description/text()")));
+				genericPodcast.setFeedArtist(parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/artist/text()")));
+				genericPodcast.setFeedCopyright(parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/copyright/text()")));
+				genericPodcast.setFeedDescription(parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/description/text()")));
+				genericPodcast.setFeedTitle(parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/title/text()")));
+				String sURL = parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/image/@url"));
+				if (sURL!=null && sURL.length() >0) {
+					try {
+						genericPodcast.setFeedImageURL(new URL(sURL));
+					} catch (MalformedURLException e) {
+						throw new ConfigException("Unable to create URL",e);
+					}
+				}
+				
+				String file = podcastNode.getAttribute("rssFile");
+				if (file==null || file.length()==0) {
+					throw new ConfigException(MessageFormat.format("No RSS file given for podcast ''{0}''",genericPodcast.getId()));
+				}
+				genericPodcast.setRSSFile(new File(file));				
+				String url = podcastNode.getAttribute("rssUrl");
+				if (url==null || url.length()==0) {
+					throw new ConfigException(MessageFormat.format("No RSS url given for podcast ''{0}''",genericPodcast.getId()));
+				}
+				try {
+					genericPodcast.setRSSURL(new URL(url));
+				} catch (MalformedURLException e) {
+					throw new ConfigException(MessageFormat.format("Unable to create URL ''{0}''",url),e);
+				}
+				String sformat= podcastNode.getAttribute("format");
+				if (sformat==null || sformat.length()==0) {
+					throw new ConfigException(MessageFormat.format("No format given for podcast ''{0}''",genericPodcast.getId()));	
+				}
+				
+				Format format = Format.fromName(sformat);
+				if (format==null) {
+					throw new ConfigException(MessageFormat.format("Unsupported format ''{0}'' for podcast ''{1}''", sformat,genericPodcast.getId()));
+				}
+				genericPodcast.setFormat(format);
+								
+				podcasts.put(genericPodcast.getId(),genericPodcast);
+			}
+		}
 	}
 	
 	private void parseGlobal(Document configNode) throws XMLParserException {
@@ -113,6 +213,9 @@ public class ConfigReader extends XMLParser {
 	}
 	
 	private String parseString(String input) {
+		if (input==null) {
+			return null;
+		}
 		input = input.replaceAll("\\$HOME", FileHelper.HOME_DIR.getAbsolutePath()); //$NON-NLS-1$
 		return input;
 	}
@@ -176,4 +279,12 @@ public class ConfigReader extends XMLParser {
 		}
 		return file;
 	}
+	
+	public Collection<AbstractPodcast> getPodcasts() {
+		return podcasts.values();
+	}
+	
+	public AbstractPodcast getPodcast(String id) {
+		return podcasts.get(id);
+	}	
 }

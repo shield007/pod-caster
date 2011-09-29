@@ -589,7 +589,7 @@ public class XMLParser {
 		}
 	}
 
-	protected Element getElement(Element parent, String name) {
+	protected Element getElement(Node parent, String name) {
 		NodeList children = parent.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
 			if (children.item(i).getNodeName().equals(name)) {
