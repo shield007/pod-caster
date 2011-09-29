@@ -212,11 +212,7 @@ public class PodCaster extends AbstractLauncher{
 		radioURL = cmd.getOptionValue(URL_OPTION);
 		String sformat = cmd.getOptionValue(FORMAT_OPTION);
 		if (sformat!=null) {
-			for (Format f : Format.values()) {
-				if (f.getName().toLowerCase().equals(sformat.toLowerCase())) {
-					this.format = f;
-				}
-			}
+			this.format = Format.fromName(sformat);			
 		}
 
 		rssFile = new File(cmd.getOptionValue(RSS_FILE_OPTION));

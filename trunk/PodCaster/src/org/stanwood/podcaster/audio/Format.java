@@ -52,4 +52,13 @@ public enum Format {
 	public Class<? extends IAudioFile>getAudioFileClass() {
 		return audioFileClass;
 	}
+
+	public static Format fromName(String sformat) {
+		for (Format f : Format.values()) {
+			if (f.getName().toLowerCase().equals(sformat.toLowerCase())) {
+				return f;
+			}
+		}
+		return null;
+	}
 }
