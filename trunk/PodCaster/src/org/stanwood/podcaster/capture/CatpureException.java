@@ -1,6 +1,8 @@
 package org.stanwood.podcaster.capture;
 
-public class CatpureException extends Exception {
+import org.stanwood.podcaster.logging.StanwoodException;
+
+public class CatpureException extends StanwoodException {
 
 	public CatpureException() {
 		super();

@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -17,11 +20,13 @@ import org.stanwood.podcaster.audio.Format;
 import org.stanwood.podcaster.audio.IAudioFile;
 import org.stanwood.podcaster.audio.WavFile;
 import org.stanwood.podcaster.capture.ICaptureStream;
-import org.stanwood.podcaster.capture.IPlayerDownloader;
-import org.stanwood.podcaster.capture.stream.MPlayer;
+import org.stanwood.podcaster.capture.StreamCaptureFactory;
 import org.stanwood.podcaster.cli.AbstractLauncher;
 import org.stanwood.podcaster.cli.DefaultExitHandler;
 import org.stanwood.podcaster.cli.IExitHandler;
+import org.stanwood.podcaster.cliutils.IPlayerDownloader;
+import org.stanwood.podcaster.cliutils.MPlayer;
+import org.stanwood.podcaster.config.AbstractPodcast;
 
 /**
  * This class provides a entry point for capturing audio and storing meta data about.
@@ -29,6 +34,8 @@ import org.stanwood.podcaster.cli.IExitHandler;
  */
 public class CaptureStream extends AbstractLauncher {
 
+	private final DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss");
+	
 	/* package for test */ static IExitHandler exitHandler = null;
 	private final static Log log = LogFactory.getLog(CaptureStream.class);
 
@@ -38,69 +45,23 @@ public class CaptureStream extends AbstractLauncher {
 	private static final List<Option> OPTIONS;
 	
 	private final static String OUTPUT_FILE_OPTION = "o";
-	private final static String TIME_OPTION = "t";
-	private final static String FORMAT_OPTION = "f";
-	private final static String URL_OPTION = "u";
-	private final static String TYPE_OPTION = "y";
-
-	private final static String META_TITLE_OPTION = "i";
-	private final static String META_ARTWORK_URL_OPTION = "a";
-	private final static String META_COPYRIGHT_OPTION = "c";
-	private final static String META_ARTIST_OPTION = "r";
-	private final static String META_DESCRIPTION_OPTION = "e";
-
-	private long time;	
-	private String url;
-	private Format format = Format.WAV;
-	private File outputFile = null; 
-	private String metaTitle = null;	
-	private URL metaArtworkURL = null;
-	private String metaCopyright = null;
-	private String metaArtist = null;
-	private String metaDescription = null;
-	private Type type = null;	
+	private final static String PODCAST_ID_OPTION = "p";
+	
+	private File outputFile = null;
+	private AbstractPodcast podcast;
 
 	static {
 		OPTIONS = new ArrayList<Option>();
 
-		Option o = new Option(FORMAT_OPTION,"format",true,"Capture format (wav,mp3,mp4)");
-		o.setArgName("format");
-		OPTIONS.add(o);		
-		o = new Option(META_TITLE_OPTION,"metaTitle",true,"Set the title meta data");
-		o.setArgName("title");
-		OPTIONS.add(o);
-		o = new Option(META_ARTWORK_URL_OPTION,"metaArtworkUrl",true,"Set the artwork to the URL");
-		o.setArgName("url");
-		OPTIONS.add(o);
-		o = new Option(META_COPYRIGHT_OPTION,"metaCopyright",true,"Set the copyright meta data");
-		o.setArgName("copyright");
-		OPTIONS.add(o);
-		o = new Option(META_ARTIST_OPTION,"metaArtist",true,"Set the artist meta data");
-		o.setArgName("artist");
-		OPTIONS.add(o);
-		o = new Option(META_DESCRIPTION_OPTION,"metaDescription",true,"Set the description meta data");
-		o.setArgName("description");
-		OPTIONS.add(o);
-		
-		o = new Option(URL_OPTION,"url",true,"Radio url");
-		o.setArgName("url");
-		o.setRequired(true);		
+		Option o = new Option(PODCAST_ID_OPTION,"podcast",true,"The ID of the podcast from the configuration");
+		o.setArgName("id");
+		o.setRequired(true);
 		OPTIONS.add(o);
 		
 		o = new Option(OUTPUT_FILE_OPTION,"output",true,"Audio Output file");
 		o.setArgName("file");
 		o.setRequired(true);
-		OPTIONS.add(o);
-		
-		o = new Option(TIME_OPTION,"time",true,"Capture time (msecs)");
-		o.setArgName("msecs");
-		o.setRequired(true);
-		OPTIONS.add(o);
-		
-		o = new Option(TYPE_OPTION,"type",true,"Type of stream downloader (stream | iplayer_dl)");
-		o.setArgName("type");
-		o.setRequired(true);
-		OPTIONS.add(o);
+		OPTIONS.add(o);		
 	}
 
 	/**
@@ -147,50 +108,40 @@ public class CaptureStream extends AbstractLauncher {
 	 */
 	@Override
 	protected boolean run() {
-		try {
-			URLFetcher urlFetcher = new URLFetcher(new URL(url));
-			urlFetcher.getMediaUrl();
+		try {						
+			Date startDate = new Date();
+			String entryTitle = podcast.getFeedTitle()+" "+DF.format(startDate);
 			
-			ICaptureStream streamCapture;
-			switch (type) {
-				case STREAM: streamCapture = new MPlayer(getConfig());
-							 break;
-				case IPLAYER_DL: streamCapture = new IPlayerDownloader(getConfig());
-				 			 break;
-				default:
-					log.error("Unkown type");
-					return false;
-			}
-			IAudioFile audioFile = streamCapture.captureLiveAudioStream(urlFetcher.getMediaUrl(), time);
+			ICaptureStream streamCapture = StreamCaptureFactory.getStreamCapture(podcast);					
+			IAudioFile audioFile = streamCapture.captureLiveAudioStream(getConfig(),podcast);
 			if (log.isDebugEnabled()) {
 				log.debug("Captured " + audioFile.getFile() + " with size " +audioFile.getFile().length());
 			}
 			
-			log.info("Converting stream to " + format.getName());
-			IAudioFile audio = AudioFileConverter.convertAudio(getConfig(),audioFile, format,outputFile);
-			if (format!=Format.WAV) {
-				if (metaTitle!=null) {
-					audio.setTitle(metaTitle);
-				}				
-				if (metaArtworkURL!=null) {
-					audio.setArtwork(metaArtworkURL);
+			log.info("Converting stream to " + podcast.getFormat().getName());
+			IAudioFile audio = AudioFileConverter.convertAudio(getConfig(),audioFile, podcast.getFormat(),outputFile);
+			if (podcast.getFormat()!=Format.WAV) {
+				if (entryTitle!=null) {
+					audio.setTitle(entryTitle);
 				}
-				if (metaCopyright!=null) {
-					audio.setCopyright(metaCopyright);
+				if (podcast.getFeedImageURL()!=null) {
+					audio.setArtwork(podcast.getFeedImageURL());
 				}
-				if (metaArtist!=null) {
-					audio.setArtist(metaArtist);
+				if (podcast.getFeedCopyright()!=null) {
+					audio.setCopyright(podcast.getFeedCopyright());
 				}
-				if (metaDescription!=null) {
-					audio.setDescription(metaDescription);
+				if (podcast.getFeedArtist()!=null) {
+					audio.setArtist(podcast.getFeedArtist());
+				}
+				if (podcast.getEntryDescription()!=null) {
+					audio.setDescription(podcast.getEntryDescription());
 				}
 				audio.writeMetaData();
 			}
 			else {
 				log.error("Meta data can't be set on "+Format.WAV.getName()+" format files");
 				return false;
-			}
-			// Encode meta data
+			}			
 		}
 		catch (Exception e)
 		{
@@ -208,61 +159,19 @@ public class CaptureStream extends AbstractLauncher {
 	 */
 	@Override
 	protected boolean processOptions(String[] args, CommandLine cmd) {
-				
-		try {
-			time = parseLongOption(cmd.getOptionValue(TIME_OPTION));
-		}
-		catch (ParseException e) {
-			log.error("Unable to parse time from '"+cmd.getOptionValue(TIME_OPTION)+"'");
-			return false;
-		}
+					
 		outputFile = new File(cmd.getOptionValue(OUTPUT_FILE_OPTION));
 		if (outputFile.exists()) {
 			log.error("Output file " + outputFile.getAbsolutePath()+" already exsits");
 			return false;
 		}
-		if (cmd.getOptionValue(TYPE_OPTION).toLowerCase().equals("stream")) {
-			type = Type.STREAM;
-		}
-		if (cmd.getOptionValue(TYPE_OPTION).toLowerCase().equals("iplayer_dl")) {
-			type = Type.IPLAYER_DL;
-		}
-		else {
-			log.error("Unknown type, possible values are: stream, iplayer_dl");
+		
+		String id = cmd.getOptionValue(PODCAST_ID_OPTION);
+		if (id==null) {
+			log.error("No podcast ID given");
 			return false;
 		}
-		
-		url = cmd.getOptionValue(URL_OPTION);
-		String sformat = cmd.getOptionValue(FORMAT_OPTION);
-		if (sformat!=null) {
-			for (Format f : Format.values()) {
-				if (f.getName().toLowerCase().equals(sformat.toLowerCase())) {
-					this.format = f;
-				}
-			}
-		}
-
-		if (cmd.hasOption(META_TITLE_OPTION)) {
-			metaTitle = cmd.getOptionValue(META_TITLE_OPTION);
-		}
-		if (cmd.hasOption(META_ARTWORK_URL_OPTION)) {
-			try {
-				String url = cmd.getOptionValue(META_ARTWORK_URL_OPTION);
-				metaArtworkURL = new URL(url);
-			} catch (MalformedURLException e) {
-				log.error("Invalid artwork url: " + url,e);
-				return false;
-			}
-		}
-		if (cmd.hasOption(META_COPYRIGHT_OPTION)) {
-			metaCopyright = cmd.getOptionValue(META_COPYRIGHT_OPTION);
-		}
-		if (cmd.hasOption(META_ARTIST_OPTION)) {
-			metaArtist = cmd.getOptionValue(META_ARTIST_OPTION);
-		}
-		if (cmd.hasOption(META_DESCRIPTION_OPTION)) {
-			metaDescription = cmd.getOptionValue(META_DESCRIPTION_OPTION);
-		}
+		podcast = getConfig().getPodcast(id);
 
 		return true;
 	}

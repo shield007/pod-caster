@@ -1,4 +1,4 @@
-package org.stanwood.podcaster.capture.stream;
+package org.stanwood.podcaster.cliutils;
 
 import org.stanwood.podcaster.capture.CatpureException;
 

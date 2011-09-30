@@ -17,6 +17,7 @@ public abstract class AbstractPodcast {
 	private URL rssUrl;
 	private Format format;
 	private URL feedImageURL;
+	private int maxEntries;
 	
 	public AbstractPodcast(String id) {
 		this.id = id;
@@ -98,4 +99,14 @@ public abstract class AbstractPodcast {
 	public URL getFeedImageURL() {
 		return feedImageURL;
 	}
+
+	public int getMaxEntries() {
+		return maxEntries;
+	}
+
+	public void setMaxEntries(int maxEntries) {
+		this.maxEntries = maxEntries;
+	}
+	
+	
 }

@@ -145,7 +145,21 @@ public class ConfigReader extends XMLParser {
 					genericPodcast.setRSSURL(new URL(url));
 				} catch (MalformedURLException e) {
 					throw new ConfigException(MessageFormat.format("Unable to create URL ''{0}''",url),e);
+				}				
+				String sEntries = podcastNode.getAttribute("maxEntries");
+				if (sEntries==null || sEntries.length()==0) {
+					genericPodcast.setMaxEntries(20);
 				}
+				else {
+					try {
+						genericPodcast.setMaxEntries(Integer.parseInt(sEntries));
+					}
+					catch (NumberFormatException e) {
+						throw new ConfigException(MessageFormat.format("Inavid max entries ''{0}'', must be a number",sEntries),e);
+					}
+				}
+					
+				
 				String sformat= podcastNode.getAttribute("format");
 				if (sformat==null || sformat.length()==0) {
 					throw new ConfigException(MessageFormat.format("No format given for podcast ''{0}''",genericPodcast.getId()));	
