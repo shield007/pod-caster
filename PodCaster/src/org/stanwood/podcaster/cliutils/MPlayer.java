@@ -1,4 +1,4 @@
-package org.stanwood.podcaster.capture.stream;
+package org.stanwood.podcaster.cliutils;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import org.stanwood.podcaster.util.AbstractExecutable;
  * This class is a wrapper around the mplayer application and is used to drive
  * mplayer in a more java friendly way
  */
-public class MPlayer extends AbstractExecutable implements ICaptureStream {
+public class MPlayer extends AbstractExecutable {
 
 	private final static Log log = LogFactory.getLog(MPlayer.class);
 

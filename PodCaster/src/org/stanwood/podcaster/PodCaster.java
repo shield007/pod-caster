@@ -21,11 +21,13 @@ import org.stanwood.podcaster.audio.Format;
 import org.stanwood.podcaster.audio.IAudioFile;
 import org.stanwood.podcaster.audio.WavFile;
 import org.stanwood.podcaster.capture.ICaptureStream;
-import org.stanwood.podcaster.capture.IPlayerDownloader;
-import org.stanwood.podcaster.capture.stream.MPlayer;
+import org.stanwood.podcaster.capture.StreamCaptureFactory;
 import org.stanwood.podcaster.cli.AbstractLauncher;
 import org.stanwood.podcaster.cli.DefaultExitHandler;
 import org.stanwood.podcaster.cli.IExitHandler;
+import org.stanwood.podcaster.cliutils.IPlayerDownloader;
+import org.stanwood.podcaster.cliutils.MPlayer;
+import org.stanwood.podcaster.config.AbstractPodcast;
 import org.stanwood.podcaster.rss.RSSFeed;
 import org.stanwood.podcaster.util.FileHelper;
 
@@ -44,132 +46,19 @@ public class PodCaster extends AbstractLauncher{
 	private final DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss");
 
 	private static final List<Option> OPTIONS;
-	private final static String TIME_OPTION = "t";
-	private final static String FORMAT_OPTION = "f";
-	private final static String URL_OPTION = "u";
-	private static final String RSS_FILE_OPTION ="rf";
-	private static final String RSS_URL_OPTION ="ru";
-	private static final String FEED_ARTWORK_OPTION="fa";
-	private final static String TYPE_OPTION = "y";
+	private final static String PODCAST_ID_OPTION = "p";
 
-	private final static String META_TITLE_OPTION = "i";
-	private final static String META_ARTWORK_URL_OPTION = "a";
-	private final static String META_COPYRIGHT_OPTION = "c";
-	private final static String META_ARTIST_OPTION = "r";
-
-	private final static String FEED_DESCRIPTION_OPTION = "fd";
-	private final static String ENTRY_DESCRIPTION_OPTION = "ed";
-	private final static String MAX_ENTRIES_OPTIONS = "m";
-
-	private long time;
-	private String radioURL;
-	private Format format = Format.WAV;
-	private String title;
-	private URL metaArtworkURL = null;
-	private String metaCopyright = null;
-	private String metaArtist = null;
-	private String entryDescription = null;
-	private String feedDescription = null;
-	private long maxEntries = 20;
-
-	private File rssFile = null;
-	private URL rssUrl;
-	private URL feedArtworkURL;
-	private Type type = null;	
+	private AbstractPodcast podcast;	
 
 	static {
 		OPTIONS = new ArrayList<Option>();
 
-		Option o = new Option(RSS_FILE_OPTION,"rssFile",true,"The location of the rss file");
-		o.setArgName("file");
-		o.setRequired(true);
-		OPTIONS.add(o);
-
-		o = new Option(RSS_URL_OPTION,"rssUrl",true,"The public URL to the rss file");
-		o.setArgName("URL");
-		o.setRequired(true);
-		OPTIONS.add(o);
-
-		o = new Option(TIME_OPTION,"time",true,"Capture time (msecs)");
-		o.setArgName("msecs");
-		o.setRequired(true);
-		OPTIONS.add(o);
-
-		o = new Option(URL_OPTION,"url",true,"Radio url");
-		o.setArgName("url");
-		o.setRequired(true);
-		OPTIONS.add(o);
-
-		o = new Option(META_TITLE_OPTION,"metaTitle",true,"The title of the radio show");
-		o.setArgName("string");
-		o.setRequired(true);
-		OPTIONS.add(o);
-
-		o = new Option(FORMAT_OPTION,"format",true,"Capture format (wav,mp3,mp4)");
-		o.setArgName("format");
-		o.setRequired(true);
-		OPTIONS.add(o);
-
-		o = new Option(META_ARTWORK_URL_OPTION,"metaArtworkUrl",true,"Set the artwork to the URL");
-		o.setArgName("url");
-		OPTIONS.add(o);
-
-		o = new Option(META_COPYRIGHT_OPTION,"metaCopyright",true,"Set the copyright meta data");
-		o.setArgName("string");
-		OPTIONS.add(o);
-
-		o = new Option(META_ARTIST_OPTION,"metaArtist",true,"Set the artist meta data");
-		o.setArgName("string");
-		OPTIONS.add(o);
-
-		o = new Option(FEED_DESCRIPTION_OPTION,"feedDescription",true,"Description of the feed");
-		o.setArgName("sting");
-		o.setRequired(true);
-		OPTIONS.add(o);
-
-		o = new Option(ENTRY_DESCRIPTION_OPTION,"entryDescription",true,"Description of the entry");
-		o.setArgName("string");
-		OPTIONS.add(o);
-
-		o = new Option(MAX_ENTRIES_OPTIONS,"maxEntries",true,"Maximum entries allowed in the feed, defaults to 20");
-		o.setArgName("number");
-		OPTIONS.add(o);
-
-		o = new Option(FEED_ARTWORK_OPTION,"feedArtwork",true,"The URL to the feeds artwork");
-		o.setArgName("url");
-		OPTIONS.add(o);
-		
-		o = new Option(TYPE_OPTION,"type",true,"Type of stream downloader (stream | iplayer_dl)");
-		o.setArgName("type");
+		Option o = new Option(PODCAST_ID_OPTION,"podcast",true,"The ID of the podcast from the configuration");
+		o.setArgName("id");
 		o.setRequired(true);
 		OPTIONS.add(o);
 	}
 
-	/**
-	 * The main method used to capture a stream to a audio file.
-	 *
-	 * The following command line syntax is passed to this method:
-	 * <pre>
-	 * podcaster [-a &lt;url&gt;] [-c &lt;string&gt;] [-ed &lt;string&gt;] -f &lt;format&gt; [-fa
-     * &lt;url&gt;] [-fd &lt;sting&gt;] [-h] -i &lt;string&gt; [-l &lt;arg&gt;] [-m &lt;number&gt;] [-r
-	 * &lt;string&gt;] -rf &lt;file&gt; -ru &lt;URL&gt; -t &lt;msecs&gt; -u &lt;url&gt;
- 	 * -a,--metaArtworkUrl &lt;url&gt;         Set the artwork to the URL
- 	 * -c,--metaCopyright &lt;string&gt;       Set the copyright meta data
- 	 * -ed,--entryDescription &lt;string&gt;   Description of the entry
- 	 * -f,--format &lt;format&gt;              Capture format (wav,mp3,mp4)
- 	 * -fa,--feedArtwork &lt;url&gt;           The URL to the feeds artwork
- 	 * -fd,--feedDescription &lt;sting&gt;     Description of the feed
- 	 * -h,--help                         Show the help
- 	 * -i,--metaTitle &lt;string&gt;           The title of the radio show
- 	 * -l,--log_config &lt;arg&gt;             The log config mode [&lt;INFO>|&lt;DEBUG>|&lt;log4j config file>]
- 	 * -m,--maxEntries &lt;number&gt;          Maximum entries allowed in the feed,defaults to 20
- 	 * -r,--metaArtist &lt;string&gt;          Set the artist meta data
- 	 * -rf,--rssFile &lt;file&gt;              The location of the rss file
- 	 * -ru,--rssUrl &lt;URL&gt;                The public URL to the rss file
- 	 * -t,--time &lt;msecs&gt;                 Capture time (msecs)
- 	 * -u,--url &lt;url&gt;                    Radio url
-	 * </pre>
-     */
 	public static void main(String[] args) {
 		if (exitHandler==null) {
 			exitHandler = new DefaultExitHandler();
@@ -194,81 +83,13 @@ public class PodCaster extends AbstractLauncher{
 	 */
 	@Override
 	protected boolean processOptions(String[] args, CommandLine cmd) {
-		try {
-			time = parseLongOption(cmd.getOptionValue(TIME_OPTION));
-		}
-		catch (ParseException e) {
-			log.error("Unable to parse time from '"+cmd.getOptionValue(TIME_OPTION)+"'");
+		String id = cmd.getOptionValue(PODCAST_ID_OPTION);
+		if (id==null) {
+			log.error("No podcast ID given");
 			return false;
 		}
-		if (cmd.getOptionValue(TYPE_OPTION).toLowerCase().equals("iplayer_dl")) {
-			type = Type.IPLAYER_DL;
-		}
-		else {
-			log.error("Unknown type, possible values are: stream, iplayer_dl");
-			return false;
-		}
+		podcast = getConfig().getPodcast(id);
 		
-		radioURL = cmd.getOptionValue(URL_OPTION);
-		String sformat = cmd.getOptionValue(FORMAT_OPTION);
-		if (sformat!=null) {
-			this.format = Format.fromName(sformat);			
-		}
-
-		rssFile = new File(cmd.getOptionValue(RSS_FILE_OPTION));
-		String url = cmd.getOptionValue(RSS_URL_OPTION);
-		try {
-			rssUrl = new URL(url);
-		}
-		catch (MalformedURLException e) {
-			log.error("Invalid rss url: " + url,e);
-			return false;
-		}
-
-		title = cmd.getOptionValue(META_TITLE_OPTION);
-
-		if (cmd.hasOption(META_ARTWORK_URL_OPTION)) {
-			url = cmd.getOptionValue(META_ARTWORK_URL_OPTION);
-			try {
-				metaArtworkURL = new URL(url);
-			} catch (MalformedURLException e) {
-				log.error("Invalid artwork url: " + url,e);
-				return false;
-			}
-		}
-		if (cmd.hasOption(FEED_ARTWORK_OPTION)) {
-			url = cmd.getOptionValue(FEED_ARTWORK_OPTION);
-			try {
-				feedArtworkURL = new URL(url);
-			} catch (MalformedURLException e) {
-				log.error("Invalid artwork url: " + url,e);
-				return false;
-			}
-		}
-
-		if (cmd.hasOption(META_COPYRIGHT_OPTION)) {
-			metaCopyright = cmd.getOptionValue(META_COPYRIGHT_OPTION);
-		}
-		if (cmd.hasOption(META_ARTIST_OPTION)) {
-			metaArtist = cmd.getOptionValue(META_ARTIST_OPTION);
-		}
-
-		if (cmd.hasOption(FEED_DESCRIPTION_OPTION)) {
-			feedDescription = cmd.getOptionValue(FEED_DESCRIPTION_OPTION);
-		}
-		if (cmd.hasOption(ENTRY_DESCRIPTION_OPTION)) {
-			entryDescription = cmd.getOptionValue(ENTRY_DESCRIPTION_OPTION);
-		}
-		if (cmd.hasOption(MAX_ENTRIES_OPTIONS)) {
-			try {
-				maxEntries = parseLongOption(cmd.getOptionValue(MAX_ENTRIES_OPTIONS));
-			}
-			catch (ParseException e) {
-				log.error("max feed entries '"+cmd.getOptionValue(MAX_ENTRIES_OPTIONS)+"'");
-				return false;
-			}
-		}
-
 		return true;
 	}
 
@@ -280,47 +101,36 @@ public class PodCaster extends AbstractLauncher{
 	protected boolean run() {
 		try {
 			Date startDate = new Date();
-			String entryTitle = title+" "+DF.format(startDate);
-			URLFetcher urlFetcher = new URLFetcher(new URL(radioURL));
-			urlFetcher.getMediaUrl();
-
-			ICaptureStream streamCapture;
-			switch (type) {
-				case STREAM: streamCapture = new MPlayer(getConfig());
-							 break;
-				case IPLAYER_DL: streamCapture = new IPlayerDownloader(getConfig());
-				 			 break;
-				default:
-					log.error("Unkown type");
-					return false;
-			}
-			IAudioFile audioFile = streamCapture.captureLiveAudioStream(urlFetcher.getMediaUrl(), time);
+			String entryTitle = podcast.getFeedTitle()+" "+DF.format(startDate);			
+			 
+			ICaptureStream streamCapture = StreamCaptureFactory.getStreamCapture(podcast);						
+			IAudioFile audioFile = streamCapture.captureLiveAudioStream(getConfig(),podcast);
 			if (log.isDebugEnabled()) {
 				log.debug("Captured " + audioFile.getFile() + " with size " +audioFile.getFile().length());
 			}
-			log.info("Converting stream to " + format.getName());
-			File outputFile = new File(rssFile.getParentFile(),entryTitle.replaceAll(" ","-")+format.getExtension());
+			log.info("Converting stream to " + podcast.getFormat().getName());
+			File outputFile = new File(podcast.getRSSFile().getParentFile(),entryTitle.replaceAll(" ","-")+podcast.getFormat().getExtension());
 
-			String baseUrl = rssUrl.toExternalForm();
+			String baseUrl = podcast.getRSSURL().toExternalForm();
 			baseUrl = baseUrl.substring(0,baseUrl.lastIndexOf('/'));
 			URL entryUrl = new URL(baseUrl+"/"+outputFile.getName());
 
-			IAudioFile audio = AudioFileConverter.convertAudio(getConfig(),audioFile, format,outputFile);
-			if (format!=Format.WAV) {
-				if (title!=null) {
+			IAudioFile audio = AudioFileConverter.convertAudio(getConfig(),audioFile, podcast.getFormat(),outputFile);
+			if (podcast.getFormat()!=Format.WAV) {
+				if (entryTitle!=null) {
 					audio.setTitle(entryTitle);
 				}
-				if (metaArtworkURL!=null) {
-					audio.setArtwork(metaArtworkURL);
+				if (podcast.getFeedImageURL()!=null) {
+					audio.setArtwork(podcast.getFeedImageURL());
 				}
-				if (metaCopyright!=null) {
-					audio.setCopyright(metaCopyright);
+				if (podcast.getFeedCopyright()!=null) {
+					audio.setCopyright(podcast.getFeedCopyright());
 				}
-				if (metaArtist!=null) {
-					audio.setArtist(metaArtist);
+				if (podcast.getFeedArtist()!=null) {
+					audio.setArtist(podcast.getFeedArtist());
 				}
-				if (entryDescription!=null) {
-					audio.setDescription(entryDescription);
+				if (podcast.getEntryDescription()!=null) {
+					audio.setDescription(podcast.getEntryDescription());
 				}
 				audio.writeMetaData();
 			}
@@ -329,29 +139,29 @@ public class PodCaster extends AbstractLauncher{
 				return false;
 			}
 
-			RSSFeed rss = new RSSFeed(rssFile);
-			if (rssFile.exists()) {
+			RSSFeed rss = new RSSFeed(podcast.getRSSFile());
+			if (podcast.getRSSFile().exists()) {
 				rss.parse();
 			}
 			else {
 				rss.createNewFeed();
 			}
 
-			rss.setTitle(title);
-			rss.setLink(rssUrl);
-			rss.setDescription(feedDescription);
+			rss.setTitle(podcast.getFeedTitle());
+			rss.setLink(podcast.getRSSURL());
+			rss.setDescription(podcast.getFeedDescription());
 
-			if (feedArtworkURL!=null) {
-				File feedArtwork = new File(rssFile.getParentFile(),title.replaceAll(" ","-")+
-							                FileHelper.getExtension(feedArtworkURL.toExternalForm()));
+			if (podcast.getFeedImageURL()!=null) {
+				File feedArtwork = new File(podcast.getRSSFile().getParentFile(),podcast.getFeedTitle().replaceAll(" ","-")+
+							                FileHelper.getExtension(podcast.getFeedImageURL().toExternalForm()));
 
-				FileHelper.downloadToFile(feedArtworkURL,feedArtwork );
+				FileHelper.downloadToFile(podcast.getFeedImageURL(),feedArtwork );
 				URL artURL = new URL(baseUrl+"/"+feedArtwork.getName());
 				rss.setArtwork(artURL);
 			}
 
-			rss.addEntry(entryTitle, entryUrl, startDate, entryDescription,metaArtist,audio);
-			rss.setMaxEntries(maxEntries,rssFile.getParentFile());
+			rss.addEntry(entryTitle, entryUrl, startDate, podcast.getEntryDescription(),podcast.getFeedArtist(),audio);
+			rss.setMaxEntries(podcast.getMaxEntries(),podcast.getRSSFile().getParentFile());
 			rss.write();
 		}
 		catch (Exception e)
