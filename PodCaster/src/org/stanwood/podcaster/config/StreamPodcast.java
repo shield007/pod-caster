@@ -11,10 +11,6 @@ public class StreamPodcast extends AbstractPodcast {
 		super(id);
 	}
 
-	public void setCaptureTime(long time) {
-		this.captureTime = time;
-	}
-
 	public void setStreamURL(URL url) {
 		this.streamURL = url;
 	}
@@ -23,6 +19,10 @@ public class StreamPodcast extends AbstractPodcast {
 		return streamURL;
 	}
 
+	public void setCaptureTime(long time) {
+		this.captureTime = time;
+	}
+	
 	public long getCaptureTime() {
 		return captureTime;
 	}

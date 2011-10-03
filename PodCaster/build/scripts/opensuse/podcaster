@@ -20,12 +20,20 @@ else
         JAVA="$JAVA_HOME/bin/java"
 fi
 
+# Main class
+MAIN=org.stanwood.podcaster.PodCaster
+
+# Libraries location
+LIB_DIR=/usr/share/java
+
 # Launch application.
-CLASSPATH=/usr/share/java/podcaster.jar
-CLASSPATH=$CLASSPATH:/usr/share/java/jaudiotagger.jar
-CLASSPATH=$CLASSPATH:/usr/share/java/jdom.jar
-CLASSPATH=$CLASSPATH:/usr/share/java/ROME.jar
-CLASSPATH=$CLASSPATH:/usr/share/java/commons-logging.jar
-CLASSPATH=$CLASSPATH:/usr/share/java/commons-cli.jar
-CLASSPATH=$CLASSPATH:/usr/share/java/log4j.jar
-exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH org.stanwood.podcaster.PodCaster "$@"
+CLASSPATH=$LIB_DIR/podcaster.jar
+CLASSPATH=$CLASSPATH:jakarta-commons-cli.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/jakarta-commons-logging.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/log4j.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/ROME.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/jaudiotagger.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/jdom.jar
+
+# Launch Application
+exec $JAVA -Xms${JAVA_HEAP_INIT_SIZE}M -Xmx${JAVA_HEAP_MAX_SIZE}M -classpath $CLASSPATH $MAIN "$@"

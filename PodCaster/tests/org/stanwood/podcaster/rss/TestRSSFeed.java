@@ -2,7 +2,6 @@ package org.stanwood.podcaster.rss;
 
 
 import java.io.File;
-
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -10,11 +9,8 @@ import java.text.SimpleDateFormat;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.stanwood.podcaster.audio.Format;
 import org.stanwood.podcaster.audio.MP3File;
-import org.stanwood.podcaster.audio.MP4File;
 import org.stanwood.podcaster.audio.TestAudioConversion;
-import org.stanwood.podcaster.rss.RSSFeed;
 import org.stanwood.podcaster.util.FileHelper;
 
 import com.sun.syndication.io.FeedException;
