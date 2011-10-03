@@ -2,8 +2,6 @@ package org.stanwood.podcaster;
 
 import java.io.File;
 import java.io.PrintStream;
-
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,20 +11,16 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.podcaster.audio.AudioFileConverter;
 import org.stanwood.podcaster.audio.Format;
 import org.stanwood.podcaster.audio.IAudioFile;
-import org.stanwood.podcaster.audio.WavFile;
 import org.stanwood.podcaster.capture.ICaptureStream;
 import org.stanwood.podcaster.capture.StreamCaptureFactory;
 import org.stanwood.podcaster.cli.AbstractLauncher;
 import org.stanwood.podcaster.cli.DefaultExitHandler;
 import org.stanwood.podcaster.cli.IExitHandler;
-import org.stanwood.podcaster.cliutils.IPlayerDownloader;
-import org.stanwood.podcaster.cliutils.MPlayer;
 import org.stanwood.podcaster.config.AbstractPodcast;
 import org.stanwood.podcaster.rss.RSSFeed;
 import org.stanwood.podcaster.util.FileHelper;

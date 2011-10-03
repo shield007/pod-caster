@@ -27,9 +27,9 @@ public class TestConfigReader {
 		testConfig.append("<podcaster>"+FileHelper.LS);
 		testConfig.append("  <global>"+FileHelper.LS);
 		testConfig.append("    <configDirectory>/blah/blah1</configDirectory>"+FileHelper.LS);
-		testConfig.append("    <mplayerPath>/blah/bin/mplayer</mplayerPath>"+FileHelper.LS);		
-		testConfig.append("    <ffmpegPath>/blah/bin/ffmpeg</ffmpegPath>"+FileHelper.LS);
-		testConfig.append("    <iplayerdlPath>/blah/bin/iplayer-dl</iplayerdlPath>"+FileHelper.LS);
+		testConfig.append("    <mplayer-path>/blah/bin/mplayer</mplayer-path>"+FileHelper.LS);		
+		testConfig.append("    <ffmpeg-path>/blah/bin/ffmpeg</ffmpeg-path>"+FileHelper.LS);
+		testConfig.append("    <get-iplayer-path>/blah/bin/get-iplayer</get-iplayer-path>"+FileHelper.LS);
 		testConfig.append("  </global>"+FileHelper.LS);
 		testConfig.append("</podcaster>"+FileHelper.LS);
 
@@ -37,7 +37,7 @@ public class TestConfigReader {
 		Assert.assertEquals("/blah/blah1",configReader.getConfigDir().getAbsolutePath());
 		Assert.assertEquals("/blah/bin/mplayer",configReader.getMPlayerPath());
 		Assert.assertEquals("/blah/bin/ffmpeg",configReader.getFFMpegPath());
-		Assert.assertEquals("/blah/bin/iplayer-dl",configReader.getIPlayerDLPath());
+		Assert.assertEquals("/blah/bin/get-iplayer",configReader.getGetIPlayerPath());
 	}
 	
 	@Test
@@ -47,10 +47,10 @@ public class TestConfigReader {
 		StringBuilder testConfig = new StringBuilder();
 		testConfig.append("<podcaster>"+FileHelper.LS);
 		testConfig.append("  <global>"+FileHelper.LS);
-		testConfig.append("    <mplayerPath>/blah/bin/mplayer</mplayerPath>"+FileHelper.LS);
+		testConfig.append("    <mplayer-path>/blah/bin/mplayer</mplayer-path>"+FileHelper.LS);
 		testConfig.append("    <configDirectory>/blah/blah1</configDirectory>"+FileHelper.LS);		
-		testConfig.append("    <iplayerdlPath>/blah/bin/iplayer-dl</iplayerdlPath>"+FileHelper.LS);
-		testConfig.append("    <ffmpegPath>/blah/bin/ffmpeg</ffmpegPath>"+FileHelper.LS);		
+		testConfig.append("    <get-iplayer-path>/blah/bin/get-iplayer</get-iplayer-path>"+FileHelper.LS);
+		testConfig.append("    <ffmpeg-path>/blah/bin/ffmpeg</ffmpeg-path>"+FileHelper.LS);		
 		testConfig.append("  </global>"+FileHelper.LS);
 		testConfig.append("</podcaster>"+FileHelper.LS);
 
@@ -58,7 +58,7 @@ public class TestConfigReader {
 		Assert.assertEquals("/blah/blah1",configReader.getConfigDir().getAbsolutePath());
 		Assert.assertEquals("/blah/bin/mplayer",configReader.getMPlayerPath());
 		Assert.assertEquals("/blah/bin/ffmpeg",configReader.getFFMpegPath());
-		Assert.assertEquals("/blah/bin/iplayer-dl",configReader.getIPlayerDLPath());
+		Assert.assertEquals("/blah/bin/get-iplayer",configReader.getGetIPlayerPath());
 	}
 	
 	@Test
@@ -80,7 +80,7 @@ public class TestConfigReader {
 		testConfig.append("        <description>This is a test radio stream entry</description>"+FileHelper.LS);
 		testConfig.append("      </entry>"+FileHelper.LS);
 		testConfig.append("    </metadata>"+FileHelper.LS);
-		testConfig.append("    <radioStream url=\"http://www.bbc.co.uk/radio1/wm_asx/aod/radio1_hi.asx\" caputureTime=\"10000\"/>"+FileHelper.LS);		
+		testConfig.append("    <radioStream url=\"http://www.bbc.co.uk/radio1/wm_asx/aod/radio1_hi.asx\" captureTime=\"10000\"/>"+FileHelper.LS);		
 		testConfig.append("  </podcast>"+FileHelper.LS);
 		testConfig.append("  <podcast id=\"iplayer\" format=\"flac\" rssFile=\"/srv/www/htdocs/podcasts/iplayer.rss\" rssUrl=\"http://blah.com/podcasts/iplayer.rss\">"+FileHelper.LS);
 		testConfig.append("    <metadata>"+FileHelper.LS);
@@ -89,7 +89,7 @@ public class TestConfigReader {
 		testConfig.append("      <entry>"+FileHelper.LS);
 		testConfig.append("      </entry>"+FileHelper.LS);
 		testConfig.append("    </metadata>"+FileHelper.LS);
-		testConfig.append("    <iplayer episode=\"b01509qq\"/>"+FileHelper.LS);		
+		testConfig.append("    <iplayer episode=\"Radio 1\" captureTime=\"10000\"/>"+FileHelper.LS);		
 		testConfig.append("  </podcast>"+FileHelper.LS);
 		testConfig.append("</podcaster>"+FileHelper.LS);
 		
@@ -124,7 +124,8 @@ public class TestConfigReader {
 		Assert.assertEquals("/srv/www/htdocs/podcasts/iplayer.rss",podcast1.getRSSFile().getAbsolutePath());
 		Assert.assertEquals("http://blah.com/podcasts/iplayer.rss",podcast1.getRSSURL().toExternalForm());
 		Assert.assertEquals(Format.FLAC,podcast1.getFormat());
-		Assert.assertEquals("b01509qq",podcast1.getEpisodeId());
+		Assert.assertEquals("Radio 1",podcast1.getEpisodeId());
+		Assert.assertEquals(10000,podcast1.getCaptureTime());
 	}
 	
 	@Test
@@ -139,7 +140,7 @@ public class TestConfigReader {
 		Assert.assertEquals(new File(FileHelper.HOME_DIR,".podcaster").getAbsolutePath(),configReader.getConfigDir().getAbsolutePath());				
 		Assert.assertEquals("mplayer",configReader.getMPlayerPath());
 		Assert.assertEquals("ffmpeg",configReader.getFFMpegPath());
-		Assert.assertEquals("iplayer-dl",configReader.getIPlayerDLPath());
+		Assert.assertEquals("get-iplayer",configReader.getGetIPlayerPath());
 	}
 
 	private ConfigReader createConfigReader(StringBuilder testConfig)

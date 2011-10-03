@@ -33,6 +33,25 @@ public class FileHelper {
 	/** Stores the current users home directory */
 	public final static File HOME_DIR = new File(System.getProperty("user.home")); //$NON-NLS-1$
 
+	/**
+	 * This will create a temporary directory using the given name.
+	 *
+	 * @param name The name of the directory to create
+	 * @return A file object pointing to the directory that was created
+	 * @throws IOException Thrown if their is a problme creating the directory
+	 */
+	public static File createTmpDir(String name) throws IOException {
+		File dir = createTempFile(name, ""); //$NON-NLS-1$
+		if (!dir.delete()) {
+			throw new IOException(MessageFormat.format("Unable to delete file ''{0}''",dir.getAbsolutePath())); //$NON-NLS-1$
+		}
+		if (!dir.mkdir()) {
+			throw new IOException(MessageFormat.format("Unable to create directory ''{0}''",dir.getAbsolutePath())); //$NON-NLS-1$
+		}
+
+		return dir;
+	}
+	
 	public static String getName(File file) {
 		String name = file.getName();
 		return name.substring(0,name.indexOf('.'));
@@ -87,7 +106,7 @@ public class FileHelper {
 	 * @throws IOException Thrown if their is a problem downloading it
 	 */
 	public static DownloadedFile downloadToTempFile(URL url) throws IOException {
-		File file = File.createTempFile("artwork", getExtension(url.getPath()));
+		File file = createTempFile("artwork", getExtension(url.getPath()));
 		if (!file.delete()) {
 			throw new IOException("Unable to delete temp file " + file.getAbsolutePath());
 		}
@@ -123,7 +142,7 @@ public class FileHelper {
     private static File getFile(String filename, Class<?> currentClass, URL url)
             throws  IOException, UnsupportedEncodingException {
         if (url.getProtocol().equals("jar")) { //$NON-NLS-1$
-            File file = File.createTempFile(filename.replaceAll("/|\\\\","-"), ".o"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            File file = createTempFile(filename.replaceAll("/|\\\\","-"), ".o"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             file.deleteOnExit();
             InputStream stream = currentClass.getResourceAsStream(filename);
             if (stream==null) {

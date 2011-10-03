@@ -44,7 +44,7 @@ public class ConfigReader extends XMLParser {
 
 	private String ffmpegPath = "ffmpeg";
 	private String mplayerPath = "mplayer";
-	private String iplayerdlPath = "iplayer-dl";
+	private String getIPlayerPath = "get-iplayer";
 
 	private Map<String, AbstractPodcast> podcasts;
 	
@@ -88,7 +88,7 @@ public class ConfigReader extends XMLParser {
 					} catch (MalformedURLException e) {
 						throw new ConfigException(MessageFormat.format("Unable to create URL ''{0}''",sURL),e);
 					}
-					String sTime = typeNode.getAttribute("caputureTime");
+					String sTime = typeNode.getAttribute("captureTime");
 					if (sTime==null || sTime.length()==0) {
 						throw new ConfigException(MessageFormat.format("No capture time for for podcast ''{0}''",podcast.getId()));
 					}
@@ -109,6 +109,16 @@ public class ConfigReader extends XMLParser {
 							throw new ConfigException(MessageFormat.format("No episode id given for iplayer podcast ''{0}''",podcast.getId()));
 						}
 						podcast.setEpisodeId(episodeId);
+						String sTime = typeNode.getAttribute("captureTime");
+						if (sTime==null || sTime.length()==0) {
+							throw new ConfigException(MessageFormat.format("No capture time for for podcast ''{0}''",podcast.getId()));
+						}
+						try {
+							podcast.setCaptureTime(Long.parseLong(sTime));
+						}
+						catch (NumberFormatException e) {
+							throw new ConfigException(MessageFormat.format("Capture time ''{0}'' is invalid.",podcast.getId()));
+						}
 						
 						genericPodcast = podcast;
 					}
@@ -189,7 +199,7 @@ public class ConfigReader extends XMLParser {
 				// Ignore
 			}			
 			try {
-				String path = parseString(getStringFromXML(node, "mplayerPath/text()")); //$NON-NLS-1$
+				String path = parseString(getStringFromXML(node, "mplayer-path/text()")); //$NON-NLS-1$
 				if (path.trim().length()>0) {
 					mplayerPath =path;
 				}
@@ -198,7 +208,7 @@ public class ConfigReader extends XMLParser {
 				// Ignore
 			}			
 			try {
-				String path = parseString(getStringFromXML(node, "ffmpegPath/text()")); //$NON-NLS-1$
+				String path = parseString(getStringFromXML(node, "ffmpeg-path/text()")); //$NON-NLS-1$
 				if (path.trim().length()>0) {
 					ffmpegPath =path;
 				}
@@ -207,9 +217,9 @@ public class ConfigReader extends XMLParser {
 				// Ignore
 			}
 			try {
-				String path = parseString(getStringFromXML(node, "iplayerdlPath/text()")); //$NON-NLS-1$
+				String path = parseString(getStringFromXML(node, "get-iplayer-path/text()")); //$NON-NLS-1$
 				if (path.trim().length()>0) {
-					iplayerdlPath =path;
+					getIPlayerPath =path;
 				}
 			}
 			catch (XMLParserNotFoundException e) {
@@ -269,8 +279,8 @@ public class ConfigReader extends XMLParser {
 		return mplayerPath;
 	}
 	
-	public String getIPlayerDLPath() {
-		return iplayerdlPath;
+	public String getGetIPlayerPath() {
+		return getIPlayerPath;
 	}
 	
 	/**

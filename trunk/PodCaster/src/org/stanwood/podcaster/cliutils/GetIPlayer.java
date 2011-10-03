@@ -1,0 +1,109 @@
+package org.stanwood.podcaster.cliutils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.stanwood.podcaster.StreamReference;
+import org.stanwood.podcaster.audio.IAudioFile;
+import org.stanwood.podcaster.audio.WavFile;
+import org.stanwood.podcaster.capture.ICaptureStream;
+import org.stanwood.podcaster.config.ConfigReader;
+import org.stanwood.podcaster.util.AbstractExecutable;
+
+/**
+ * This class is a wrapper around the mplayer application and is used to drive
+ * mplayer in a more java friendly way
+ */
+public class GetIPlayer extends AbstractExecutable {
+
+	private final static Log log = LogFactory.getLog(GetIPlayer.class);
+
+	private final static int CACHE_SIZE = 500;
+
+	public GetIPlayer(ConfigReader config) {
+		super(config);
+	}
+	
+	/**
+	 * This will capture a audio stream from using mplayer for the given amount of time
+	 * @param wavOutputFile The WAV file to create from the audio stream
+	 * @param stream The stream to capture
+	 * @param time The time in milliseconds to capture the stream
+	 * @throws MPlayerException Thrown if their is a problem with mplayer
+	 */
+	public IAudioFile captureLiveAudioStream(String epsiode,long time) throws  MPlayerException
+	{		
+		File wavOutputFile;
+		try {
+			wavOutputFile = File.createTempFile("captured", ".wav");
+		} catch (IOException e) {
+			throw new MPlayerException("Unable to create temp file",e);
+		}
+				
+		log.info("Recording live radio from BBC IPlayer: " + epsiode + " to " + wavOutputFile.getAbsolutePath());
+		List<String> args = new ArrayList<String>();
+		args.add(getConfig().getGetIPlayerPath());
+		args.add("-stream");
+		args.add(epsiode);
+		args.add("-type=liveradio");
+		args.add("|");
+		args.add(getConfig().getFFMpegPath());
+		args.add("-i");
+		args.add("-");
+		args.add("-vn");
+		args.add("-f");
+		args.add("wav");
+		args.add(wavOutputFile.getAbsolutePath());
+		executeWithTimeout(args,time);
+		if (wavOutputFile.length()==0) {
+			throw new MPlayerException("Unable to caputre audio, the caputred audio file is empty. Try increasing the caputre time.");
+		}
+		WavFile result = new WavFile(wavOutputFile);
+		return result;
+	}
+
+	/**
+	 * Execute the command with a list of arguments. The this argument should be the application.
+	 * @param args The arguments. The first is the application been executed.
+	 * @param timeout The timeout in milliseconds before the process is killed,
+	 *                or -1 for no timeout
+	 * @return The exit code of the application that is executed.
+	 * @throws MPlayerException Thrown if their is a problem with mplayer
+	 */
+	private void executeWithTimeout(final List<String> args,long timeout) throws MPlayerException {
+		FutureTask<Integer>task = new FutureTask<Integer>(new Callable<Integer>() {
+			public Integer call() throws Exception {
+				return execute(args);
+			}
+		});
+
+		ExecutorService es = Executors.newSingleThreadExecutor ();
+		es.submit (task);
+		try {
+			int value = task.get(timeout, TimeUnit.MILLISECONDS);
+			log.error("Unable to execute mplayer command: " + getErrorStream());
+			throw new MPlayerException("Unexpected exit with exit code " + value);
+		}
+		catch (TimeoutException e) {
+			kill();
+			log.debug(getOutputStream());
+			log.debug(getErrorStream());
+		} catch (InterruptedException e) {
+			throw new MPlayerException("Execution interrupted",e);
+		} catch (ExecutionException e) {
+			throw new MPlayerException(e.getMessage(),e);
+		}
+	}
+	
+}

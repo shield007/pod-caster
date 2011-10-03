@@ -7,9 +7,9 @@
   					<xs:complexType>  							  				
   						<xs:choice minOccurs="0" maxOccurs="unbounded">
   							<xs:element name="configDirectory" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
-  						    <xs:element name="mplayerPath" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>	  						     					  						    
-  						    <xs:element name="ffmpegPath" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
-  						    <xs:element name="iplayerdlPath" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
+  						    <xs:element name="mplayer-path" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>	  						     					  						    
+  						    <xs:element name="ffmpeg-path" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
+  						    <xs:element name="get-iplayer-path" type="pathElement" minOccurs="0" maxOccurs="unbounded"/>
   						</xs:choice>						
   					</xs:complexType>
   					</xs:element>
@@ -47,12 +47,13 @@
 			  					<xs:element name="radioStream">
 			  						<xs:complexType>
 				  						<xs:attribute name="url" type="xs:string" use="required"/>		  						  			
-				  						<xs:attribute name="caputureTime" type="xs:integer" use="required"/>			  			
+				  						<xs:attribute name="captureTime" type="xs:integer" use="required"/>			  			
 				  					</xs:complexType>
 			  					</xs:element>
 			  					<xs:element name="iplayer">
 			  						<xs:complexType>
 			  							<xs:attribute name="episode" type="xs:string" use="required"/>
+			  							<xs:attribute name="captureTime" type="xs:integer" use="required"/>
 			  						</xs:complexType>		  						  						  									  		
 			  					</xs:element>
 			  				</xs:choice>
