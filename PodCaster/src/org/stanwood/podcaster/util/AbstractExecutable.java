@@ -43,11 +43,11 @@ public class AbstractExecutable {
 	public AbstractExecutable(ConfigReader config) {
 		this.config = config;
 	}
-	
+
 	public ConfigReader getConfig() {
 		return config;
 	}
-	
+
 	/**
 	 * Execute the command with a list of arguments. The this argument should be the application.
 	 * @param args The arguments. The first is the application been executed.
@@ -55,7 +55,32 @@ public class AbstractExecutable {
 	 * @throws IOException Thrown if their is a IO related problem.
 	 * @throws InterruptedException Thrown if the thread is interrupted.
 	 */
-	protected int execute(List<String> args) throws IOException, InterruptedException {		
+	protected int execute(List<String> args) throws IOException, InterruptedException {
+		proc = createProcess(args);
+		errorGobbler = new StreamGobbler(proc.getErrorStream(),"stderr reader");
+		outputGobbler = new StreamGobbler(proc.getInputStream(),"stdout reader");
+
+		return AbstractExecutable.execute(args.get(0),proc,outputGobbler,errorGobbler);
+	}
+
+	public static int execute(String name,Process proc,IStreamGobbler outputGobbler,IStreamGobbler errorGobbler) throws IOException, InterruptedException {
+		outputGobbler.start();
+        errorGobbler.start();
+		int exitCode =  proc.waitFor();
+		while (!errorGobbler.isDone() || !outputGobbler.isDone()) { }
+
+		errorGobbler.done();
+		outputGobbler.done();
+
+		proc.getErrorStream().close();
+		proc.getInputStream().close();
+		proc.getOutputStream().close();
+
+		return exitCode;
+	}
+
+
+	protected Process createProcess(List<String> args) throws IOException {
 		List<String> newArgs = new ArrayList<String>();
 		if (System.getProperty("os.name").toLowerCase().equals("Windows 95")) {
 			newArgs.add("command.com");
@@ -77,23 +102,7 @@ public class AbstractExecutable {
 		}
 
 		ProcessBuilder pb = new ProcessBuilder(newArgs);
-		proc = pb.start();
-
-		errorGobbler = new StreamGobbler(proc.getErrorStream(),"stderr reader");
-		outputGobbler = new StreamGobbler(proc.getInputStream(),"stdout reader");
-
-        outputGobbler.start();
-        errorGobbler.start();        
-		int exitCode =  proc.waitFor();		
-		while (!errorGobbler.isDone() || !outputGobbler.isDone()) { }
-		
-		errorGobbler.done();
-		outputGobbler.done();
-
-		proc.getErrorStream().close();
-		proc.getInputStream().close();
-		proc.getOutputStream().close();
-		return exitCode;
+		return pb.start();
 	}
 
 	/**

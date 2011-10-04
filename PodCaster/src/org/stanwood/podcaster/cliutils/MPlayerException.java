@@ -1,11 +1,11 @@
 package org.stanwood.podcaster.cliutils;
 
-import org.stanwood.podcaster.capture.CatpureException;
+import org.stanwood.podcaster.capture.CaptureException;
 
 /**
  * Thrown if their is a problem driving MPlayer application
  */
-public class MPlayerException extends CatpureException {
+public class MPlayerException extends CaptureException {
 
 	private static final long serialVersionUID = -8024263389978825505L;
 

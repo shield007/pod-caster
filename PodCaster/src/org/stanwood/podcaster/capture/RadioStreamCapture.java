@@ -13,7 +13,7 @@ import org.stanwood.podcaster.config.StreamPodcast;
 public class RadioStreamCapture implements ICaptureStream {
 
 	@Override
-	public IAudioFile captureLiveAudioStream(ConfigReader config,AbstractPodcast pc) throws CatpureException {
+	public IAudioFile captureLiveAudioStream(ConfigReader config,AbstractPodcast pc) throws CaptureException {
 		StreamPodcast podcast = (StreamPodcast)pc;
 		try {
 			URLFetcher urlFetcher = new URLFetcher(podcast.getStreamURL());
@@ -21,7 +21,7 @@ public class RadioStreamCapture implements ICaptureStream {
 			MPlayer mplayer = new MPlayer(config);
 			return mplayer.captureLiveAudioStream(urlFetcher.getMediaUrl(), podcast.getCaptureTime());
 		} catch (IOException e) {
-			throw new CatpureException(MessageFormat.format("Unable to capture stream ''{0}''",podcast.getStreamURL().toExternalForm()),e);
+			throw new CaptureException(MessageFormat.format("Unable to capture stream ''{0}''",podcast.getStreamURL().toExternalForm()),e);
 		}
 	}
 

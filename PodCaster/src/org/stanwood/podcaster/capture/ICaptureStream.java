@@ -7,5 +7,5 @@ import org.stanwood.podcaster.config.ConfigReader;
 
 public interface ICaptureStream {
 
-	public IAudioFile captureLiveAudioStream(ConfigReader configReader,AbstractPodcast podcast) throws  CatpureException;
+	public IAudioFile captureLiveAudioStream(ConfigReader configReader,AbstractPodcast podcast) throws  CaptureException;
 }

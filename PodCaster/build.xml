@@ -197,7 +197,7 @@
 			<zipfileset dir="${src.dir}" prefix="${ant.project.name}-${project.version}/src"/>
 			<zipfileset dir="${test.src.dir}" prefix="${ant.project.name}-${project.version}/tests"/>
 			<zipfileset dir="${etc.dir}" prefix="${ant.project.name}-${project.version}/etc"/>
-			<zipfileset dir="scripts" prefix="${ant.project.name}-${project.version}/scripts"/>
+			<zipfileset dir="build" prefix="${ant.project.name}-${project.version}/build"/>
 			<zipfileset dir="${docs.dir}" prefix="${ant.project.name}-${project.version}/docs" includes ="**/*.xml"/>
 			<zipfileset file="${basedir}/TODO" prefix="${ant.project.name}-${project.version}"/>			
 			<zipfileset file="${basedir}/COPYING" prefix="${ant.project.name}-${project.version}"/>
@@ -217,7 +217,7 @@
 		<copy todir="${dist.dir}/bin/${ant.project.name}-${project.version}">
 			<fileset file="${basedir}/VERSION" />
 			<fileset file="${basedir}/COPYING" />
-			<fileset file="${basedir}/scripts/**" />						
+			<fileset file="${basedir}/build/scripts/opensuse/**" />						
 		</copy>		
 		<copy file="${etc.dir}/defaultConfig.xml" tofile="${dist.dir}/bin/${ant.project.name}-${project.version}/podcaster-conf.xml"/>
 		
