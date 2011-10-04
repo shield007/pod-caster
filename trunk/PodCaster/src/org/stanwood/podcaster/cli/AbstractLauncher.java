@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.text.MessageFormat;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -17,11 +16,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.stanwood.podcaster.Author;
 import org.stanwood.podcaster.ProjectDetails;
-import org.stanwood.podcaster.logging.LogConfig;
-import org.stanwood.podcaster.logging.LogSetupHelper;
-import org.stanwood.podcaster.util.FileHelper;
 import org.stanwood.podcaster.config.ConfigException;
 import org.stanwood.podcaster.config.ConfigReader;
+import org.stanwood.podcaster.logging.LogConfig;
+import org.stanwood.podcaster.logging.LogSetupHelper;
 
 /**
  * This class should be extended by classes that have a main method used to lauch them
@@ -39,9 +37,7 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 	private File configFile = null;
 //	private Controller controller;
 
-	/** This is used by tests to set a configuration that should be used, if null then a configuration is read
-	 * in the usual way. Once the configuration has been used, this is set back to null */
-	private static ConfigReader config = null;
+	private ConfigReader config = null;
 
 	/**
 	 * Create a instance of the class
@@ -95,16 +91,13 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 			printVersion();
 		}
 		try {
-			processConfig();	
+			processConfig();
 		} catch (FileNotFoundException e) {
 			fatal(e);
 			return false;
 		} catch (ConfigException e) {
 			fatal(e);
 			return false;
-		}
-		finally {
-			config=null;
 		}
 
 		return processOptions(args,cmd);
@@ -158,7 +151,7 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 			}
 		}
 		return true;
-	}	
+	}
 
 	private boolean initLogging(String logConfig) {
 		if (logConfig!=null) {
@@ -198,14 +191,6 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 		catch (NumberFormatException e) {
 			throw new ParseException("Unable to parse number from " + optionValue); //$NON-NLS-1$
 		}
-	}
-
-	/**
-	 * Used by tests to set the config reader
-	 * @param configReader the config reader
-	 */
-	public static void setConfig(ConfigReader configReader) {
-		config = configReader;
 	}
 
 	public ConfigReader getConfig() {

@@ -29,10 +29,10 @@ import org.apache.commons.logging.LogFactory;
  * class, so {@link #start()} should be called to start the thread. {@link #getResult()}
  * can be called to get the contents of the swallowed stream.
  */
-public class StreamGobbler extends Thread {
+public class StreamGobbler extends Thread implements IStreamGobbler {
 
 	private final static Log log = LogFactory.getLog(StreamGobbler.class);
-	
+
 	private InputStream is;
 	private StringBuilder result;
 	private boolean done;
@@ -54,17 +54,17 @@ public class StreamGobbler extends Thread {
 	 */
 	@Override
 	public void run() {
-		running = true;		
+		running = true;
 		try {
 			InputStreamReader isr = new InputStreamReader(is);
 			BufferedReader br = new BufferedReader(isr);
 			String line = null;
 			done = false;
-			
-			while (!isDone() && (line = br.readLine()) != null) {				
+
+			while (!isDone() && (line = br.readLine()) != null) {
 				result.append(line + "\n");
 			}
-		} catch (IOException ioe) {			
+		} catch (IOException ioe) {
 			log.debug(ioe.getMessage(),ioe);
 		}
 		finally {
@@ -85,10 +85,12 @@ public class StreamGobbler extends Thread {
 	 * This will return true when the string has been gobbled.
 	 * @return True if the stream has been completely gobbled, otherwise false.
 	 */
+	@Override
 	public boolean isDone() {
 		return done;
 	}
 
+	@Override
 	public void done() {
 		done = true;
 		// Block until it finishes

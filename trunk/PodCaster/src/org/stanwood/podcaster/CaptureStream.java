@@ -24,25 +24,26 @@ import org.stanwood.podcaster.config.AbstractPodcast;
 
 /**
  * This class provides a entry point for capturing audio and storing meta data about.
- * See the {@link CaptureStream.main(String[])} method for more details. 
+ * See the {@link CaptureStream.main(String[])} method for more details.
  */
 public class CaptureStream extends AbstractLauncher {
 
 	private final DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss");
-	
+
 	/* package for test */ static IExitHandler exitHandler = null;
 	private final static Log log = LogFactory.getLog(CaptureStream.class);
 
 	private static PrintStream stdout = System.out;
 	private static PrintStream stderr = System.err;
-	
+
 	private static final List<Option> OPTIONS;
-	
+
 	private final static String OUTPUT_FILE_OPTION = "o";
 	private final static String PODCAST_ID_OPTION = "p";
-	
+
 	private File outputFile = null;
-	private AbstractPodcast podcast;
+
+	private String id;
 
 	static {
 		OPTIONS = new ArrayList<Option>();
@@ -51,18 +52,18 @@ public class CaptureStream extends AbstractLauncher {
 		o.setArgName("id");
 		o.setRequired(true);
 		OPTIONS.add(o);
-		
+
 		o = new Option(OUTPUT_FILE_OPTION,"output",true,"Audio Output file");
 		o.setArgName("file");
 		o.setRequired(true);
-		OPTIONS.add(o);		
+		OPTIONS.add(o);
 	}
 
 	/**
-	 * The main method used to capture a stream to a audio file. 
-	 * 
+	 * The main method used to capture a stream to a audio file.
+	 *
 	 * The following command line syntax is passed to this method:
-	 * <pre> 
+	 * <pre>
 	 * stream-capture [-a &lt;url&gt;] [-c &lt;copyright&gt;] [-e &lt;description&gt;] [-f
      * &lt;format&gt;] [-h] [-i &lt;title&gt;] [-l &lt;arg&gt;] -o &lt;wavFile&gt; [-r &lt;artist&gt;] -t
      * &lt;msecs&gt; -u &lt;url&gt;
@@ -78,7 +79,7 @@ public class CaptureStream extends AbstractLauncher {
      * -t,--time &lt;msecs&gt;                    Capture time (msecs)
      * -u,--url &lt;url&gt;                       Radio url
 	 * </pre>
-	 */	
+	 */
 	public static void main(String[] args) {
 		if (exitHandler==null) {
 			exitHandler = new DefaultExitHandler();
@@ -102,16 +103,17 @@ public class CaptureStream extends AbstractLauncher {
 	 */
 	@Override
 	protected boolean run() {
-		try {						
+		AbstractPodcast podcast = getConfig().getPodcast(id);
+		try {
 			Date startDate = new Date();
 			String entryTitle = podcast.getFeedTitle()+" "+DF.format(startDate);
-			
-			ICaptureStream streamCapture = StreamCaptureFactory.getStreamCapture(podcast);					
+
+			ICaptureStream streamCapture = StreamCaptureFactory.getStreamCapture(podcast);
 			IAudioFile audioFile = streamCapture.captureLiveAudioStream(getConfig(),podcast);
 			if (log.isDebugEnabled()) {
 				log.debug("Captured " + audioFile.getFile() + " with size " +audioFile.getFile().length());
 			}
-			
+
 			log.info("Converting stream to " + podcast.getFormat().getName());
 			IAudioFile audio = AudioFileConverter.convertAudio(getConfig(),audioFile, podcast.getFormat(),outputFile);
 			if (podcast.getFormat()!=Format.WAV) {
@@ -135,7 +137,7 @@ public class CaptureStream extends AbstractLauncher {
 			else {
 				log.error("Meta data can't be set on "+Format.WAV.getName()+" format files");
 				return false;
-			}			
+			}
 		}
 		catch (Exception e)
 		{
@@ -153,19 +155,19 @@ public class CaptureStream extends AbstractLauncher {
 	 */
 	@Override
 	protected boolean processOptions(String[] args, CommandLine cmd) {
-					
+
 		outputFile = new File(cmd.getOptionValue(OUTPUT_FILE_OPTION));
 		if (outputFile.exists()) {
 			log.error("Output file " + outputFile.getAbsolutePath()+" already exsits");
 			return false;
 		}
-		
+
 		String id = cmd.getOptionValue(PODCAST_ID_OPTION);
 		if (id==null) {
 			log.error("No podcast ID given");
 			return false;
 		}
-		podcast = getConfig().getPodcast(id);
+		this.id = id;
 
 		return true;
 	}

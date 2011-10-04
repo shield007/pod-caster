@@ -2,6 +2,7 @@ package org.stanwood.podcaster.cliutils;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -17,7 +18,6 @@ import org.apache.commons.logging.LogFactory;
 import org.stanwood.podcaster.StreamReference;
 import org.stanwood.podcaster.audio.IAudioFile;
 import org.stanwood.podcaster.audio.WavFile;
-import org.stanwood.podcaster.capture.ICaptureStream;
 import org.stanwood.podcaster.config.ConfigReader;
 import org.stanwood.podcaster.util.AbstractExecutable;
 
@@ -34,7 +34,7 @@ public class MPlayer extends AbstractExecutable {
 	public MPlayer(ConfigReader config) {
 		super(config);
 	}
-	
+
 	/**
 	 * This will capture a audio stream from using mplayer for the given amount of time
 	 * @param wavOutputFile The WAV file to create from the audio stream
@@ -43,14 +43,14 @@ public class MPlayer extends AbstractExecutable {
 	 * @throws MPlayerException Thrown if their is a problem with mplayer
 	 */
 	public IAudioFile captureLiveAudioStream(StreamReference stream,long time) throws  MPlayerException
-	{		
+	{
 		File wavOutputFile;
 		try {
 			wavOutputFile = File.createTempFile("captured", ".wav");
 		} catch (IOException e) {
 			throw new MPlayerException("Unable to create temp file",e);
 		}
-				
+
 		log.info("Capturing audio from stream: " + stream.getUrl() + " to " + wavOutputFile.getAbsolutePath());
 		List<String> args = new ArrayList<String>();
 		args.add(getConfig().getMPlayerPath());
@@ -86,6 +86,7 @@ public class MPlayer extends AbstractExecutable {
 	 */
 	private void executeWithTimeout(final List<String> args,long timeout) throws MPlayerException {
 		FutureTask<Integer>task = new FutureTask<Integer>(new Callable<Integer>() {
+			@Override
 			public Integer call() throws Exception {
 				return execute(args);
 			}
@@ -96,7 +97,7 @@ public class MPlayer extends AbstractExecutable {
 		try {
 			int value = task.get(timeout, TimeUnit.MILLISECONDS);
 			log.error("Unable to execute mplayer command: " + getErrorStream());
-			throw new MPlayerException("Unexpected exit with exit code " + value);
+			throw new MPlayerException(MessageFormat.format("Unexpected exit with exit code {0}",value));
 		}
 		catch (TimeoutException e) {
 			kill();
@@ -108,5 +109,5 @@ public class MPlayer extends AbstractExecutable {
 			throw new MPlayerException(e.getMessage(),e);
 		}
 	}
-	
+
 }
