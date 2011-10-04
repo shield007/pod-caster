@@ -28,7 +28,7 @@ LIB_DIR=/usr/share/java
 
 # Launch application.
 CLASSPATH=$LIB_DIR/podcaster.jar
-CLASSPATH=$CLASSPATH:jakarta-commons-cli.jar
+CLASSPATH=$CLASSPATH:$LIB_DIR/jakarta-commons-cli.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/jakarta-commons-logging.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/log4j.jar
 CLASSPATH=$CLASSPATH:$LIB_DIR/ROME.jar
