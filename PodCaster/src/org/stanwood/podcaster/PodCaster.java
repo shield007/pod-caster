@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,16 +34,15 @@ public class PodCaster extends AbstractLauncher{
 
 	/* package for test */ static IExitHandler exitHandler = null;
 	private final static Log log = LogFactory.getLog(PodCaster.class);
-	
+
 	private static PrintStream stdout = System.out;
 	private static PrintStream stderr = System.err;
 
 	private final DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss");
+	private String id;
 
 	private static final List<Option> OPTIONS;
 	private final static String PODCAST_ID_OPTION = "p";
-
-	private AbstractPodcast podcast;	
 
 	static {
 		OPTIONS = new ArrayList<Option>();
@@ -82,8 +82,8 @@ public class PodCaster extends AbstractLauncher{
 			log.error("No podcast ID given");
 			return false;
 		}
-		podcast = getConfig().getPodcast(id);
-		
+		this.id = id;
+
 		return true;
 	}
 
@@ -93,16 +93,21 @@ public class PodCaster extends AbstractLauncher{
 	 */
 	@Override
 	protected boolean run() {
+		AbstractPodcast podcast = getConfig().getPodcast(id);
+		if (podcast==null) {
+			log.error(MessageFormat.format("Unable to find podcast with id ''{0}''", id));
+			return false;
+		}
 		try {
 			Date startDate = new Date();
-			String entryTitle = podcast.getFeedTitle()+" "+DF.format(startDate);			
-			 
-			ICaptureStream streamCapture = StreamCaptureFactory.getStreamCapture(podcast);						
+			String entryTitle = podcast.getFeedTitle()+" "+DF.format(startDate);
+
+			ICaptureStream streamCapture = StreamCaptureFactory.getStreamCapture(podcast);
 			IAudioFile audioFile = streamCapture.captureLiveAudioStream(getConfig(),podcast);
 			if (log.isDebugEnabled()) {
 				log.debug("Captured " + audioFile.getFile() + " with size " +audioFile.getFile().length());
 			}
-			log.info("Converting stream to " + podcast.getFormat().getName());
+			log.info(MessageFormat.format("Converting stream to {0}",podcast.getFormat().getName()));
 			File outputFile = new File(podcast.getRSSFile().getParentFile(),entryTitle.replaceAll(" ","-")+podcast.getFormat().getExtension());
 
 			String baseUrl = podcast.getRSSURL().toExternalForm();
@@ -129,7 +134,7 @@ public class PodCaster extends AbstractLauncher{
 				audio.writeMetaData();
 			}
 			else {
-				log.error("Meta data can't be set on "+Format.WAV.getName()+" format files");
+				log.error(MessageFormat.format("Meta data can't be set on {0} format files",Format.WAV.getName()));
 				return false;
 			}
 

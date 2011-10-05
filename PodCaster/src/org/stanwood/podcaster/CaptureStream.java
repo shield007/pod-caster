@@ -3,6 +3,7 @@ package org.stanwood.podcaster;
 import java.io.File;
 import java.io.PrintStream;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -104,6 +105,10 @@ public class CaptureStream extends AbstractLauncher {
 	@Override
 	protected boolean run() {
 		AbstractPodcast podcast = getConfig().getPodcast(id);
+		if (podcast==null) {
+			log.error(MessageFormat.format("Unable to find podcast with id ''{0}''", id));
+			return false;
+		}
 		try {
 			Date startDate = new Date();
 			String entryTitle = podcast.getFeedTitle()+" "+DF.format(startDate);
@@ -114,7 +119,7 @@ public class CaptureStream extends AbstractLauncher {
 				log.debug("Captured " + audioFile.getFile() + " with size " +audioFile.getFile().length());
 			}
 
-			log.info("Converting stream to " + podcast.getFormat().getName());
+			log.info(MessageFormat.format("Converting stream to {0}",podcast.getFormat().getName()));
 			IAudioFile audio = AudioFileConverter.convertAudio(getConfig(),audioFile, podcast.getFormat(),outputFile);
 			if (podcast.getFormat()!=Format.WAV) {
 				if (entryTitle!=null) {
@@ -135,7 +140,7 @@ public class CaptureStream extends AbstractLauncher {
 				audio.writeMetaData();
 			}
 			else {
-				log.error("Meta data can't be set on "+Format.WAV.getName()+" format files");
+				log.error(MessageFormat.format("Meta data can't be set on {0} format files",Format.WAV.getName()));
 				return false;
 			}
 		}
@@ -158,7 +163,7 @@ public class CaptureStream extends AbstractLauncher {
 
 		outputFile = new File(cmd.getOptionValue(OUTPUT_FILE_OPTION));
 		if (outputFile.exists()) {
-			log.error("Output file " + outputFile.getAbsolutePath()+" already exsits");
+			log.error(MessageFormat.format("Output file {0} already exsits", outputFile.getAbsolutePath()));
 			return false;
 		}
 
