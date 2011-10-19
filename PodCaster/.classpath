@@ -9,6 +9,6 @@
 	<classpathentry kind="lib" path="libs/run-time/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="libs/run-time/jdom.jar"/>
 	<classpathentry kind="lib" path="libs/run-time/rome-1.0.jar"/>
-	<classpathentry kind="lib" path="libs/run-time/jaudiotagger-2.0.2.jar"/>
+	<classpathentry kind="lib" path="libs/run-time/jaudiotagger-2.0.4-20110922.152428-14.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
