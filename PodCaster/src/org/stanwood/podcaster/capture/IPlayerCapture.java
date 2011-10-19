@@ -43,6 +43,9 @@ public class IPlayerCapture implements ICaptureStream {
 			throw new CaptureException("Unable to create temp file",e);
 		}
 		File rawFile = capture(config, pc, wavOutputFile);
+		if (log.isDebugEnabled()) {
+			log.debug("Captured "+rawFile+" with size "+rawFile.length());
+		}
 		log.info(MessageFormat.format("Converting ''{0}'' to wav file ''{1}''...",rawFile,wavOutputFile));
 		FFMPEG ffmpeg = new FFMPEG(config);
 		try {
@@ -66,7 +69,7 @@ public class IPlayerCapture implements ICaptureStream {
 		final StreamGobbler getiplayerErrorGobbler = new StreamGobbler(getiplayer.getErrorStream(),"getiplayer stderr reader");
 		FileOutputStream fs = null;
 		try {
-			File captureFile = FileHelper.createTempFile("capture", ".raw");
+			File captureFile = FileHelper.createTempFile("capture", ".dat");
 			log.info(MessageFormat.format("Capturing stream to file {0}",captureFile.getAbsolutePath()));
 			fs = new FileOutputStream(captureFile);
 
