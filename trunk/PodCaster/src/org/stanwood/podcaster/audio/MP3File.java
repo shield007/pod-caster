@@ -39,7 +39,7 @@ public class MP3File extends AbstractAudioFile {
 	}
 
 	/**
-	 * Used to get the format of the file. 
+	 * Used to get the format of the file.
 	 * @return This will return {@link Format.MP3}
 	 */
 	@Override
@@ -54,7 +54,7 @@ public class MP3File extends AbstractAudioFile {
 	@Override
 	public void setTitle(String title) {
 		this.title = title;
-	}	
+	}
 
 	/**
 	 * Used to set the copyright text of the file
@@ -72,7 +72,7 @@ public class MP3File extends AbstractAudioFile {
 	@Override
 	public void setCopyright(String copyright) {
 		this.copyright = copyright;
-	}	
+	}
 
 	/**
 	 * Used to set the artist of the file
@@ -110,7 +110,7 @@ public class MP3File extends AbstractAudioFile {
 				tag.setField(FieldKey.ARTIST,artist);
 			}
 			if (copyright!=null) {
-				tag.setField(FieldKey.ALBUM, copyright);				
+				tag.setField(FieldKey.ALBUM, copyright);
 			}
 			if (title!=null) {
 				tag.setField(FieldKey.TITLE,title);
@@ -127,10 +127,10 @@ public class MP3File extends AbstractAudioFile {
 				if (imageFile.read(imagedata)!=imagedata.length) {
 					throw new MetaDataException("Unable to read cover art " + artworkURL.toExternalForm());
 				}
-				v2tag.addField(v2tag.createArtworkField(imagedata,coverArt.getContentType()));				
+				v2tag.addField(v2tag.createArtworkField(imagedata,coverArt.getContentType()));
 			}
 
-			tag.setField(FieldKey.YEAR,String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));			
+			tag.setField(FieldKey.YEAR,String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
 			mp3.commit();
 
 //			AudioFileIO.write(mp3);
@@ -139,7 +139,7 @@ public class MP3File extends AbstractAudioFile {
 			throw new MetaDataException(e.getMessage(),e);
 		}
 	}
-	
+
 	/**
 	 * Used to convert a wave file to a MP3 file. The file
 	 * is then stored as {@link #getFile()}, leaving the original wav intact.
