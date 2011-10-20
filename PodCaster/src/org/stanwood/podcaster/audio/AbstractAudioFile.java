@@ -6,10 +6,17 @@ import java.net.URL;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 
+/**
+ * A base class for audio files
+ */
 public abstract class AbstractAudioFile implements IAudioFile {
 
 	private File file;
 
+	/**
+	 * The constructor
+	 * @param file The audio file
+	 */
 	public AbstractAudioFile(File file){
 		this.file = file;
 	}
@@ -22,7 +29,7 @@ public abstract class AbstractAudioFile implements IAudioFile {
 	public File getFile() {
 		return file;
 	}
-	
+
 	/**
 	 * Used to set the title of the file. This will always throw  {@link UnsupportedOperationException}
 	 * and should be reimplemented by extending classes.
@@ -83,12 +90,13 @@ public abstract class AbstractAudioFile implements IAudioFile {
 	public void writeMetaData() throws MetaDataException {
 		throw new UnsupportedOperationException("Unable to set metadata on "+getFormat().getName()+" format of file");
 	}
-	
+
 	/**
 	 * Gets the length in seconds of the audio
 	 * @return The length of the audio
 	 * @throws MetaDataException Thrown if their is a problem reading the audio
 	 */
+	@Override
 	public int getLengthAsSeconds() throws MetaDataException {
 		try {
 			AudioFile mp4 = AudioFileIO.read(getFile());

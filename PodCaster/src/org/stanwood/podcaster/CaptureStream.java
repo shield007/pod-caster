@@ -25,7 +25,7 @@ import org.stanwood.podcaster.config.AbstractPodcast;
 
 /**
  * This class provides a entry point for capturing audio and storing meta data about.
- * See the {@link CaptureStream.main(String[])} method for more details.
+ * See the {@link #main(String[])} method for more details.
  */
 public class CaptureStream extends AbstractLauncher {
 
@@ -65,21 +65,17 @@ public class CaptureStream extends AbstractLauncher {
 	 *
 	 * The following command line syntax is passed to this method:
 	 * <pre>
-	 * stream-capture [-a &lt;url&gt;] [-c &lt;copyright&gt;] [-e &lt;description&gt;] [-f
-     * &lt;format&gt;] [-h] [-i &lt;title&gt;] [-l &lt;arg&gt;] -o &lt;wavFile&gt; [-r &lt;artist&gt;] -t
-     * &lt;msecs&gt; -u &lt;url&gt;
-     * -a,--metaArtworkUrl &lt;url&gt;            Set the artwork to the URL
-     * -c,--metaCopyright &lt;copyright&gt;       Set the copyright meta data
-     * -e,--metaDescription &lt;description&gt;   Set the description meta data
-     * -f,--format &lt;format&gt;                 Capture format (wav,mp3,mp4)
-     * -h,--help                            Show the help
-     * -i,--metaTitle &lt;title&gt;               Set the title meta data
-     * -l,--log_config &lt;arg&gt;             The log config mode [&lt;INFO&gt;|&lt;DEBUG&gt;|&lt;log4j config file&gt;]
-     * -o,--output &lt;wavFile&gt;                Output file
-     * -r,--metaArtist &lt;artist&gt;             Set the artist meta data
-     * -t,--time &lt;msecs&gt;                    Capture time (msecs)
-     * -u,--url &lt;url&gt;                       Radio url
+	 * usage: stream-capture [-c &lt;file&gt] [-h] [-l &lt;info|debug|file&gt] -o &lt;file&gt -p &lt;id&gt [-v]
+	 *
+	 *  --version, -v                 Display the version
+	 *  --config_file, -c &lt;file&gt;      The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
+	 *  --podcast, -p &lt;id&gt;            The ID of the podcast from the configuration
+	 *  --output, -o &lt;file&gt;           Audio Output file
+	 *  --log_config, -l &lt;info|debug|file&gt;
+	 *                                The log config mode [INFO|DEBUG|log4j config file]
+  	 *  --help, -h                    Show the help
 	 * </pre>
+	 * @param args The arguments
 	 */
 	public static void main(String[] args) {
 		if (exitHandler==null) {

@@ -1,7 +1,6 @@
 package org.stanwood.podcaster.audio;
 
 import java.io.File;
-import java.io.RandomAccessFile;
 import java.net.URL;
 import java.util.Calendar;
 
@@ -11,12 +10,9 @@ import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.stanwood.podcaster.cliutils.FFMPEG;
 import org.stanwood.podcaster.cliutils.FFMPEGException;
 import org.stanwood.podcaster.config.ConfigReader;
-import org.stanwood.podcaster.util.DownloadedFile;
-import org.stanwood.podcaster.util.FileHelper;
 
 /**
  * This class is used to write metadata to Ogg format files
@@ -25,12 +21,11 @@ public class OggFile extends AbstractAudioFile {
 
 	private final static Log log = LogFactory.getLog(OggFile.class);
 
-	public URL podcastUrl;
-	public String title;
-	public URL artworkURL;
-	public String copyright;
-	public String artist;
-	public String description;
+	private String title;
+	private URL artworkURL;
+	private String copyright;
+	private String artist;
+	private String description;
 
 	/**
 	 * Used to construct a {@link OggFile} instance
@@ -39,9 +34,9 @@ public class OggFile extends AbstractAudioFile {
 	public OggFile(File file) {
 		super(file);
 	}
-	
+
 	/**
-	 * Used to get the format of the file. 
+	 * Used to get the format of the file.
 	 * @return This will return {@link Format.OGG}
 	 */
 	@Override
@@ -67,7 +62,7 @@ public class OggFile extends AbstractAudioFile {
 				tag.setField(FieldKey.ARTIST,artist);
 			}
 			if (copyright!=null) {
-				tag.setField(FieldKey.ALBUM, copyright);				
+				tag.setField(FieldKey.ALBUM, copyright);
 			}
 			if (title!=null) {
 				tag.setField(FieldKey.TITLE,title);
@@ -83,11 +78,11 @@ public class OggFile extends AbstractAudioFile {
 //				byte[] imagedata = new byte[(int) imageFile.length()];
 //				if (imageFile.read(imagedata)!=imagedata.length) {
 //					throw new MetaDataException("Unable to read cover art " + artworkURL.toExternalForm());
-//				}				
+//				}
 //				tag.addField(((OggTag)tag).createArtworkField(imagedata));
 //			}
 
-			tag.setField(FieldKey.YEAR,String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));					
+			tag.setField(FieldKey.YEAR,String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
 			ogg.commit();
 		}
 		catch (Exception e) {
@@ -139,7 +134,7 @@ public class OggFile extends AbstractAudioFile {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	/**
 	 * Used to convert a wave file to a MP4 file. The file
 	 * is then stored as {@link #getFile()}, leaving the original wav intact.
@@ -149,6 +144,6 @@ public class OggFile extends AbstractAudioFile {
 	@Override
 	public void fromWav(ConfigReader config,WavFile wav) throws FFMPEGException {
 		FFMPEG ffmpeg = new FFMPEG(config);
-		ffmpeg.wav2ogg(wav.getFile(),getFile());		
+		ffmpeg.wav2ogg(wav.getFile(),getFile());
 	}
 }

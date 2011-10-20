@@ -28,7 +28,7 @@ import org.stanwood.podcaster.util.FileHelper;
 
 /**
  * This class provides a tool for capturing audio streams and storing them as podcasts.
- * See the {@link PodCaster.main(String[])} method for more details.
+ * See the {@link #main(String[])} method for more details.
  */
 public class PodCaster extends AbstractLauncher{
 
@@ -53,6 +53,22 @@ public class PodCaster extends AbstractLauncher{
 		OPTIONS.add(o);
 	}
 
+	/**
+	 * The main method used to podcast a new episode as specified in the configuration file
+	 *
+	 * The following command line syntax is passed to this method:
+	 * <pre>
+	 * usage: podcaster [-c &lt;file&gt] [-h] [-l &lt;info|debug|file&gt] -p &lt;id&gt [-v]
+	 *
+	 *  --version, -v                 Display the version
+	 *  --config_file, -c &lt;file&gt;      The location of the config file. If not present, attempts to load it from /etc/mediafetcher-conf.xml
+	 *  --podcast, -p &lt;id&gt;            The ID of the podcast from the configuration
+	 *  --log_config, -l &lt;info|debug|file&gt;
+	 *                                The log config mode [INFO|DEBUG|log4j config file]
+  	 *  --help, -h                    Show the help
+	 * </pre>
+	 * @param args The arguments
+	 */
 	public static void main(String[] args) {
 		if (exitHandler==null) {
 			exitHandler = new DefaultExitHandler();

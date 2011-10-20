@@ -25,12 +25,11 @@ public class MP4File extends AbstractAudioFile {
 
 	private final static Log log = LogFactory.getLog(MP4File.class);
 
-	public URL podcastUrl;
-	public String title;
-	public URL artworkURL;
-	public String copyright;
-	public String artist;
-	public String description;
+	private String title;
+	private URL artworkURL;
+	private String copyright;
+	private String artist;
+	private String description;
 
 	/**
 	 * Used to construct a {@link MP4File} instance
@@ -39,9 +38,9 @@ public class MP4File extends AbstractAudioFile {
 	public MP4File(File file) {
 		super(file);
 	}
-	
+
 	/**
-	 * Used to get the format of the file. 
+	 * Used to get the format of the file.
 	 * @return This will return {@link Format.MP4}
 	 */
 	@Override
@@ -67,7 +66,7 @@ public class MP4File extends AbstractAudioFile {
 				tag.setField(FieldKey.ARTIST,artist);
 			}
 			if (copyright!=null) {
-				tag.setField(FieldKey.ALBUM, copyright);				
+				tag.setField(FieldKey.ALBUM, copyright);
 			}
 			if (title!=null) {
 				tag.setField(FieldKey.TITLE,title);
@@ -87,7 +86,7 @@ public class MP4File extends AbstractAudioFile {
 				tag.addField(((Mp4Tag)tag).createArtworkField(imagedata));
 			}
 
-			tag.setField(FieldKey.YEAR,String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));					
+			tag.setField(FieldKey.YEAR,String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
 			mp4.commit();
 		}
 		catch (Exception e) {
@@ -139,7 +138,7 @@ public class MP4File extends AbstractAudioFile {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 	/**
 	 * Used to convert a wave file to a MP4 file. The file
 	 * is then stored as {@link #getFile()}, leaving the original wav intact.
@@ -149,6 +148,6 @@ public class MP4File extends AbstractAudioFile {
 	@Override
 	public void fromWav(ConfigReader config,WavFile wav) throws FFMPEGException {
 		FFMPEG ffmpeg = new FFMPEG(config);
-		ffmpeg.wav2mp4(wav.getFile(),getFile());		
+		ffmpeg.wav2mp4(wav.getFile(),getFile());
 	}
 }
