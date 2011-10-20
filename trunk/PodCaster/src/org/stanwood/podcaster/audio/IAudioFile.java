@@ -17,7 +17,7 @@ public interface IAudioFile {
 	 * @return The raw file object
 	 */
 	public File getFile();
-	
+
 	/**
 	 * Used to get the format of the file
 	 * @return The format of the file
@@ -71,7 +71,8 @@ public interface IAudioFile {
 	/**
 	 * Used to convert a wave file to the a the correct format. The file
 	 * is then stored as {@link #getFile()}, leaving the original wav intact.
-	 * @param wav The wav file to conveert
+	 * @param config The application configuration
+	 * @param wav The wav file to convert
 	 * @throws FFMPEGException Thrown if their is a problem converting the file
 	 */
 	public void fromWav(ConfigReader config,WavFile wav) throws FFMPEGException;

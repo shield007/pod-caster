@@ -24,11 +24,11 @@ public class MP3File extends AbstractAudioFile {
 
 	private final static Log log = LogFactory.getLog(MP3File.class);
 
-	public String title;
-	public URL artworkURL;
-	public String copyright;
-	public String artist;
-	public String description;
+	private String title;
+	private URL artworkURL;
+	private String copyright;
+	private String artist;
+	private String description;
 
 	/**
 	 * Used to construct a MP3File instance

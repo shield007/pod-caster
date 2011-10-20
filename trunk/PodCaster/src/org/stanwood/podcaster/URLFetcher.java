@@ -5,6 +5,9 @@ import java.net.URL;
 
 import org.stanwood.podcaster.util.WebFile;
 
+/**
+ * Used to download audio streams from URL's
+ */
 public class URLFetcher {
 
 	private boolean playlist;
