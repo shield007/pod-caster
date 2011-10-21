@@ -13,23 +13,26 @@ import org.stanwood.podcaster.config.ConfigReader;
 import org.stanwood.podcaster.util.AbstractExecutable;
 
 /**
- * This class is a wrapper around the mplayer application and is used to drive
- * mplayer in a more java friendly way
+ * This class is used to wrap around the get_iplayer application so it can be used from
+ * java to capture audio from iplayer.
  */
 public class GetIPlayer extends AbstractExecutable {
 
 	private final static Log log = LogFactory.getLog(GetIPlayer.class);
 
+	/**
+	 * The constructor
+	 * @param config The application configuration
+	 */
 	public GetIPlayer(ConfigReader config) {
 		super(config);
 	}
 
 	/**
-	 * This will capture a audio stream from using mplayer for the given amount of time
-	 * @param wavOutputFile The WAV file to create from the audio stream
-	 * @param stream The stream to capture
-	 * @param time The time in milliseconds to capture the stream
-	 * @throws MPlayerException Thrown if their is a problem with mplayer
+	 * Used to create the process that will be used to capture audio from iplayer.
+	 * @param epsiode The epsiode id to capture
+	 * @return The process
+	 * @throws CaptureException Thrown if their is a problem
 	 */
 	public Process captureLiveAudioStream(String epsiode) throws  CaptureException
 	{
