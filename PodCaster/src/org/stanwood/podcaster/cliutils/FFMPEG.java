@@ -24,6 +24,10 @@ public class FFMPEG extends AbstractExecutable {
 	private static final String MP4_BITRATE = "112k";
 	private static final String OGG_BITRATE = "112k";
 
+	/**
+	 * The constructor
+	 * @param config the application configuration
+	 */
 	public FFMPEG(ConfigReader config) {
 		super(config);
 	}
@@ -69,6 +73,12 @@ public class FFMPEG extends AbstractExecutable {
 		}
 	}
 
+	/**
+	 * Used to convert a file format to a wav using FFMPEG's auto detection
+	 * @param raw The file to convert
+	 * @param target The converted file
+	 * @throws FFMPEGException Thrown if their is a problem
+	 */
 	public void raw2Wav(File raw,File target) throws FFMPEGException {
 		try {
 			List<String> args = new ArrayList<String>();
@@ -131,6 +141,12 @@ public class FFMPEG extends AbstractExecutable {
 		}
 	}
 
+	/**
+	 * Used to convert a wav audio file to a ogg audio file
+	 * @param wavFile The wav file
+	 * @param targetFile The ogg file to create
+	 * @throws FFMPEGException Thrown if their is a problem
+	 */
 	public void wav2ogg(File wavFile,File targetFile) throws FFMPEGException {
 		try {
 			List<String> args = new ArrayList<String>();
@@ -159,6 +175,12 @@ public class FFMPEG extends AbstractExecutable {
 		}
 	}
 
+	/**
+	 * Used to convert a wav audio file to a flac audio file
+	 * @param wavFile The wav file
+	 * @param targetFile The flac file to create
+	 * @throws FFMPEGException Thrown if their is a problem
+	 */
 	public void wav2flac(File wavFile,File targetFile) throws FFMPEGException {
 		try {
 			List<String> args = new ArrayList<String>();

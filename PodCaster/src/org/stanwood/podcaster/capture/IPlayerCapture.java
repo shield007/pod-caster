@@ -29,10 +29,16 @@ import org.stanwood.podcaster.util.IStreamGobbler;
 import org.stanwood.podcaster.util.Piper;
 import org.stanwood.podcaster.util.StreamGobbler;
 
+/**
+ * This class is used to capture BBC iplayer content using a 3rd part application get_iplayer.
+ */
 public class IPlayerCapture implements ICaptureStream {
 
 	private final static Log log = LogFactory.getLog(IPlayerCapture.class);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public IAudioFile captureLiveAudioStream(final ConfigReader config,AbstractPodcast pc) throws CaptureException {
 		final File wavOutputFile;

@@ -31,6 +31,10 @@ public class MPlayer extends AbstractExecutable {
 
 	private final static int CACHE_SIZE = 500;
 
+	/**
+	 * The constructor
+	 * @param config The application configuration
+	 */
 	public MPlayer(ConfigReader config) {
 		super(config);
 	}
@@ -40,6 +44,7 @@ public class MPlayer extends AbstractExecutable {
 	 * @param wavOutputFile The WAV file to create from the audio stream
 	 * @param stream The stream to capture
 	 * @param time The time in milliseconds to capture the stream
+	 * @return The audio file that was captured
 	 * @throws MPlayerException Thrown if their is a problem with mplayer
 	 */
 	public IAudioFile captureLiveAudioStream(StreamReference stream,long time) throws  MPlayerException
@@ -81,7 +86,6 @@ public class MPlayer extends AbstractExecutable {
 	 * @param args The arguments. The first is the application been executed.
 	 * @param timeout The timeout in milliseconds before the process is killed,
 	 *                or -1 for no timeout
-	 * @return The exit code of the application that is executed.
 	 * @throws MPlayerException Thrown if their is a problem with mplayer
 	 */
 	private void executeWithTimeout(final List<String> args,long timeout) throws MPlayerException {

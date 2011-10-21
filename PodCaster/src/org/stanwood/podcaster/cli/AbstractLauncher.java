@@ -193,6 +193,10 @@ public abstract class AbstractLauncher extends BaseLauncher implements ICLIComma
 		}
 	}
 
+	/**
+	 * Get the application configuration
+	 * @return the application configuration
+	 */
 	public ConfigReader getConfig() {
 		return config;
 	}
