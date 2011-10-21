@@ -262,14 +262,26 @@ public class ConfigReader extends XMLParser {
 		return dir;
 	}
 
+	/**
+	 * Used to get the path to FFMPEG command line application
+	 * @return the path to FFMPEG command line application
+	 */
 	public String getFFMpegPath() {
 		return ffmpegPath;
 	}
 
+	/**
+	 * Used to get the path to mplayer command line application
+	 * @return the path to mplayer command line application
+	 */
 	public String getMPlayerPath() {
 		return mplayerPath;
 	}
 
+	/**
+	 * Used to get the path to get_iplayer command line application
+	 * @return the path to get_iplayer command line application
+	 */
 	public String getGetIPlayerPath() {
 		return getIPlayerPath;
 	}
@@ -295,10 +307,19 @@ public class ConfigReader extends XMLParser {
 		return file;
 	}
 
+	/**
+	 * Used to get all the podcast information in the configuration
+	 * @return all the podcast information in the configuration
+	 */
 	public Collection<AbstractPodcast> getPodcasts() {
 		return podcasts.values();
 	}
 
+	/**
+	 * Used to lookup podcast information
+	 * @param id The ID of the podcast to lookup
+	 * @return The podcast information, or null if not found
+	 */
 	public AbstractPodcast getPodcast(String id) {
 		return podcasts.get(id);
 	}
