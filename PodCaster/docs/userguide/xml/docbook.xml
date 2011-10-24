@@ -1,7 +1,7 @@
 <?xml version='1.0'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V3.1//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
 	<!ENTITY apptitle "Pod Caster">	
-	<!ENTITY version "1.1">
+	<!ENTITY version "1.2">
 	<!ENTITY podcaster "podcaster">	
 	<!ENTITY capturestream "capture-stream">
 ]>
@@ -39,10 +39,11 @@
 			<para>
 				<itemizedlist>
 					<listitem><para>Capture Internet radio to audio files.</para></listitem>
-					<listitem><para>Create MP3, WAV and MP4 files.</para></listitem>
+					<listitem><para>Create MP3, WAV, FLAC and MP4 files.</para></listitem>
 					<listitem><para>Encodes metadata and cover art into the media files.</para></listitem>
-					<listitem><para>Create pod cast from captured radio stations.</para></listitem>
-					<listitem><para>Supports real audio and Microsoft ASF format.</para></listitem>					
+					<listitem><para>Create podcast from captured radio stations.</para></listitem>
+					<listitem><para>Supports real audio and Microsoft ASF format streams via mplayer application.</para></listitem>					
+					<listitem><para>Supports BBC iPlayer streams via get_iplayer application.</para></listitem>
 				</itemizedlist>				
 			</para>
 		</sect1>	
@@ -93,51 +94,20 @@
 				in a directory. This audio file is then added to a podcast.
 				<cmdsynopsis>
 					<command>&podcaster;</command>				
-					<arg>-h</arg>											
-					<arg choice="opt" rep="repeat">OPTIONS</arg>
-					<arg choice="plain">-f</arg>
-					<arg choice="plain">-i</arg>
-					<arg choice="plain">-rf</arg>
-					<arg choice="plain">-ru</arg>
-					<arg choice="plain">-t</arg>
-					<arg choice="plain">-u</arg>					  
+					<arg>-h</arg>
+					<arg>-v</arg>																
+					<arg>-c</arg>				
+					<arg>-p</arg>
+					<arg>-l</arg>										 
 				</cmdsynopsis>				
 			</para>				
 			<para>
-			This command uses the system tools <command>ffmpeg</command> and <command>mplayer</command>, by defailt
-			the tool will look for these in /usr/bin, however it possible to change the location of these via a configuration
+			This command uses the system tools to capture audio streams specified in the configuation file to a audio file.
+			These are then added to a podcast. All the configuration for the podcasts and audio file is done via a configuartion
 			file. See the <link linkend="configuration">configuration chapter</link> for more information on the format. 
 			</para>												
 			<sect2>				
-					<title>Optional arguemnts:</title>
-					<sect3>
-						<title>-a, --metaArtworkUrl</title>
-						<para>The URL to the cover artwork that should be encodeding into the captured audio file. If 
-							  this option is missing, the audio file will not have any cover artwork.</para>
-					</sect3>
-					<sect3>
-						<title>-c, --metaCopyright</title>
-						<para>
-						If this option is given, then a copyright message is stored in the captured audio file.
-						</para>
-					</sect3>			
-					<sect3>
-						<title>-ed, --entryDescription</title>
-						<para>If this option is given, then a description is encoded as metadata in the captured audio file</para>
-					</sect3>
-					<sect3>
-						<title>-fa, --feedArtwork</title>
-						<para>This option is used to get a URL which points to cover artwork that can be used as the feeds
-						artwork image. The artwork will be downloaded to file and placed next to the feed on the filesystem.
-						If the feed already exsits, then this option tells it to use this artwork instead of any artwork
-						that might have been used in the past.</para>
-					</sect3>
-					<sect3>
-						<title>-fd, --feedDescription</title>
-						<para>This option will place a description used to desctribe the podcast into the rss feed. If the 
-						feed already exsits, then this option tells it to use this description instead of any description
-						that might have been used in the past.</para>
-					</sect3>
+					<title>Optional arguemnts:</title>					
 					<sect3>
 						<title>-l, --log_config</title>
 						<para>This option is used to control the loggin of the tool. The default option if this option is
@@ -150,16 +120,80 @@
 						</para>
 					</sect3>
 					<sect3>
-						<title>-m,--maxEntries</title>
-						<para>Used to set the maximum number of entries in the podcast rss feed. If the number
-						in the feed exceeds the amount given, then entries are deleted, starting with the oldest untill
-						their is the same number in the feed as the number given with this option. If entries are removed,
-						then any files they reference are also deleted.</para>
+						<title>-h, --help</title>
+						<para>Show the help message</para>
 					</sect3>
 					<sect3>
-						<title>-r,--metaArtist</title>
-						<para>This option is used to encode the aritst into the audio files metadata and it's also 
-						used by the podcast rss feed.</para>
+						<title>-c, --config_file</title>
+						<para>
+						This option is used to override the default configuration file been used.  
+						</para>
+					</sect3>
+					<sect3>
+						<title>-v, --version</title>
+						<para>This is used to display the application version</para>
+					</sect3>					 
+			</sect2>
+			<sect2>				
+					<title>Required arguemnts:</title>
+					<sect3>
+						<title>-p, --podcast</title>
+						<para>The ID of the podcast from the configuration file</para>
+					</sect3>					
+			</sect2>
+			<sect2>
+				<title>Examples</title>
+				<para>
+					<example>
+						<title>Using &podcaster; in a cron job</title>
+						<para>
+						The following line is a example of using podcaster to record a radio show and insert it into a podcast. 
+						The line is a crontab entry set to execute the podcaster command at the correct time. This will record 
+						the Zane Lowe show from radio1 on a monday night and make a podcast out of it. It reads the details of
+						the podcast with the id "zaneLowe" from the configuration. 																
+						<code>							
+						50 18 * * 1 /usr/bin/podcaster -p zaneLowe
+						</code>
+						</para>
+					</example>										
+				</para>
+			</sect2>
+	</sect1>
+		<sect1 id="capturestreamcmd">
+			<title id="capturestreamcmd.title">&capturestream;</title>
+			<para>
+				The &capturestream; command is used capture audio from internet and store it in a media file.
+				<cmdsynopsis>
+					<command>&capturestream;</command>				
+					<arg>-h</arg>
+					<arg>-v</arg>																
+					<arg>-c</arg>				
+					<arg>-p</arg>
+					<arg>-l</arg>
+					<arg>-o</arg>										 
+				</cmdsynopsis>				
+			</para>
+			<para>
+			This command uses the system tools to retrive the audio and encode it into audio files, by default
+			the tool will look for these in on the path, however it possible to change the location of these via a configuration
+			file. See the <link linkend="configuration">configuration chapter</link> for more information on the format. 
+			</para>	
+			<para>
+			The details of audio file been captured is specified by the podcast ID and the details are configured in
+			the configuartion file.
+			</para>
+			<sect2>				
+					<title>Optional arguemnts:</title>					
+					<sect3>
+						<title>-l, --log_config</title>
+						<para>This option is used to control the loggin of the tool. The default option if this option is
+						missing is <emphasis>INFO</emphasis>, which will log only messages considered suiteable for information
+						level. If the option <emphasis>DEBUG</emphasis> is used then their will also be debug messages and the
+						format will be changed to make debuging easier.</para>
+						<para>
+							It's also possible to pass a log4j configuration file path to this option which will cause the logging
+							setup to be configured with the contents of the file.
+						</para>
 					</sect3>
 					<sect3>
 						<title>-h, --help</title>
@@ -170,133 +204,23 @@
 						<para>
 						This option is used to override the default configuration file been used.  
 						</para>
+					</sect3>
+					<sect3>
+						<title>-v, --version</title>
+						<para>This is used to display the application version</para>
 					</sect3>					 
 			</sect2>
 			<sect2>				
 					<title>Required arguemnts:</title>
 					<sect3>
-						<title>-f, --format</title>
-						<para>Used to set the format of the audio file is saved in. This can be either WAV, MP3 or MP4</para>
-					</sect3>
-					<sect3>
-						<title>-i, --metaTitle</title>
-						<para>This option is used to set the title of the entry</para>
-					</sect3>
-					<sect3>
-						<title>-rf, --rssFile</title>
-						<para>This is used to set the path to the podcast RSS file. This is the location
-						the RSS file is saved and updated.</para>
-					</sect3>
-					<sect3>
-						<title>-ru, --rssUrl</title>
-						<para>This is used to set a webserver URL to the RSS feed, this is encoded into the 
-						podcast RSS feed.</para>
-					</sect3>
-					<sect3>
-						<title>-t, --time</title>
-						<para>This is used to set the duration the audio should be captured for. The value
-						is in miliseconds</para>
-					</sect3>
-					<sect3>
-						<title>-u, --url</title>
-						<para>This is used to supply the URL to the audio stream that is to be captured</para>
-					</sect3>
-				</sect2>
-				<sect2>
-					<title>Examples</title>
-					<para>
-						<example>
-							<title>Using &podcaster; in a cron job</title>
-							<para>
-							The following line is a example of using podcaster to record a radio show and insert it into a podcast.
-							This will record the Zane Lowe show from radio1 on a monday night and make a podcast out of it. It will
-							also add artwork and metadata to the mp4/podcast that is created.																								
-							<code>							
-							50 18 * * 1 /usr/bin/podcaster --metaArtworkUrl="http://node1.bbcimg.co.uk/iplayer/images/episode/b00lgm79_640_360.jpg" --metaCopyright="BBC" --entryDescription="Two hours of the best new and cutting-edge music." --format mp4 --feedArtwork="http://node1.bbcimg.co.uk/iplayer/images/episode/b00lgm79_640_360.jpg" --feedDescription="Two hours of the best new and cutting-edge music, including Passion Pit in" --metaTitle "Zane Lowe" --maxEntries 15 --metaArtist "Zane Lowe" --rssFile /srv/www/htdocs/podcasts/radio/zane-lowe.xml --rssUrl http://stanwood0.homeip.net/podcasts/radio/zane-lowe.xml --time 7200000 -u http://www.bbc.co.uk/radio1/realaudio/media/r1live.ram
-							</code>
-							</para>
-						</example>										
-					</para>
-				</sect2>
-		</sect1>
-		<sect1 id="capturestreamcmd">
-			<title id="capturestreamcmd.title">&capturestream;</title>
-			<para>
-				The &capturestream; command is used capture audio from internet radio stations and store it as a audio file.
-				It will also store metadata passed on the command line in the file if the format allows it.
-				<cmdsynopsis>
-					<command>&capturestream;</command>				
-					<arg>-h</arg>											
-					<arg choice="opt" rep="repeat">OPTIONS</arg>
-					<arg choice="plain">-u</arg>
-					<arg choice="plain">-t</arg>
-					<arg choice="plain">-o</arg>										 
-				</cmdsynopsis>				
-			</para>
-			<para>
-			This command uses the system tools <command>ffmpeg</command> and <command>mplayer</command>, by defailt
-			the tool will look for these in /usr/bin, however it possible to change the location of these via a configuration
-			file. See the <link linkend="configuration">configuration chapter</link> for more information on the format. 
-			</para>	
-			<sect2>				
-				<title>Optional arguemnts:</title>
-				<sect3>
-					<title>-f, --format</title>
-					<para>Used to set the format of the audio file is saved in. This can be either WAV, MP3 or MP4</para>
-				</sect3>
-				<sect3>
-					<title>-i, --metaTitle</title>
-					<para>This option is used to set the title in the metadata of the caputred audio file</para>
-				</sect3>
-				<sect3>
-					<title>-a, --metaArtworkUrl</title>
-					<para>A URL to a artwork image which will be saved in the caputred audio file as it's artwork</para>
-				</sect3>
-				<sect3>
-					<title>-c, --metaCopyright</title>
-					<para>If this option is given, then a copyright message is stored in the captured audio file.</para>
-				</sect3>
-				<sect3>
-					<title>-r, --metaArtist</title>
-					<para>This option is used to set the artist in the metadata of the caputred audio file</para>
-				</sect3>
-				<sect3>
-					<title>-e, --metaDescription</title>
-					<para>This option is used to set the comment in the metadata of the caputred audio file</para>
-				</sect3>									
-				<sect3>
-					<title>-l, --log_config</title>
-					<para>This option is used to control the loggin of the tool. The default option if this option is
-					missing is <emphasis>INFO</emphasis>, which will log only messages considered suiteable for information
-					level. If the option <emphasis>DEBUG</emphasis> is used then their will also be debug messages and the
-					format will be changed to make debuging easier.</para>
-					<para>
-						It's also possible to pass a log4j configuration file path to this option which will cause the logging
-						setup to be configured with the contents of the file.
-					</para>
-				</sect3>
-				<sect3>
-					<title>-c, --config_file</title>
-					<para>
-					This option is used to override the default configuration file been used.  
-					</para>
-				</sect3>				
-			</sect2>
-			<sect2>				
-					<title>Required arguemnts:</title>
-					<sect3>
-						<title>-u, --url</title>
-						<para>This is used to supply the URL to the audio stream that is to be captured</para>
+						<title>-p, --podcast</title>
+						<para>The ID of the podcast from the configuration file</para>
 					</sect3>
 					<sect3>
 						<title>-o, --output</title>
 						<para>The path to the file the captured audio should be saved in.</para>
 					</sect3>
-					<sect3>
-						<title>-t, --time</title>
-						<para>This is used to set the duration the audio should be captured for. The value
-						is in miliseconds</para>
-					</sect3>				
+										
 			</sect2>
 		</sect1>
 	</chapter>
@@ -308,29 +232,57 @@
 		<para>
 			The applications have CLI options that can be used too tell it which configuration
 			file to use. If this option is not present, then it will look for the file at the 
-			location <filename>/etc/podcaster-conf.xml</filename>. If this can't be found,
-			it will fall back too using default settings.
+			locations <filename>/etc/podcaster-conf.xml</filename> or <filename>~/.podcaster/podcaster-conf.xml</filename>. 			
+		</para>
+		<para>
 		</para>		
 		<para>					
 			<example>		
-				<title>The default configuration file</title>
+				<title>A configuration file for downloading from iPlayer and a Stream</title>
 				<programlisting>
-			<![CDATA[<config>
-	<sources>
-		<!-- www.tv.com TV Show information source -->
-		<source id="org.stanwood.media.source.TVCOMSource"/>
-		
-		<!-- www.imdb.com The film information source -->
-		<source id="org.stanwood.media.source.IMDBSource"/>
-	</sources>
-	<stores>
-		<!-- Caches data in memory while the application is running -->
-		<store id="org.stanwood.media.store.memory.MemoryStore"/>
-		
-		<!-- A Store for saving Show/Movies in a XML file in the current directory -->
-		<store id="org.stanwood.media.store.XMLStore"/>		
-	</stores>
-</config>]]>			
+			<![CDATA[<podcaster>
+     <!-- Configure the paths to system tools that are used --> 
+     <global>
+     	<configDirectory>$HOME/.podcaster</configDirectory>
+		<mplayer-path>/usr/bin/mplayer</mplayer-path>
+		<ffmpeg-path>/usr/bin/ffmpeg</ffmpeg-path>
+		<get-iplayer-path>/usr/bin/get_iplayer</get-iplayer-path>
+     </global>
+     
+     <!-- The details used to download the zane lowe radio show from BBC iPlayer --> 
+	 <podcast id="zaneLowe" rssFile="/srv/www/htdocs/podcasts/radio/zane-lowe.xml" rssUrl="http://stanwood0.homeip.net/podcasts/radio/zane-lowe.xml" maxEntries="15">
+        <metadata>
+            <feed>
+                <title>Zane Lowe</title>
+                <image url="http://node1.bbcimg.co.uk/iplayer/images/episode/b00lgm79_640_360.jpg"/>
+                <copyright>BBC</copyright>
+                <artist>Zane Lowe</artist>
+                <description>Two hours of the best new and cutting-edge music.</description>
+            </feed>
+            <entry>
+                <description>Two hours of the best new and cutting-edge music.</description>
+            </entry>
+        </metadata>
+        <iplayer episode="Radio 1" captureTime="7200000"/>
+    </podcast>
+    
+    <!-- A Example of using a stream -->
+    <podcast id="radio" rssFile="/srv/www/htdocs/podcasts/radio.rss" rssUrl="http://blah.com/podcasts/radio.rss" maxEntries="10">
+		<metadata>
+		   <feed>
+		      <title>A test feed</title>
+		      <image url="http://www.bbc.co.uk/iplayer/images/brand/b006wq52_512_288.jpg"/>
+		      <copyright>Copyright</copyright>
+		      <artist>A Author</artist>
+		      <description>This is a test radio steam feed</description>
+		    </feed>
+		    <entry>
+		      <description>This is a test radio stream entry</description>
+		    </entry>		    
+		</metadata>
+		<radioStream url="http://www.bbc.co.uk/radio1/wm_asx/aod/radio1_hi.asx" captureTime="10000"/>
+	</podcast>
+</podcaster>]]>			
 				</programlisting>
 			</example>						
 		</para>		
@@ -345,7 +297,7 @@
 			</listitem>
 		</itemizedlist>
 		<para>
-        	Documentation copyright 2008-2009, John-Paul Stanford
+        	Documentation copyright 2008-2011, John-Paul Stanford
             <email>dev@stanwood.org.uk</email>
 		</para>		
 	</chapter>
