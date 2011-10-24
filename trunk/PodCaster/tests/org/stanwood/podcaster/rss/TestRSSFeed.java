@@ -15,8 +15,15 @@ import org.stanwood.podcaster.util.FileHelper;
 
 import com.sun.syndication.io.FeedException;
 
+/**
+ * Used to test the class {@link RSSFeed}
+ */
 public class TestRSSFeed {
 
+	/**
+	 * Used to test the creation of a new rss feed
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testFeedCreation() throws Exception {
 		File rssFile = File.createTempFile("temp", ".rss");
@@ -44,20 +51,24 @@ public class TestRSSFeed {
 
 		Assert.assertEquals("Check that created feed", expected.toString(),actual);
 	}
-	
+
+	/**
+	 * Used to test a RSS feed can be read and parsed
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testReadExsitingFeed() throws Exception {
 		File rssFile = File.createTempFile("temp", ".xml");
 		rssFile.deleteOnExit();
-		FileHelper.copy(TestRSSFeed.class.getResourceAsStream("testFeed.xml"), rssFile);				
+		FileHelper.copy(TestRSSFeed.class.getResourceAsStream("testFeed.xml"), rssFile);
 
 		RSSFeed rss = new RSSFeed(rssFile);
-		rss.parse();		
+		rss.parse();
 		rss.write();
 
 		String actual = FileHelper.readFileContents(rssFile);
-		
-		
+
+
 		StringBuilder expected = new StringBuilder();
 		expected.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+FileHelper.LS);
 		expected.append("<rss version=\"2.0\">"+FileHelper.LS);
@@ -71,25 +82,29 @@ public class TestRSSFeed {
 
 		Assert.assertEquals("Check that created feed", expected.toString(),actual);
 	}
-	
+
+	/**
+	 * Used to test the adding of a entry to the rss feed
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testAddEntry() throws Exception {
 		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-		
+
 		File rssFile = File.createTempFile("temp", ".xml");
 		rssFile.deleteOnExit();
-		FileHelper.copy(TestRSSFeed.class.getResourceAsStream("testFeed.xml"), rssFile);				
+		FileHelper.copy(TestRSSFeed.class.getResourceAsStream("testFeed.xml"), rssFile);
 
 		File mp3File = File.createTempFile("test", ".mp3");
-		mp3File.deleteOnExit();		
+		mp3File.deleteOnExit();
 		FileHelper.copy(TestAudioConversion.class.getResourceAsStream("test.mp3"),mp3File);
-		
+
 		MP3File mp3 = new MP3File(mp3File);
-		
+
 		RSSFeed rss = new RSSFeed(rssFile);
-		rss.parse();			
+		rss.parse();
 		rss.addEntry("Funky", new URL("http://www.funky.com/test.mp3"), df.parse("05-04-2009"), "Funky aduio for all your funky needs", "DJ Funk", mp3);
-		
+
 		rss.write();
 
 		String actual = FileHelper.readFileContents(rssFile);
@@ -111,13 +126,17 @@ public class TestRSSFeed {
 		expected.append("      <dc:creator>DJ Funk</dc:creator>"+FileHelper.LS);
 		expected.append("      <dc:date>2009-04-04T23:00:00Z</dc:date>"+FileHelper.LS);
 		expected.append("    </item>"+FileHelper.LS);
-		expected.append("  </channel>"+FileHelper.LS);	
+		expected.append("  </channel>"+FileHelper.LS);
 		expected.append("</rss>"+FileHelper.LS);
 		expected.append(""+FileHelper.LS);
 
 		Assert.assertEquals("Check that created feed", expected.toString(),actual);
 	}
 
+	/**
+	 * Used to test the writing of a RSS feed with missing fields
+	 * @throws Exception Thrown if their are any problems
+	 */
 	@Test
 	public void testWithMissingFields() throws Exception {
 		File rssFile = File.createTempFile("temp", ".rss");
