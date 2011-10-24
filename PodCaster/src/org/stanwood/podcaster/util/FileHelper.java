@@ -23,13 +23,16 @@ import java.util.regex.Pattern;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * Used to provide helper methods for file operations
+ */
 public class FileHelper {
 
 	private final static Log log = LogFactory.getLog(FileHelper.class);
-	
+
 	/** A Line separator property value */
 	public final static String LS = System.getProperty("line.separator");
-	
+
 	/** Stores the current users home directory */
 	public final static File HOME_DIR = new File(System.getProperty("user.home")); //$NON-NLS-1$
 
@@ -51,12 +54,22 @@ public class FileHelper {
 
 		return dir;
 	}
-	
+
+	/**
+	 * Used to get the name part of a file name
+	 * @param file The file
+	 * @return the name part of a file name
+	 */
 	public static String getName(File file) {
 		String name = file.getName();
 		return name.substring(0,name.indexOf('.'));
 	}
 
+	/**
+	 * Used to get the extension of the file name
+	 * @param file The file
+	 * @return The extension
+	 */
 	public static String getExtension(File file) {
 		String name = file.getName();
 		return name.substring(name.lastIndexOf('.'));
@@ -180,7 +193,9 @@ public class FileHelper {
 
         while(true) {
             int count = in.read(buffer);
-            if(count == -1) break;
+            if(count == -1) {
+				break;
+			}
             out.write(buffer,0,count);
         }
 
@@ -221,7 +236,7 @@ public class FileHelper {
 		in.close();
 		return results.toString();
 	}
-	
+
 	/**
 	 * Used to read the contents of a stream into a string
 	 *
@@ -274,7 +289,7 @@ public class FileHelper {
 		}
 		in.close();
 	}
-	
+
 	/**
 	 * Used to get the current working directory
 	 * @return the current working directory
@@ -310,7 +325,7 @@ public class FileHelper {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Used a temporary file that will be deleted when the JVM exits
 	 * @param name name of file
@@ -349,7 +364,7 @@ public class FileHelper {
 		FileHelper.appendContentsToFile(configFile, testConfig);
 		return configFile;
 	}
-	
+
 	/**
 	 * Used to add contents to a file
 	 * @param file The file to add contetns to
@@ -383,7 +398,7 @@ public class FileHelper {
 			}
 		}
 	}
-	
+
 	/**
 	 * Used to delete a directory and all it's children
 	 *

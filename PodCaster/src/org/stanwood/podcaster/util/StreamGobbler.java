@@ -41,6 +41,7 @@ public class StreamGobbler extends Thread implements IStreamGobbler {
 	/**
 	 * Creates a instance of the stream gobbler thread
 	 * @param is The stream that is to be swallowed
+	 * @param name The name of the process
 	 */
 	public StreamGobbler(InputStream is,String name) {
 		this.is = is;
@@ -90,6 +91,9 @@ public class StreamGobbler extends Thread implements IStreamGobbler {
 		return done;
 	}
 
+	/**
+	 * Used to mark the stream has done and block till it's not running
+	 */
 	@Override
 	public void done() {
 		done = true;

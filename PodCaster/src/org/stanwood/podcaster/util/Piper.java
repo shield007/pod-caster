@@ -1,5 +1,8 @@
 package org.stanwood.podcaster.util;
 
+/**
+ * Used to pipe output from a input stream to a output stream
+ */
 public class Piper extends Thread implements IStreamGobbler {
 
     private java.io.InputStream input;
@@ -10,11 +13,19 @@ public class Piper extends Thread implements IStreamGobbler {
 
 	private boolean running;
 
+	/**
+	 * The constructor
+	 * @param input The input stream
+	 * @param output The output stream
+	 */
     public Piper(java.io.InputStream input, java.io.OutputStream output) {
         this.input = input;
         this.output = output;
     }
 
+    /**
+     * This reads the contents from the input stream and sends it to the output stream
+     */
     @Override
 	public void run() {
     	running = true;
@@ -49,6 +60,9 @@ public class Piper extends Thread implements IStreamGobbler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
 	@Override
 	public void done() {
 		done = true;
@@ -58,6 +72,9 @@ public class Piper extends Thread implements IStreamGobbler {
 		}
 	}
 
+	/**
+     * {@inheritDoc}
+     */
 	@Override
 	public boolean isDone() {
 		return done;
