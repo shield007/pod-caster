@@ -40,10 +40,18 @@ public class AbstractExecutable {
 
 	private ConfigReader config;
 
+	/**
+	 * The constructor
+	 * @param config The application configuration
+	 */
 	public AbstractExecutable(ConfigReader config) {
 		this.config = config;
 	}
 
+	/**
+	 * Used to get the application configuration
+	 * @return the application configuration
+	 */
 	public ConfigReader getConfig() {
 		return config;
 	}
@@ -60,10 +68,19 @@ public class AbstractExecutable {
 		errorGobbler = new StreamGobbler(proc.getErrorStream(),"stderr reader");
 		outputGobbler = new StreamGobbler(proc.getInputStream(),"stdout reader");
 
-		return AbstractExecutable.execute(args.get(0),proc,outputGobbler,errorGobbler);
+		return AbstractExecutable.execute(proc,outputGobbler,errorGobbler);
 	}
 
-	public static int execute(String name,Process proc,IStreamGobbler outputGobbler,IStreamGobbler errorGobbler) throws IOException, InterruptedException {
+	/**
+	 * Used to execute a process and capture the output. This method will return when the process has finished
+	 * @param proc The process
+	 * @param outputGobbler The standard output gobbler
+	 * @param errorGobbler The standard error gobbler
+	 * @return The exit code of the process
+	 * @throws IOException Thrown if their are any problems
+	 * @throws InterruptedException Thrown if the threads are intruppted
+	 */
+	public static int execute(Process proc,IStreamGobbler outputGobbler,IStreamGobbler errorGobbler) throws IOException, InterruptedException {
 		outputGobbler.start();
         errorGobbler.start();
 		int exitCode =  proc.waitFor();

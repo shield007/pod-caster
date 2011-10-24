@@ -1,21 +1,17 @@
 package org.stanwood.podcaster.rss;
 
 import java.io.File;
-
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.stanwood.podcaster.audio.Format;
 import org.stanwood.podcaster.audio.IAudioFile;
-import org.stanwood.podcaster.audio.MetaDataException;
 
-import com.sun.syndication.feed.rss.Enclosure;
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEnclosure;
@@ -153,28 +149,28 @@ public class RSSFeed {
 		SyndEntry entry = new SyndEntryImpl();
 		if (title != null) {
 			entry.setTitle(title);
-		}		
-				
-		entry.setLink(link.toExternalForm());		
+		}
+
+		entry.setLink(link.toExternalForm());
 		entry.setPublishedDate(publishDate);
-		
+
 		List<SyndEnclosure> es = new ArrayList<SyndEnclosure>();
-		SyndEnclosure e = new SyndEnclosureImpl();		
-		e.setType(audioFile.getFormat().getContentType());		
-		e.setUrl(link.toExternalForm());		
-		e.setLength(audioFile.getFile().length());		
+		SyndEnclosure e = new SyndEnclosureImpl();
+		e.setType(audioFile.getFormat().getContentType());
+		e.setUrl(link.toExternalForm());
+		e.setLength(audioFile.getFile().length());
 		es.add(e);
 		entry.setEnclosures(es);
 
 		if (plainDescription != null) {
 			SyndContent description = new SyndContentImpl();
 			description.setType("text/plain");
-			description.setValue(plainDescription);		
+			description.setValue(plainDescription);
 			entry.setDescription(description);
 		}
-		entry.setAuthor(author);			
+		entry.setAuthor(author);
 
-		feed.getEntries().add(0, entry);		
+		feed.getEntries().add(0, entry);
 		log.info("Entry added to rss feed" + feedFile);
 	}
 

@@ -102,7 +102,7 @@ public class IPlayerCapture implements ICaptureStream {
 			@Override
 			public Integer call() throws Exception {
 				try {
-					return AbstractExecutable.execute("get-iplayer",proc,getiplayerErrorGobbler,piper);
+					return AbstractExecutable.execute(proc,getiplayerErrorGobbler,piper);
 				} catch (IOException e) {
 					throw new CaptureException("Unable to convert stream to wav",e);
 				} catch (InterruptedException e) {
