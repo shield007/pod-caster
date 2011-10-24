@@ -5,8 +5,15 @@ import java.io.File;
 import org.junit.Test;
 import org.stanwood.podcaster.util.FileHelper;
 
+/**
+ * Used to test the class {@link MP3File}
+ */
 public class TestMP3File {
 
+	/**
+	 * Used to test that metadata is written
+	 * @throws Exception Thrown if their is a problem
+	 */
 	@Test
 	public void testWriteMetaData() throws Exception {
 		File tmpMp3 = FileHelper.createTempFile("test", ".mp3");
