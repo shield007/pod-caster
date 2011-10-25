@@ -1,9 +1,13 @@
 <?xml version='1.0'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V3.1//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+    <!ENTITY apptitle "@@name@@">   
+    <!ENTITY version "@@version@@">
 	<!ENTITY apptitle "Pod Caster">	
 	<!ENTITY version "1.2">
 	<!ENTITY podcaster "podcaster">	
 	<!ENTITY capturestream "capture-stream">
+    <!ENTITY copyrightdate "2008-2011">
+    <!ENTITY copyholder "John-Paul Stanford">
 ]>
 <book>
 	<bookinfo>
@@ -297,7 +301,7 @@
 			</listitem>
 		</itemizedlist>
 		<para>
-        	Documentation copyright 2008-2011, John-Paul Stanford
+        	Documentation copyright &copyrightdate;, &copyrightholder;
             <email>dev@stanwood.org.uk</email>
 		</para>		
 	</chapter>
