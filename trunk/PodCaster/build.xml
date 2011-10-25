@@ -239,33 +239,42 @@
 
 	<!-- 
 			http://wiki.wsmoak.net/cgi-bin/wiki.pl?DocBookToPDF
-		-->					
-	<target name="docs" description="Converts docbook xml into pdf" >
-		<delete dir="${basedir}/docbook"/>		
-		<delete dir="${fo.dir}"/>
-		<mkdir dir="${basedir}/docbook"/>
-		<mkdir dir="${userguide.dir}/html"/>
-		
-		<unzip src="docbook.zip" dest="${basedir}/docbook"/>
-		
-	    <xslt  style="${docbook.home}/fo/docbook.xsl"	         	     	
-	            basedir="${userguide.dir}/xml"
-	            extension=".fo"
-	            destdir="${fo.dir}" />
-				
-		<xslt  style="${docbook.home}/html/docbook.xsl"	         	     	
-			            basedir="${userguide.dir}/xml"
-			            extension=".html"
-			            destdir="${userguide.dir}/html" />	
-				
-		<fop format="application/pdf" 
-			 fofile="${fo.dir}/docbook.fo" 
-			 outfile="${userguide.dir}/${ant.project.name}-userguide-${project.version}.pdf" />		
-		
-		<delete dir="${fo.dir}"/>
-		<delete dir="${basedir}/docbook"/>
-	</target>
-		
+		-->		
+    <target name="docs" description="Converts docbook xml into pdf" >
+        <delete dir="${basedir}/docbook"/>      
+        <mkdir dir="${basedir}/docbook"/>
+        <mkdir dir="${userguide.dir}/html"/>
+        
+        <unzip src="docbook.zip" dest="${basedir}/docbook"/>
+        
+        <mkdir dir="${userguide.dir}/xml-updated"/>     
+        <copy todir="${userguide.dir}/xml-updated" file="${userguide.dir}/xml/docbook.xml"/>        
+        
+        <replace file="${userguide.dir}/xml-updated/docbook.xml">
+            <replacefilter token="@@version@@" value="${project.version}"/>
+            <replacefilter token="@@name@@" value="${ant.project.name}"/>
+            <replacefilter token="@@file@@" value="${ant.project.name}-${project.version}-install.jar"/>
+            <replacefilter token="@@mode@@" value="0"/>
+        </replace>
+        
+        <xslt processor="trax"  style="${docbook.home}/fo/docbook.xsl"                      
+                basedir="${userguide.dir}/xml-updated"
+                extension=".fo"
+                destdir="${fo.dir}" />
+        
+        <xslt processor="trax" style="${docbook.home}/html/docbook.xsl"                     
+                        basedir="${userguide.dir}/xml-updated"
+                        extension=".html"
+                        destdir="${userguide.dir}/html" />  
+
+        <fop format="application/pdf" 
+             fofile="${fo.dir}/docbook.fo" 
+             outfile="${userguide.dir}/userguide.pdf" />
+        
+        <delete dir="${fo.dir}"/>
+        <delete dir="${basedir}/docbook"/>
+        <delete dir="${userguide.dir}/xml-updated"/>
+    </target>			
 
 	<target name="dist" depends="clean,run-tests,javadoc,docs,jars"/>
 </project>
