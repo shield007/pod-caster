@@ -37,7 +37,7 @@ public class TestConfigReader {
 		testConfig.append("</podcaster>"+FileHelper.LS);
 
 		ConfigReader configReader = createConfigReader(testConfig);
-		Assert.assertEquals("/blah/blah1",configReader.getConfigDir().getAbsolutePath());
+		Assert.assertEquals(new File("/blah/blah1").getAbsolutePath(),configReader.getConfigDir().getAbsolutePath());
 		Assert.assertEquals("/blah/bin/mplayer",configReader.getMPlayerPath());
 		Assert.assertEquals("/blah/bin/ffmpeg",configReader.getFFMpegPath());
 		Assert.assertEquals("/blah/bin/get-iplayer",configReader.getGetIPlayerPath());
@@ -62,7 +62,7 @@ public class TestConfigReader {
 		testConfig.append("</podcaster>"+FileHelper.LS);
 
 		ConfigReader configReader = createConfigReader(testConfig);
-		Assert.assertEquals("/blah/blah1",configReader.getConfigDir().getAbsolutePath());
+		Assert.assertEquals(new File("/blah/blah1").getAbsolutePath(),configReader.getConfigDir().getAbsolutePath());
 		Assert.assertEquals("/blah/bin/mplayer",configReader.getMPlayerPath());
 		Assert.assertEquals("/blah/bin/ffmpeg",configReader.getFFMpegPath());
 		Assert.assertEquals("/blah/bin/get-iplayer",configReader.getGetIPlayerPath());
@@ -117,7 +117,7 @@ public class TestConfigReader {
 		Assert.assertEquals("This is a test radio steam feed",podcast2.getFeedDescription());
 		Assert.assertEquals("A test feed",podcast2.getFeedTitle());
 		Assert.assertEquals("http://www.bbc.co.uk/iplayer/images/brand/b006wq52_512_288.jpg",podcast2.getFeedImageURL().toExternalForm());
-		Assert.assertEquals("/srv/www/htdocs/podcasts/radio.rss",podcast2.getRSSFile().getAbsolutePath());
+		Assert.assertEquals(new File("/srv/www/htdocs/podcasts/radio.rss").getAbsolutePath(),podcast2.getRSSFile().getAbsolutePath());
 		Assert.assertEquals("http://blah.com/podcasts/radio.rss",podcast2.getRSSURL().toExternalForm());
 		Assert.assertEquals(Format.MP3,podcast2.getFormat());
 		Assert.assertEquals("http://www.bbc.co.uk/radio1/wm_asx/aod/radio1_hi.asx",podcast2.getStreamURL().toExternalForm());
@@ -132,7 +132,7 @@ public class TestConfigReader {
 		Assert.assertNull(podcast1.getFeedDescription());
 		Assert.assertNull(podcast1.getFeedTitle());
 		Assert.assertNull(podcast1.getFeedImageURL());
-		Assert.assertEquals("/srv/www/htdocs/podcasts/iplayer.rss",podcast1.getRSSFile().getAbsolutePath());
+		Assert.assertEquals(new File("/srv/www/htdocs/podcasts/iplayer.rss").getAbsolutePath(),podcast1.getRSSFile().getAbsolutePath());
 		Assert.assertEquals("http://blah.com/podcasts/iplayer.rss",podcast1.getRSSURL().toExternalForm());
 		Assert.assertEquals(Format.FLAC,podcast1.getFormat());
 		Assert.assertEquals("Radio 1",podcast1.getEpisodeId());
