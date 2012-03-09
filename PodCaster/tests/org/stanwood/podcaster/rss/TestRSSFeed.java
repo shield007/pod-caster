@@ -5,6 +5,8 @@ import java.io.File;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import junit.framework.Assert;
 
@@ -89,7 +91,8 @@ public class TestRSSFeed {
 	 */
 	@Test
 	public void testAddEntry() throws Exception {
-		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+		DateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+		df.setTimeZone(TimeZone.getTimeZone("GMT"));
 
 		File rssFile = File.createTempFile("temp", ".xml");
 		rssFile.deleteOnExit();
@@ -103,7 +106,15 @@ public class TestRSSFeed {
 
 		RSSFeed rss = new RSSFeed(rssFile);
 		rss.parse();
-		rss.addEntry("Funky", new URL("http://www.funky.com/test.mp3"), df.parse("05-04-2009"), "Funky aduio for all your funky needs", "DJ Funk", mp3);
+		Date date = df.parse("Sat, 04 Apr 2009 23:00:00 GMT");
+
+		DateFormat UTC = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //$NON-NLS-1$
+		UTC.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
+
+		System.out.println(date.toString());
+
+
+		rss.addEntry("Funky", new URL("http://www.funky.com/test.mp3"), date, "Funky aduio for all your funky needs", "DJ Funk", mp3);
 
 		rss.write();
 
@@ -121,10 +132,10 @@ public class TestRSSFeed {
 		expected.append("      <link>http://www.funky.com/test.mp3</link>"+FileHelper.LS);
 		expected.append("      <description>Funky aduio for all your funky needs</description>"+FileHelper.LS);
 		expected.append("      <enclosure url=\"http://www.funky.com/test.mp3\" length=\"94020\" type=\"audio/mpeg\" />"+FileHelper.LS);
-		expected.append("      <pubDate>Sat, 04 Apr 2009 23:00:00 GMT</pubDate>"+FileHelper.LS);
+		expected.append("      <pubDate>"+df.format(date)+"</pubDate>"+FileHelper.LS);
 		expected.append("      <guid>http://www.funky.com/test.mp3</guid>"+FileHelper.LS);
 		expected.append("      <dc:creator>DJ Funk</dc:creator>"+FileHelper.LS);
-		expected.append("      <dc:date>2009-04-04T23:00:00Z</dc:date>"+FileHelper.LS);
+		expected.append("      <dc:date>"+UTC.format(date)+"</dc:date>"+FileHelper.LS);
 		expected.append("    </item>"+FileHelper.LS);
 		expected.append("  </channel>"+FileHelper.LS);
 		expected.append("</rss>"+FileHelper.LS);
