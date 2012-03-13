@@ -148,7 +148,7 @@
 
     	<exec executable="xsltproc" dir="${userguide.dir}/xml-updated" failonerror="true">
             <arg value="-o"/>
-            <arg value="${userguide.dir}/html/${ant.project.name}-docbook-${project.version}.html"/>
+            <arg value="${userguide.dir}/html/${ant.project.name}-userguide-${project.version}.html"/>
             <arg value="${docbook.home}/html/docbook.xsl"/>
             <arg value="docbook.xml"/>
         </exec>
