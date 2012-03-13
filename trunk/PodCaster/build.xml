@@ -43,6 +43,11 @@
 	<path id="test-time.libs.classpath">
 		<fileset dir="${libs.dir}/test-time" includes="*.jar" />
 	</path>
+	<path id="fop.libs.classpath">
+		<fileset dir="${libs.dir}/compile-time" includes="**/*.jar" />
+		<fileset dir="${libs.dir}/test-time" includes="*.jar" />
+        <fileset dir="${libs.dir}/fop" includes="*.jar" />
+    </path>
 	
 	<!-- Cobeture setup -->
 	<property name="cobertura.dir" value="${basedir}/cobertura" />
@@ -54,8 +59,7 @@
 
 	<!-- Fop setup -->
   	<taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop">        
-    	<classpath refid="compile-time.libs.classpath"/>	                    
-    	<classpath refid="run-time.libs.classpath"/>	                    
+  		<classpath refid="fop.libs.classpath"/>	                    
     </taskdef>
 	
 	<target name="init">
@@ -249,6 +253,15 @@
         
         <unzip src="docbook.zip" dest="${basedir}/docbook"/>
         
+    	<xmlcatalog id="dtds">
+            <dtd publicId="-//OASIS//DTD DocBook XML V4.1.2//EN"
+                 location="${docbook.home}/../dtd/docbookx.dtd"/>
+            <dtd publicId="-//OASIS//DTD DocBook XML V4.2//EN"
+                 location="${docbook.home}/../dtd/docbookx.dtd"/>
+            <dtd publicId="-//OASIS//DTD DocBook V3.1//EN"
+                 location="${docbook.home}/../dtd/docbookx.dtd"/>
+        </xmlcatalog>
+    	
         <mkdir dir="${userguide.dir}/xml-updated"/>     
         <copy todir="${userguide.dir}/xml-updated" file="${userguide.dir}/xml/docbook.xml"/>        
         
