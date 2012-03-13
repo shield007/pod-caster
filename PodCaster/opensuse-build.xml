@@ -38,8 +38,8 @@
 
     <path id="compile-time.libs.classpath">    	
         <fileset dir="${fop.dir}">
-        	<include name="fop*.jar"/>
-        	<include name="avalon-framework*.jar"/>
+        	<include name="*fop*.jar"/>
+        	<include name="excalibur/avalon-framework*.jar"/>
         	<include name="batik*.jar"/>        	
         </fileset>        
     </path>
@@ -114,42 +114,52 @@
     </target>
 
     <target name="docs" description="Converts docbook xml into pdf" >
-        <delete dir="${docbook.dir}/docbook"/>
-    	<delete dir="${fo.dir}"/>
+    	<delete dir="${basedir}/docbook"/>      
+        <mkdir dir="${basedir}/docbook"/>
         <mkdir dir="${userguide.dir}/html"/>
-
-    	<property name="dtd" value="${docbook.home}/schema/dtd/4.4/docbookx.dtd"/>
-        <echo message="DTD: ${dtd}"/>
-		
-        <xmlcatalog id="dtds">                           
+        
+        <unzip src="docbook.zip" dest="${basedir}/docbook"/>
+        
+    	<xmlcatalog id="dtds">
             <dtd publicId="-//OASIS//DTD DocBook XML V4.1.2//EN"
-                 location="${dtd}"/>
+                 location="${docbook.home}/../dtd/docbookx.dtd"/>
             <dtd publicId="-//OASIS//DTD DocBook XML V4.2//EN"
-                 location="${dtd}"/>
+                 location="${docbook.home}/../dtd/docbookx.dtd"/>
             <dtd publicId="-//OASIS//DTD DocBook V3.1//EN"
-                 location="${dtd}"/>                 
+                 location="${docbook.home}/../dtd/docbookx.dtd"/>
         </xmlcatalog>
+    	
+        <mkdir dir="${userguide.dir}/xml-updated"/>     
+        <copy todir="${userguide.dir}/xml-updated" file="${userguide.dir}/xml/docbook.xml"/>        
+        
+        <replace file="${userguide.dir}/xml-updated/docbook.xml">
+            <replacefilter token="@@version@@" value="${project.version}"/>
+            <replacefilter token="@@name@@" value="${ant.project.name}"/>
+            <replacefilter token="@@file@@" value="${ant.project.name}-${project.version}-install.jar"/>
+            <replacefilter token="@@mode@@" value="0"/>
+        </replace>
+           	
+    	<exec executable="xsltproc" dir="${userguide.dir}/xml-updated" failonerror="true">
+            <arg value="-o"/>
+            <arg value="${fo.dir}/docbook.fo"/>
+            <arg value="${docbook.home}/fo/docbook.xsl"/>
+            <arg value="docbook.xml"/>
+        </exec>
 
-        <xslt  style="${docbook.home}/stylesheet/nwalsh/current/fo/docbook.xsl"
-                basedir="${userguide.dir}/xml"
-                extension=".fo"
-                destdir="${fo.dir}">
-                <xmlcatalog refid="dtds"/>
-        </xslt>
+    	<exec executable="xsltproc" dir="${userguide.dir}/xml-updated" failonerror="true">
+            <arg value="-o"/>
+            <arg value="${userguide.dir}/html/docbook.html"/>
+            <arg value="${docbook.home}/html/docbook.xsl"/>
+            <arg value="docbook.xml"/>
+        </exec>
 
-        <xslt  style="${docbook.home}/stylesheet/nwalsh/current/html/docbook.xsl"
-                        basedir="${userguide.dir}/xml"
-                        extension=".html"
-                        destdir="${userguide.dir}/html">
-                <xmlcatalog refid="dtds"/>
-        </xslt>
-
-        <fop format="application/pdf"
-             fofile="${fo.dir}/docbook.fo"
-        	outfile="${userguide.dir}/${ant.project.name}-userguide-${project.version}.pdf" />
-
+        <fop format="application/pdf" 
+             fofile="${fo.dir}/docbook.fo" 
+             outfile="${userguide.dir}/userguide.pdf" />
+        
         <delete dir="${fo.dir}"/>
         <delete dir="${basedir}/docbook"/>
+        <delete dir="${userguide.dir}/xml-updated"/>
     </target>
 
     <target name="all" depends="clean,compile,javadoc,docs,jars"/>
