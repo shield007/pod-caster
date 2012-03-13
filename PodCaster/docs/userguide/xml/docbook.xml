@@ -7,7 +7,7 @@
 	<!ENTITY podcaster "podcaster">	
 	<!ENTITY capturestream "capture-stream">
     <!ENTITY copyrightdate "2008-2011">
-    <!ENTITY copyholder "John-Paul Stanford">
+    <!ENTITY copyrightholder "John-Paul Stanford">
 ]>
 <book>
 	<bookinfo>
