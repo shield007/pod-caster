@@ -41,7 +41,7 @@ for FILE in `find $LIB_DIR -name "*.jar"`
 do
 	CLASSPATH=$CLASSPATH:$FILE	
 done 
-
+echo $CLASSPATH
 # Native lib location
 export MM_NATIVE_DIR=$SCRIPT_PATH/../../../native
 
