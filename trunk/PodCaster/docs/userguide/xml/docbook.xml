@@ -267,6 +267,7 @@
                 <description>Two hours of the best new and cutting-edge music.</description>
             </entry>
         </metadata>
+        <!-- Capture using the get-iplayer tool for 7200000 miliseconds -->
         <iplayer episode="Radio 1" captureTime="7200000"/>
     </podcast>
     
@@ -284,6 +285,7 @@
 		      <description>This is a test radio stream entry</description>
 		    </entry>		    
 		</metadata>
+		<!-- Capture from  a radio stream for 10000 miliseconds -->
 		<radioStream url="http://www.bbc.co.uk/radio1/wm_asx/aod/radio1_hi.asx" captureTime="10000"/>
 	</podcast>
 </podcaster>]]>			
