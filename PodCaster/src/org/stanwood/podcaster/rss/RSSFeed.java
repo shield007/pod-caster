@@ -3,6 +3,7 @@ package org.stanwood.podcaster.rss;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -33,7 +34,7 @@ public class RSSFeed {
 
 	private final static Log log = LogFactory.getLog(RSSFeed.class);
 
-	private final static String FEED_TYPE = "rss_2.0";
+	private final static String FEED_TYPE = "rss_2.0"; //$NON-NLS-1$
 
 	private SyndFeed feed;
 	private File feedFile;
@@ -60,7 +61,7 @@ public class RSSFeed {
 	 * Used to create a new feed
 	 */
 	public void createNewFeed() {
-		log.info("Creating new rss feed " + feedFile);
+		log.info(MessageFormat.format("Creating new rss feed {0}",feedFile));
 		feed = new SyndFeedImpl();
 		feed.setFeedType(FEED_TYPE);
 	}
@@ -120,7 +121,7 @@ public class RSSFeed {
 	 */
 	public void write() throws IOException, FeedException {
 		if (feed==null) {
-			throw new FeedException("parse() or createNewFeed() must be called before writing the feed");
+			throw new FeedException("parse() or createNewFeed() must be called before writing the feed"); //$NON-NLS-1$
 		}
 		SyndFeedOutput output = new SyndFeedOutput();
 		if (feed.getTitle()==null) {
@@ -194,12 +195,12 @@ public class RSSFeed {
 				File entryFile = new File(rssDir, fileName);
 				if (entryFile.exists()) {
 					if (!entryFile.delete()) {
-						log.error("Unable to delete file : " + entryFile);
+						log.error(MessageFormat.format("Unable to delete file : {0}",entryFile));
 					}
 				}
 
 				it.remove();
-				log.info("Old entry " + link + " removed from feed");
+				log.info(MessageFormat.format("Old entry {0} removed from feed",link));
 			}
 		}
 	}
