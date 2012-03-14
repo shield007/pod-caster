@@ -18,37 +18,39 @@ public class WebFile {
 
 	/**
 	 * Open a web file.
-	 * 
+	 *
 	 * @param url The URL of the file to open
 	 * @throws IOException Thrown if their is a problem fetching the web file
 	 */
 	public WebFile(URL url) throws IOException {
-		// Open a URL connection.		
+		// Open a URL connection.
 		final java.net.URLConnection uconn = url.openConnection();
 		if (!(uconn instanceof java.net.HttpURLConnection))
-			throw new java.lang.IllegalArgumentException("URL protocol must be HTTP.");
+		 {
+			throw new java.lang.IllegalArgumentException("URL protocol must be HTTP."); //$NON-NLS-1$
+		}
 		final java.net.HttpURLConnection conn = (java.net.HttpURLConnection) uconn;
 
 		// Set up a request.
 		conn.setConnectTimeout(10000); // 10 sec
 		conn.setReadTimeout(10000); // 10 sec
 		conn.setInstanceFollowRedirects(true);
-		conn.setRequestProperty("User-agent", "spider");
+		conn.setRequestProperty("User-agent", "spider");  //$NON-NLS-1$//$NON-NLS-2$
 
 		// Send the request.
 		conn.connect();
 
 		// Get the response.
 		responseHeader = conn.getHeaderFields();
-		responseCode = conn.getResponseCode();	
+		responseCode = conn.getResponseCode();
 		final int length = conn.getContentLength();
 		final String type = conn.getContentType();
 		if (type != null) {
-			final String[] parts = type.split(";");
+			final String[] parts = type.split(";"); //$NON-NLS-1$
 			MIMEtype = parts[0].trim();
 			for (int i = 1; i < parts.length && charset == null; i++) {
 				final String t = parts[i].trim();
-				final int index = t.toLowerCase().indexOf("charset=");
+				final int index = t.toLowerCase().indexOf("charset="); //$NON-NLS-1$
 				if (index != -1) {
 					charset = t.substring(index + 8);
 				}
@@ -57,10 +59,11 @@ public class WebFile {
 
 		// Get the content.
 		final java.io.InputStream stream = conn.getErrorStream();
-		if (stream != null)
+		if (stream != null) {
 			content = readStream(length, stream);
-		else if ((content = conn.getContent()) != null && content instanceof java.io.InputStream)
+		} else if ((content = conn.getContent()) != null && content instanceof java.io.InputStream) {
 			content = readStream(length, (java.io.InputStream) content);
+		}
 		conn.disconnect();
 	}
 
@@ -85,8 +88,8 @@ public class WebFile {
 		return bytes;
 	}
 
-	/** 
-	 * Get the content. 
+	/**
+	 * Get the content.
 	 * @return The Content
 	 */
 	public Object getContent() {
@@ -94,23 +97,23 @@ public class WebFile {
 	}
 
 	/** Get the response code.
-	 * @return The response code 
+	 * @return The response code
 	 */
 	public int getResponseCode() {
 		return responseCode;
 	}
 
-	/** 
-	 * Get the response header. 
-	 * @return The response header fields 
+	/**
+	 * Get the response header.
+	 * @return The response header fields
 	 */
 	public java.util.Map<String, java.util.List<String>> getHeaderFields() {
 		return responseHeader;
-	}	
+	}
 
-	/** 
+	/**
 	 * Get the MIME type.
-	 * @return The MIME type 
+	 * @return The MIME type
 	 */
 	public String getMIMEType() {
 		return MIMEtype;

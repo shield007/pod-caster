@@ -31,7 +31,7 @@ public class FileHelper {
 	private final static Log log = LogFactory.getLog(FileHelper.class);
 
 	/** A Line separator property value */
-	public final static String LS = System.getProperty("line.separator");
+	public final static String LS = System.getProperty("line.separator"); //$NON-NLS-1$
 
 	/** Stores the current users home directory */
 	public final static File HOME_DIR = new File(System.getProperty("user.home")); //$NON-NLS-1$
@@ -119,9 +119,9 @@ public class FileHelper {
 	 * @throws IOException Thrown if their is a problem downloading it
 	 */
 	public static DownloadedFile downloadToTempFile(URL url) throws IOException {
-		File file = createTempFile("artwork", getExtension(url.getPath()));
+		File file = createTempFile("artwork", getExtension(url.getPath())); //$NON-NLS-1$
 		if (!file.delete()) {
-			throw new IOException("Unable to delete temp file " + file.getAbsolutePath());
+			throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UnableDeleteTempFile"),file.getAbsolutePath())); //$NON-NLS-1$
 		}
 		file.deleteOnExit();
 
@@ -147,7 +147,7 @@ public class FileHelper {
     public static File getFile(String filename, Class<?> currentClass) throws IOException {
         URL url = currentClass.getResource(filename);
         if (url == null) {
-            throw new IOException("Unable to find file " + filename);
+            throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UnableFindFile") ,filename)); //$NON-NLS-1$
         }
         return getFile(filename,currentClass, url);
     }
@@ -159,7 +159,7 @@ public class FileHelper {
             file.deleteOnExit();
             InputStream stream = currentClass.getResourceAsStream(filename);
             if (stream==null) {
-            	throw new IOException("Unable to find file " + filename);
+            	throw new IOException(MessageFormat.format(Messages.getString("FileHelper.UnableFindFile") ,filename)); //$NON-NLS-1$
             }
             copy(stream, file);
             return file;
@@ -246,7 +246,7 @@ public class FileHelper {
 	 */
 	public static String readFileContents(InputStream inputStream) throws IOException {
 		if (inputStream==null) {
-			throw new IOException("Input stream is null");
+			throw new IOException("Input stream is null"); //$NON-NLS-1$
 		}
 		BufferedReader in = null;
 		try {

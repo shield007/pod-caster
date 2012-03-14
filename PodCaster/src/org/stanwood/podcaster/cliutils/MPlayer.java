@@ -51,12 +51,12 @@ public class MPlayer extends AbstractExecutable {
 	{
 		File wavOutputFile;
 		try {
-			wavOutputFile = File.createTempFile("captured", ".wav");
+			wavOutputFile = File.createTempFile("captured", ".wav"); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (IOException e) {
-			throw new MPlayerException("Unable to create temp file",e);
+			throw new MPlayerException(Messages.getString("MPlayer.2"),e); //$NON-NLS-1$
 		}
 
-		log.info("Capturing audio from stream: " + stream.getUrl() + " to " + wavOutputFile.getAbsolutePath());
+		log.info(MessageFormat.format(Messages.getString("MPlayer.CaputingAudio"),stream.getUrl(),wavOutputFile.getAbsolutePath())); //$NON-NLS-1$
 		List<String> args = new ArrayList<String>();
 		args.add(getConfig().getMPlayerPath());
 		args.add("-nojoystick"); //$NON-NLS-1$
@@ -75,7 +75,7 @@ public class MPlayer extends AbstractExecutable {
 		args.add(stream.getUrl());
 		executeWithTimeout(args,time);
 		if (wavOutputFile.length()==0) {
-			throw new MPlayerException("Unable to caputre audio, the caputred audio file is empty. Try increasing the caputre time.");
+			throw new MPlayerException(Messages.getString("MPlayer.UnableCaptureAudio")); //$NON-NLS-1$
 		}
 		WavFile result = new WavFile(wavOutputFile);
 		return result;
@@ -100,15 +100,15 @@ public class MPlayer extends AbstractExecutable {
 		es.submit (task);
 		try {
 			int value = task.get(timeout, TimeUnit.MILLISECONDS);
-			log.error("Unable to execute mplayer command: " + getErrorStream());
-			throw new MPlayerException(MessageFormat.format("Unexpected exit with exit code {0}",value));
+			log.error(MessageFormat.format(Messages.getString("MPlayer.UnableToExecute"), getErrorStream())); //$NON-NLS-1$
+			throw new MPlayerException(MessageFormat.format(Messages.getString("MPlayer.UnexpectedExitCode"),value)); //$NON-NLS-1$
 		}
 		catch (TimeoutException e) {
 			kill();
 			log.debug(getOutputStream());
 			log.debug(getErrorStream());
 		} catch (InterruptedException e) {
-			throw new MPlayerException("Execution interrupted",e);
+			throw new MPlayerException(Messages.getString("MPlayer.ExecutionInterrupted"),e); //$NON-NLS-1$
 		} catch (ExecutionException e) {
 			throw new MPlayerException(e.getMessage(),e);
 		}

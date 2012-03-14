@@ -45,7 +45,7 @@ public class StreamGobbler extends Thread implements IStreamGobbler {
 	 */
 	public StreamGobbler(InputStream is,String name) {
 		this.is = is;
-		result = new StringBuilder("");
+		result = new StringBuilder(""); //$NON-NLS-1$
 		this.setName(name);
 	}
 
@@ -63,7 +63,7 @@ public class StreamGobbler extends Thread implements IStreamGobbler {
 			done = false;
 
 			while (!isDone() && (line = br.readLine()) != null) {
-				result.append(line + "\n");
+				result.append(line + FileHelper.LS);
 			}
 		} catch (IOException ioe) {
 			log.debug(ioe.getMessage(),ioe);
