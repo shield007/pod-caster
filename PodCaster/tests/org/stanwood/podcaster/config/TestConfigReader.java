@@ -16,6 +16,7 @@ import org.stanwood.podcaster.util.FileHelper;
 /**
  * Used to test the reading of the application configuration
  */
+@SuppressWarnings("nls")
 public class TestConfigReader {
 
 	/**

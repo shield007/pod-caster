@@ -12,6 +12,7 @@ import org.stanwood.podcaster.util.FileHelper;
 /**
  * Used to test the Audio conversion operations
  */
+@SuppressWarnings("nls")
 public class TestAudioConversion {
 
 	/**

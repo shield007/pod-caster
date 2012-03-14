@@ -20,6 +20,7 @@ import com.sun.syndication.io.FeedException;
 /**
  * Used to test the class {@link RSSFeed}
  */
+@SuppressWarnings("nls")
 public class TestRSSFeed {
 
 	/**
