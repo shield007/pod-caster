@@ -8,6 +8,7 @@ import org.stanwood.podcaster.util.FileHelper;
 /**
  * Used to test the class {@link MP3File}
  */
+@SuppressWarnings("nls")
 public class TestMP3File {
 
 	/**
