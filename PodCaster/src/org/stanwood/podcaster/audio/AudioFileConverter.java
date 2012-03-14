@@ -3,6 +3,7 @@ package org.stanwood.podcaster.audio;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 
 import org.stanwood.podcaster.config.ConfigReader;
 
@@ -31,24 +32,24 @@ public class AudioFileConverter {
 				Constructor<? extends IAudioFile> con = format.getAudioFileClass().getConstructor(File.class);
 				audioFile = con.newInstance(targetFile);
 			} catch (SecurityException e) {
-				throw new AudioConvertException("Unable to create format handler class",e);
+				throw new AudioConvertException(Messages.getString("AudioFileConverter.UnableCreateFormatHandler"),e); //$NON-NLS-1$
 			} catch (NoSuchMethodException e) {
-				throw new AudioConvertException("Unable to create format handler class",e);
+				throw new AudioConvertException(Messages.getString("AudioFileConverter.UnableCreateFormatHandler"),e); //$NON-NLS-1$
 			} catch (IllegalArgumentException e) {
-				throw new AudioConvertException("Unable to create format handler class",e);
+				throw new AudioConvertException(Messages.getString("AudioFileConverter.UnableCreateFormatHandler"),e); //$NON-NLS-1$
 			} catch (InstantiationException e) {
-				throw new AudioConvertException("Unable to create format handler class",e);
+				throw new AudioConvertException(Messages.getString("AudioFileConverter.UnableCreateFormatHandler"),e); //$NON-NLS-1$
 			} catch (IllegalAccessException e) {
-				throw new AudioConvertException("Unable to create format handler class",e);
+				throw new AudioConvertException(Messages.getString("AudioFileConverter.UnableCreateFormatHandler"),e); //$NON-NLS-1$
 			} catch (InvocationTargetException e) {
-				throw new AudioConvertException("Unable to create format handler class",e);
+				throw new AudioConvertException(Messages.getString("AudioFileConverter.UnableCreateFormatHandler"),e); //$NON-NLS-1$
 			}
 			audioFile.fromWav(config,wav);
 		}
 
 		if (!audioFile.getFile().equals(wav.getFile())) {
 			if (!wav.getFile().delete() && wav.getFile().exists()) {
-				throw new AudioConvertException("Unable to delete old wav file " + wav.getFile());
+				throw new AudioConvertException(MessageFormat.format(Messages.getString("AudioFileConverter.UnableDeleteWav"),wav.getFile())); //$NON-NLS-1$
 			}
 		}
 		return audioFile;
@@ -72,7 +73,7 @@ public class AudioFileConverter {
 			return wav2Format(config,(WavFile)audioFile, format, outputFile);
 		}
 		else {
-			throw new AudioConvertException("Unsupported conversion " + audioFile.getFormat() +" -> " + format);
+			throw new AudioConvertException(MessageFormat.format(Messages.getString("AudioFileConverter.UnspportedConversion"),audioFile.getFormat(),format)); //$NON-NLS-1$
 		}
 	}
 }

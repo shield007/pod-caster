@@ -29,7 +29,7 @@ import org.stanwood.podcaster.config.AbstractPodcast;
  */
 public class CaptureStream extends AbstractLauncher {
 
-	private final DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss");
+	private final DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss"); //$NON-NLS-1$
 
 	/* package for test */ static IExitHandler exitHandler = null;
 	private final static Log log = LogFactory.getLog(CaptureStream.class);
@@ -39,8 +39,8 @@ public class CaptureStream extends AbstractLauncher {
 
 	private static final List<Option> OPTIONS;
 
-	private final static String OUTPUT_FILE_OPTION = "o";
-	private final static String PODCAST_ID_OPTION = "p";
+	private final static String OUTPUT_FILE_OPTION = "o"; //$NON-NLS-1$
+	private final static String PODCAST_ID_OPTION = "p"; //$NON-NLS-1$
 
 	private File outputFile = null;
 
@@ -49,13 +49,13 @@ public class CaptureStream extends AbstractLauncher {
 	static {
 		OPTIONS = new ArrayList<Option>();
 
-		Option o = new Option(PODCAST_ID_OPTION,"podcast",true,"The ID of the podcast from the configuration");
-		o.setArgName("id");
+		Option o = new Option(PODCAST_ID_OPTION,"podcast",true,Messages.getString("CaptureStream.descPodcast")); //$NON-NLS-1$ //$NON-NLS-2$
+		o.setArgName("id"); //$NON-NLS-1$
 		o.setRequired(true);
 		OPTIONS.add(o);
 
-		o = new Option(OUTPUT_FILE_OPTION,"output",true,"Audio Output file");
-		o.setArgName("file");
+		o = new Option(OUTPUT_FILE_OPTION,"output",true,Messages.getString("CaptureStream.destOutput")); //$NON-NLS-1$ //$NON-NLS-2$
+		o.setArgName("file"); //$NON-NLS-1$
 		o.setRequired(true);
 		OPTIONS.add(o);
 	}
@@ -91,7 +91,7 @@ public class CaptureStream extends AbstractLauncher {
 	 * @param exitHandler The exit handler to use
 	 */
 	private CaptureStream(IExitHandler exitHandler) {
-		super("stream-capture",OPTIONS,exitHandler,stdout,stderr);
+		super("stream-capture",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
 	}
 
 	/**
@@ -102,20 +102,20 @@ public class CaptureStream extends AbstractLauncher {
 	protected boolean run() {
 		AbstractPodcast podcast = getConfig().getPodcast(id);
 		if (podcast==null) {
-			log.error(MessageFormat.format("Unable to find podcast with id ''{0}''", id));
+			log.error(MessageFormat.format(Messages.getString("CaptureStream.UnableFindPodcastWithId"), id)); //$NON-NLS-1$
 			return false;
 		}
 		try {
 			Date startDate = new Date();
-			String entryTitle = podcast.getFeedTitle()+" "+DF.format(startDate);
+			String entryTitle = podcast.getFeedTitle()+" "+DF.format(startDate); //$NON-NLS-1$
 
 			ICaptureStream streamCapture = StreamCaptureFactory.getStreamCapture(podcast);
 			IAudioFile audioFile = streamCapture.captureLiveAudioStream(getConfig(),podcast);
 			if (log.isDebugEnabled()) {
-				log.debug("Captured " + audioFile.getFile() + " with size " +audioFile.getFile().length());
+				log.debug("Captured " + audioFile.getFile() + " with size " +audioFile.getFile().length()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
-			log.info(MessageFormat.format("Converting stream to {0}",podcast.getFormat().getName()));
+			log.info(MessageFormat.format(Messages.getString("CaptureStream.ConvertingString"),podcast.getFormat().getName())); //$NON-NLS-1$
 			IAudioFile audio = AudioFileConverter.convertAudio(getConfig(),audioFile, podcast.getFormat(),outputFile);
 			if (podcast.getFormat()!=Format.WAV) {
 				if (entryTitle!=null) {
@@ -136,7 +136,7 @@ public class CaptureStream extends AbstractLauncher {
 				audio.writeMetaData();
 			}
 			else {
-				log.error(MessageFormat.format("Meta data can't be set on {0} format files",Format.WAV.getName()));
+				log.error(MessageFormat.format(Messages.getString("CaptureStream.MetaDataCantBeSet"),Format.WAV.getName())); //$NON-NLS-1$
 				return false;
 			}
 		}
@@ -145,7 +145,7 @@ public class CaptureStream extends AbstractLauncher {
 			log.error(e.getMessage(),e);
 			return false;
 		}
-		log.debug("Audio captured successfully");
+		log.debug("Audio captured successfully"); //$NON-NLS-1$
 		return true;
 	}
 
@@ -159,13 +159,13 @@ public class CaptureStream extends AbstractLauncher {
 
 		outputFile = new File(cmd.getOptionValue(OUTPUT_FILE_OPTION));
 		if (outputFile.exists()) {
-			log.error(MessageFormat.format("Output file {0} already exsits", outputFile.getAbsolutePath()));
+			log.error(MessageFormat.format(Messages.getString("CaptureStream.FileExists"), outputFile.getAbsolutePath())); //$NON-NLS-1$
 			return false;
 		}
 
 		String id = cmd.getOptionValue(PODCAST_ID_OPTION);
 		if (id==null) {
-			log.error("No podcast ID given");
+			log.error(Messages.getString("CaptureStream.NoPodCastID")); //$NON-NLS-1$
 			return false;
 		}
 		this.id = id;

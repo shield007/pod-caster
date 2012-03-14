@@ -2,6 +2,7 @@ package org.stanwood.podcaster.audio;
 
 import java.io.File;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Calendar;
 
 import org.apache.commons.logging.Log;
@@ -53,7 +54,7 @@ public class OggFile extends AbstractAudioFile {
 		if (artist==null && copyright == null && title == null && description == null && artworkURL == null) {
 			return;
 		}
-		log.info("Writing metadata to file '"+getFile().getAbsolutePath()+"'");
+		log.info(MessageFormat.format(Messages.getString("OggFile.WritingMetadata"),getFile().getAbsolutePath())); //$NON-NLS-1$
 		try {
 			AudioFile ogg = AudioFileIO.read(getFile());
 			Tag tag = ogg.getTag();
@@ -70,17 +71,6 @@ public class OggFile extends AbstractAudioFile {
 			if (description!=null) {
 				tag.setField(FieldKey.COMMENT,description);
 			}
-
-//			if (artworkURL!=null) {
-//
-//				DownloadedFile coverArt = FileHelper.downloadToTempFile(artworkURL);
-//				RandomAccessFile imageFile = new RandomAccessFile(coverArt.getFile(), "r");
-//				byte[] imagedata = new byte[(int) imageFile.length()];
-//				if (imageFile.read(imagedata)!=imagedata.length) {
-//					throw new MetaDataException("Unable to read cover art " + artworkURL.toExternalForm());
-//				}
-//				tag.addField(((OggTag)tag).createArtworkField(imagedata));
-//			}
 
 			tag.setField(FieldKey.YEAR,String.valueOf(Calendar.getInstance().get(Calendar.YEAR)));
 			ogg.commit();
