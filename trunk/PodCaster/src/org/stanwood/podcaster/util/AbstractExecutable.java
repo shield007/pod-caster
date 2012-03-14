@@ -65,8 +65,8 @@ public class AbstractExecutable {
 	 */
 	protected int execute(List<String> args) throws IOException, InterruptedException {
 		proc = createProcess(args);
-		errorGobbler = new StreamGobbler(proc.getErrorStream(),"stderr reader");
-		outputGobbler = new StreamGobbler(proc.getInputStream(),"stdout reader");
+		errorGobbler = new StreamGobbler(proc.getErrorStream(),"stderr reader"); //$NON-NLS-1$
+		outputGobbler = new StreamGobbler(proc.getInputStream(),"stdout reader"); //$NON-NLS-1$
 
 		return AbstractExecutable.execute(proc,outputGobbler,errorGobbler);
 	}
@@ -99,13 +99,13 @@ public class AbstractExecutable {
 
 	protected Process createProcess(List<String> args) throws IOException {
 		List<String> newArgs = new ArrayList<String>();
-		if (System.getProperty("os.name").toLowerCase().equals("Windows 95")) {
-			newArgs.add("command.com");
-			newArgs.add("/C");
+		if (System.getProperty("os.name").toLowerCase().equals("Windows 95")) { //$NON-NLS-1$ //$NON-NLS-2$
+			newArgs.add("command.com"); //$NON-NLS-1$
+			newArgs.add("/C"); //$NON-NLS-1$
 		}
-		else if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
-			newArgs.add("cmd.exe");
-			newArgs.add("/C");
+		else if (System.getProperty("os.name").toLowerCase().startsWith("windows")) { //$NON-NLS-1$ //$NON-NLS-2$
+			newArgs.add("cmd.exe"); //$NON-NLS-1$
+			newArgs.add("/C"); //$NON-NLS-1$
 		}
 		newArgs.addAll(args);
 
@@ -113,7 +113,7 @@ public class AbstractExecutable {
 			StringBuilder debugOutput = new StringBuilder();
 			for (String arg : newArgs) {
 				debugOutput.append(arg);
-				debugOutput.append(" ");
+				debugOutput.append(" "); //$NON-NLS-1$
 			}
 			log.debug(debugOutput.toString());
 		}

@@ -60,16 +60,16 @@ public class FFMPEG extends AbstractExecutable {
 				log.info(getOutputStream());
 				log.error(getErrorStream());
 
-				throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","mp4",targetFile));
+				throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"mp4",targetFile)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			if (!targetFile.exists()) {
-				throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","mp4",targetFile));
+				throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"mp4",targetFile)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (IOException e) {
-			throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","mp4",targetFile),e);
+			throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"mp4",targetFile),e); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (InterruptedException e) {
-			throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","mp4",targetFile),e);
+			throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"mp4",targetFile),e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -93,16 +93,16 @@ public class FFMPEG extends AbstractExecutable {
 				log.info(getOutputStream());
 				log.error(getErrorStream());
 
-				throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","wav",target));
+				throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"wav",target)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			if (!target.exists()) {
-				throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","wav",target));
+				throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"wav",target)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (IOException e) {
-			throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","wav",target),e);
+			throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"wav",target),e); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (InterruptedException e) {
-			throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","wav",target),e);
+			throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"wav",target),e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -132,12 +132,12 @@ public class FFMPEG extends AbstractExecutable {
 				log.info(getOutputStream());
 				log.error(getErrorStream());
 
-				throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","mp3",targetFile));
+				throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"mp3",targetFile)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (IOException e) {
-			throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","mp3",targetFile),e);
+			throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"mp3",targetFile),e); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (InterruptedException e) {
-			throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","mp3",targetFile),e);
+			throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"mp3",targetFile),e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -166,12 +166,12 @@ public class FFMPEG extends AbstractExecutable {
 				log.info(getOutputStream());
 				log.error(getErrorStream());
 
-				throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","ogg",targetFile));
+				throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"ogg",targetFile)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (IOException e) {
-			throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","ogg",targetFile),e);
+			throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"ogg",targetFile),e); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (InterruptedException e) {
-			throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","ogg",targetFile),e);
+			throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"ogg",targetFile),e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -198,12 +198,12 @@ public class FFMPEG extends AbstractExecutable {
 				log.info(getOutputStream());
 				log.error(getErrorStream());
 
-				throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","flac",targetFile));
+				throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"flac",targetFile)); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		} catch (IOException e) {
-			throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","flac",targetFile),e);
+			throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"flac",targetFile),e); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch (InterruptedException e) {
-			throw new FFMPEGException(MessageFormat.format("Unable to create {0} file: {1}","flac",targetFile),e);
+			throw new FFMPEGException(MessageFormat.format(Messages.getString("FFMPEG.UnableToCreateFile"),"flac",targetFile),e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }

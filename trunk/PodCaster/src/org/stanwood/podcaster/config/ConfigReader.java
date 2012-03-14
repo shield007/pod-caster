@@ -57,7 +57,7 @@ public class ConfigReader extends XMLParser {
 			parseGlobal(doc);
 			parsePodcasts(doc);
 		} catch (XMLParserException e) {
-			throw new ConfigException("Unable to parse configuration file",e);
+			throw new ConfigException(Messages.getString("ConfigReader.UnableParseConfigFile"),e); //$NON-NLS-1$
 		}
 	}
 
@@ -69,46 +69,46 @@ public class ConfigReader extends XMLParser {
 				AbstractPodcast genericPodcast = null;
 				Element typeNode = (Element) selectSingleNode(podcastNode, "radioStream"); //$NON-NLS-1$
 				if (typeNode!=null) {
-					StreamPodcast podcast = new StreamPodcast(podcastNode.getAttribute("id"));
+					StreamPodcast podcast = new StreamPodcast(podcastNode.getAttribute("id")); //$NON-NLS-1$
 					String sURL = typeNode.getAttribute("url"); //$NON-NLS-1$
 					if (sURL==null || sURL.length()==0) {
-						throw new ConfigException(MessageFormat.format("No stream URL for for podcast ''{0}''",podcast.getId()));
+						throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.NoStramURL"),podcast.getId())); //$NON-NLS-1$
 					}
 					try {
 						podcast.setStreamURL(new URL(sURL));
 					} catch (MalformedURLException e) {
-						throw new ConfigException(MessageFormat.format("Unable to create URL ''{0}''",sURL),e);
+						throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UnableCreateURL"),sURL),e); //$NON-NLS-1$
 					}
 					String sTime = typeNode.getAttribute("captureTime"); //$NON-NLS-1$
 					if (sTime==null || sTime.length()==0) {
-						throw new ConfigException(MessageFormat.format("No capture time for for podcast ''{0}''",podcast.getId()));
+						throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.NoCaptureTime"),podcast.getId())); //$NON-NLS-1$
 					}
 					try {
 						podcast.setCaptureTime(Long.parseLong(sTime));
 					}
 					catch (NumberFormatException e) {
-						throw new ConfigException(MessageFormat.format("Capture time ''{0}'' is invalid.",podcast.getId()));
+						throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.InvalidCaptureTime"),podcast.getId())); //$NON-NLS-1$
 					}
 					genericPodcast = podcast;
 				}
 				else {
 					typeNode = (Element) selectSingleNode(podcastNode, "iplayer"); //$NON-NLS-1$
 					if (typeNode!=null) {
-						IPlayerPodcast podcast = new IPlayerPodcast(podcastNode.getAttribute("id"));
-						String episodeId = typeNode.getAttribute("episode");
+						IPlayerPodcast podcast = new IPlayerPodcast(podcastNode.getAttribute("id")); //$NON-NLS-1$
+						String episodeId = typeNode.getAttribute("episode"); //$NON-NLS-1$
 						if (episodeId==null || episodeId.length()==0) {
-							throw new ConfigException(MessageFormat.format("No episode id given for iplayer podcast ''{0}''",podcast.getId()));
+							throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.NoEpiusodeId"),podcast.getId())); //$NON-NLS-1$
 						}
 						podcast.setEpisodeId(episodeId);
 						String sTime = typeNode.getAttribute("captureTime"); //$NON-NLS-1$
 						if (sTime==null || sTime.length()==0) {
-							throw new ConfigException(MessageFormat.format("No capture time for for podcast ''{0}''",podcast.getId()));
+							throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.NoCaptureTime"),podcast.getId())); //$NON-NLS-1$
 						}
 						try {
 							podcast.setCaptureTime(Long.parseLong(sTime));
 						}
 						catch (NumberFormatException e) {
-							throw new ConfigException(MessageFormat.format("Capture time ''{0}'' is invalid.",podcast.getId()));
+							throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.InvalidCaptureTime"),podcast.getId())); //$NON-NLS-1$
 						}
 
 						genericPodcast = podcast;
@@ -116,38 +116,38 @@ public class ConfigReader extends XMLParser {
 				}
 
 				if (genericPodcast==null) {
-					throw new ConfigException("Missing podcast node of name <iplayer> or <radioStream>");
+					throw new ConfigException(Messages.getString("ConfigReader.MissingPodcastNode")); //$NON-NLS-1$
 				}
 
-				genericPodcast.setEntryDescription(parseString(getStringFromXMLOrNull(podcastNode, "metadata/entry/description/text()")));
-				genericPodcast.setFeedArtist(parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/artist/text()")));
-				genericPodcast.setFeedCopyright(parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/copyright/text()")));
-				genericPodcast.setFeedDescription(parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/description/text()")));
-				genericPodcast.setFeedTitle(parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/title/text()")));
-				String sURL = parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/image/@url"));
+				genericPodcast.setEntryDescription(parseString(getStringFromXMLOrNull(podcastNode, "metadata/entry/description/text()"))); //$NON-NLS-1$
+				genericPodcast.setFeedArtist(parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/artist/text()"))); //$NON-NLS-1$
+				genericPodcast.setFeedCopyright(parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/copyright/text()"))); //$NON-NLS-1$
+				genericPodcast.setFeedDescription(parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/description/text()"))); //$NON-NLS-1$
+				genericPodcast.setFeedTitle(parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/title/text()"))); //$NON-NLS-1$
+				String sURL = parseString(getStringFromXMLOrNull(podcastNode, "metadata/feed/image/@url")); //$NON-NLS-1$
 				if (sURL!=null && sURL.length() >0) {
 					try {
 						genericPodcast.setFeedImageURL(new URL(sURL));
 					} catch (MalformedURLException e) {
-						throw new ConfigException("Unable to create URL",e);
+						throw new ConfigException(Messages.getString("ConfigReader.UnableCreateURL2"),e); //$NON-NLS-1$
 					}
 				}
 
 				String file = podcastNode.getAttribute("rssFile"); //$NON-NLS-1$
 				if (file==null || file.length()==0) {
-					throw new ConfigException(MessageFormat.format("No RSS file given for podcast ''{0}''",genericPodcast.getId()));
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.NoRSSFile"),genericPodcast.getId())); //$NON-NLS-1$
 				}
 				genericPodcast.setRSSFile(new File(file));
 				String url = podcastNode.getAttribute("rssUrl"); //$NON-NLS-1$
 				if (url==null || url.length()==0) {
-					throw new ConfigException(MessageFormat.format("No RSS url given for podcast ''{0}''",genericPodcast.getId()));
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.NoRSSURL"),genericPodcast.getId())); //$NON-NLS-1$
 				}
 				try {
 					genericPodcast.setRSSURL(new URL(url));
 				} catch (MalformedURLException e) {
-					throw new ConfigException(MessageFormat.format("Unable to create URL ''{0}''",url),e);
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UnableCreateURL1"),url),e); //$NON-NLS-1$
 				}
-				String sEntries = podcastNode.getAttribute("maxEntries");
+				String sEntries = podcastNode.getAttribute("maxEntries"); //$NON-NLS-1$
 				if (sEntries==null || sEntries.length()==0) {
 					genericPodcast.setMaxEntries(20);
 				}
@@ -156,19 +156,19 @@ public class ConfigReader extends XMLParser {
 						genericPodcast.setMaxEntries(Integer.parseInt(sEntries));
 					}
 					catch (NumberFormatException e) {
-						throw new ConfigException(MessageFormat.format("Inavid max entries ''{0}'', must be a number",sEntries),e);
+						throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.InvalidMaxEntries"),sEntries),e); //$NON-NLS-1$
 					}
 				}
 
 
 				String sformat= podcastNode.getAttribute("format"); //$NON-NLS-1$
 				if (sformat==null || sformat.length()==0) {
-					throw new ConfigException(MessageFormat.format("No format given for podcast ''{0}''",genericPodcast.getId()));
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.NoForamt"),genericPodcast.getId())); //$NON-NLS-1$
 				}
 
 				Format format = Format.fromName(sformat);
 				if (format==null) {
-					throw new ConfigException(MessageFormat.format("Unsupported format ''{0}'' for podcast ''{1}''", sformat,genericPodcast.getId()));
+					throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.UnspportedFormat"), sformat,genericPodcast.getId())); //$NON-NLS-1$
 				}
 				genericPodcast.setFormat(format);
 

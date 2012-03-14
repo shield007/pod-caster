@@ -44,7 +44,7 @@ public class Piper extends Thread implements IStreamGobbler {
         } catch (Exception e) {
         	if (!done) {
 	            // Something happened while reading or writing streams; pipe is broken
-	            throw new RuntimeException("Broken pipe", e);
+	            throw new RuntimeException("Broken pipe", e); //$NON-NLS-1$
         	}
         } finally {
             try {

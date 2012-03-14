@@ -61,7 +61,7 @@ public class RSSFeed {
 	 * Used to create a new feed
 	 */
 	public void createNewFeed() {
-		log.info(MessageFormat.format("Creating new rss feed {0}",feedFile));
+		log.info(MessageFormat.format(Messages.getString("RSSFeed.CreateingNewFeed"),feedFile)); //$NON-NLS-1$
 		feed = new SyndFeedImpl();
 		feed.setFeedType(FEED_TYPE);
 	}
@@ -108,7 +108,7 @@ public class RSSFeed {
 				image.setTitle(feed.getTitle());
 			}
 			else {
-				image.setTitle("No Title");
+				image.setTitle(Messages.getString("RSSFeed.NoTitle")); //$NON-NLS-1$
 			}
 			feed.setImage(image);
 		}
@@ -125,13 +125,13 @@ public class RSSFeed {
 		}
 		SyndFeedOutput output = new SyndFeedOutput();
 		if (feed.getTitle()==null) {
-			throw new FeedException("Unable to write feed, feed has no title");
+			throw new FeedException(Messages.getString("RSSFeed.UnableWriteNoTitle")); //$NON-NLS-1$
 		}
 		if (feed.getDescription()==null) {
-			throw new FeedException("Unable to write feed, feed has no description");
+			throw new FeedException(Messages.getString("RSSFeed.UnableWriteNoDescription")); //$NON-NLS-1$
 		}
 		if (feed.getLink()==null) {
-			throw new FeedException("Unable to write feed, feed has no link");
+			throw new FeedException(Messages.getString("RSSFeed.UnableWriteNoLink")); //$NON-NLS-1$
 		}
 		output.output(feed, feedFile);
 	}
@@ -165,14 +165,14 @@ public class RSSFeed {
 
 		if (plainDescription != null) {
 			SyndContent description = new SyndContentImpl();
-			description.setType("text/plain");
+			description.setType("text/plain"); //$NON-NLS-1$
 			description.setValue(plainDescription);
 			entry.setDescription(description);
 		}
 		entry.setAuthor(author);
 
 		feed.getEntries().add(0, entry);
-		log.info("Entry added to rss feed" + feedFile);
+		log.info(Messages.getString("RSSFeed.EntryAdded") + feedFile); //$NON-NLS-1$
 	}
 
 	/**
@@ -195,12 +195,12 @@ public class RSSFeed {
 				File entryFile = new File(rssDir, fileName);
 				if (entryFile.exists()) {
 					if (!entryFile.delete()) {
-						log.error(MessageFormat.format("Unable to delete file : {0}",entryFile));
+						log.error(MessageFormat.format(Messages.getString("RSSFeed.UnableDeleteFile"),entryFile)); //$NON-NLS-1$
 					}
 				}
 
 				it.remove();
-				log.info(MessageFormat.format("Old entry {0} removed from feed",link));
+				log.info(MessageFormat.format(Messages.getString("RSSFeed.OldEntryRemoved"),link)); //$NON-NLS-1$
 			}
 		}
 	}
