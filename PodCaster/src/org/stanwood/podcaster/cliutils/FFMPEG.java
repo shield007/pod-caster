@@ -13,16 +13,16 @@ import org.stanwood.podcaster.config.ConfigReader;
 import org.stanwood.podcaster.util.AbstractExecutable;
 
 /**
- * This is a utility class that wraps around the ffmpeg applcation inorder to use it to perform various
+ * This is a utility class that wraps around the ffmpeg application in order to use it to perform various
  * tasks.
  */
 public class FFMPEG extends AbstractExecutable {
 
 	private final static Log log = LogFactory.getLog(FFMPEG.class);
 
-	private static final String MP3_BITRATE = "112k";
-	private static final String MP4_BITRATE = "112k";
-	private static final String OGG_BITRATE = "112k";
+	private static final String MP3_BITRATE = "112k"; //$NON-NLS-1$
+	private static final String MP4_BITRATE = "112k"; //$NON-NLS-1$
+	private static final String OGG_BITRATE = "112k"; //$NON-NLS-1$
 
 	/**
 	 * The constructor
@@ -44,14 +44,14 @@ public class FFMPEG extends AbstractExecutable {
 
 			List<String> args = new ArrayList<String>();
 			args.add(getConfig().getFFMpegPath());
-			args.add("-i");
+			args.add("-i"); //$NON-NLS-1$
 			args.add(wavFile.getAbsolutePath());
-			args.add("-acodec");
-			args.add("libfaac");
-			args.add("-ac");
-			args.add("2");
-			args.add("-y");
-			args.add("-ab");
+			args.add("-acodec"); //$NON-NLS-1$
+			args.add("libfaac"); //$NON-NLS-1$
+			args.add("-ac"); //$NON-NLS-1$
+			args.add("2"); //$NON-NLS-1$
+			args.add("-y"); //$NON-NLS-1$
+			args.add("-ab"); //$NON-NLS-1$
 			args.add(MP4_BITRATE);
 			args.add(targetFile.getAbsolutePath());
 			execute(args);
@@ -83,11 +83,11 @@ public class FFMPEG extends AbstractExecutable {
 		try {
 			List<String> args = new ArrayList<String>();
 			args.add(getConfig().getFFMpegPath());
-			args.add("-i");
+			args.add("-i"); //$NON-NLS-1$
 			args.add(raw.getAbsolutePath());
-			args.add("-vn");
-			args.add("-f");
-			args.add("wav");
+			args.add("-vn"); //$NON-NLS-1$
+			args.add("-f"); //$NON-NLS-1$
+			args.add("wav"); //$NON-NLS-1$
 			args.add(target.getAbsolutePath());
 			if (execute(args)!=0) {
 				log.info(getOutputStream());
@@ -117,14 +117,14 @@ public class FFMPEG extends AbstractExecutable {
 		try {
 			List<String> args = new ArrayList<String>();
 			args.add(getConfig().getFFMpegPath());
-			args.add("-i");
+			args.add("-i"); //$NON-NLS-1$
 			args.add(wavFile.getAbsolutePath());
-			args.add("-acodec");
-			args.add("libmp3lame");
-			args.add("-ac");
-			args.add("2");
-			args.add("-y");
-			args.add("-ab");
+			args.add("-acodec"); //$NON-NLS-1$
+			args.add("libmp3lame"); //$NON-NLS-1$
+			args.add("-ac"); //$NON-NLS-1$
+			args.add("2"); //$NON-NLS-1$
+			args.add("-y"); //$NON-NLS-1$
+			args.add("-ab"); //$NON-NLS-1$
 			args.add(MP3_BITRATE);
 			args.add(targetFile.getAbsolutePath());
 			execute(args);
@@ -151,14 +151,14 @@ public class FFMPEG extends AbstractExecutable {
 		try {
 			List<String> args = new ArrayList<String>();
 			args.add(getConfig().getFFMpegPath());
-			args.add("-i");
+			args.add("-i"); //$NON-NLS-1$
 			args.add(wavFile.getAbsolutePath());
-			args.add("-acodec");
-			args.add("vorbis");
-			args.add("-ac");
-			args.add("2");
-			args.add("-y");
-			args.add("-ab");
+			args.add("-acodec"); //$NON-NLS-1$
+			args.add("vorbis"); //$NON-NLS-1$
+			args.add("-ac"); //$NON-NLS-1$
+			args.add("2"); //$NON-NLS-1$
+			args.add("-y"); //$NON-NLS-1$
+			args.add("-ab"); //$NON-NLS-1$
 			args.add(OGG_BITRATE);
 			args.add(targetFile.getAbsolutePath());
 			execute(args);
@@ -185,13 +185,13 @@ public class FFMPEG extends AbstractExecutable {
 		try {
 			List<String> args = new ArrayList<String>();
 			args.add(getConfig().getFFMpegPath());
-			args.add("-i");
+			args.add("-i"); //$NON-NLS-1$
 			args.add(wavFile.getAbsolutePath());
-			args.add("-acodec");
-			args.add("flac");
-			args.add("-ac");
-			args.add("2");
-			args.add("-y");
+			args.add("-acodec"); //$NON-NLS-1$
+			args.add("flac"); //$NON-NLS-1$
+			args.add("-ac"); //$NON-NLS-1$
+			args.add("2"); //$NON-NLS-1$
+			args.add("-y"); //$NON-NLS-1$
 			args.add(targetFile.getAbsolutePath());
 			execute(args);
 			if (!targetFile.exists() || targetFile.length()==0) {

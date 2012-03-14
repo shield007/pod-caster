@@ -38,7 +38,7 @@ public class GetIPlayer extends AbstractExecutable {
 	{
 		File wavOutputFile;
 		try {
-			wavOutputFile = File.createTempFile("captured", ".wav");
+			wavOutputFile = File.createTempFile("captured", ".wav");  //$NON-NLS-1$//$NON-NLS-2$
 		} catch (IOException e) {
 			throw new MPlayerException("Unable to create temp file",e);
 		}
@@ -46,9 +46,9 @@ public class GetIPlayer extends AbstractExecutable {
 		log.info(MessageFormat.format("Recording live radio from BBC IPlayer: {0} to {1}",epsiode,wavOutputFile.getAbsolutePath()));
 		List<String> args = new ArrayList<String>();
 		args.add(getConfig().getGetIPlayerPath());
-		args.add("--stream");
+		args.add("--stream"); //$NON-NLS-1$
 		args.add(epsiode);
-		args.add("--type=liveradio");
+		args.add("--type=liveradio"); //$NON-NLS-1$
 
 		Process p;
 		try {

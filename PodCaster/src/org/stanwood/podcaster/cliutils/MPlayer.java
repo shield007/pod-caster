@@ -59,18 +59,18 @@ public class MPlayer extends AbstractExecutable {
 		log.info("Capturing audio from stream: " + stream.getUrl() + " to " + wavOutputFile.getAbsolutePath());
 		List<String> args = new ArrayList<String>();
 		args.add(getConfig().getMPlayerPath());
-		args.add("-nojoystick");
-		args.add("-nolirc");
-		args.add("-cache");
+		args.add("-nojoystick"); //$NON-NLS-1$
+		args.add("-nolirc"); //$NON-NLS-1$
+		args.add("-cache"); //$NON-NLS-1$
 		args.add(String.valueOf(CACHE_SIZE));
-		args.add("-vc");
-		args.add("null");
-		args.add("-vo");
-		args.add("null");
-		args.add("-ao");
-		args.add("pcm:waveheader:fast:file=\""+wavOutputFile.getAbsolutePath()+"\"");
+		args.add("-vc"); //$NON-NLS-1$
+		args.add("null"); //$NON-NLS-1$
+		args.add("-vo"); //$NON-NLS-1$
+		args.add("null"); //$NON-NLS-1$
+		args.add("-ao"); //$NON-NLS-1$
+		args.add("pcm:waveheader:fast:file=\""+wavOutputFile.getAbsolutePath()+"\""); //$NON-NLS-1$ //$NON-NLS-2$
 		if (stream.isPlaylist()) {
-			args.add("-playlist");
+			args.add("-playlist"); //$NON-NLS-1$
 		}
 		args.add(stream.getUrl());
 		executeWithTimeout(args,time);

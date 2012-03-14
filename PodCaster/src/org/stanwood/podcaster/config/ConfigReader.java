@@ -79,7 +79,7 @@ public class ConfigReader extends XMLParser {
 					} catch (MalformedURLException e) {
 						throw new ConfigException(MessageFormat.format("Unable to create URL ''{0}''",sURL),e);
 					}
-					String sTime = typeNode.getAttribute("captureTime");
+					String sTime = typeNode.getAttribute("captureTime"); //$NON-NLS-1$
 					if (sTime==null || sTime.length()==0) {
 						throw new ConfigException(MessageFormat.format("No capture time for for podcast ''{0}''",podcast.getId()));
 					}
@@ -92,7 +92,7 @@ public class ConfigReader extends XMLParser {
 					genericPodcast = podcast;
 				}
 				else {
-					typeNode = (Element) selectSingleNode(podcastNode, "iplayer");
+					typeNode = (Element) selectSingleNode(podcastNode, "iplayer"); //$NON-NLS-1$
 					if (typeNode!=null) {
 						IPlayerPodcast podcast = new IPlayerPodcast(podcastNode.getAttribute("id"));
 						String episodeId = typeNode.getAttribute("episode");
@@ -100,7 +100,7 @@ public class ConfigReader extends XMLParser {
 							throw new ConfigException(MessageFormat.format("No episode id given for iplayer podcast ''{0}''",podcast.getId()));
 						}
 						podcast.setEpisodeId(episodeId);
-						String sTime = typeNode.getAttribute("captureTime");
+						String sTime = typeNode.getAttribute("captureTime"); //$NON-NLS-1$
 						if (sTime==null || sTime.length()==0) {
 							throw new ConfigException(MessageFormat.format("No capture time for for podcast ''{0}''",podcast.getId()));
 						}
@@ -133,12 +133,12 @@ public class ConfigReader extends XMLParser {
 					}
 				}
 
-				String file = podcastNode.getAttribute("rssFile");
+				String file = podcastNode.getAttribute("rssFile"); //$NON-NLS-1$
 				if (file==null || file.length()==0) {
 					throw new ConfigException(MessageFormat.format("No RSS file given for podcast ''{0}''",genericPodcast.getId()));
 				}
 				genericPodcast.setRSSFile(new File(file));
-				String url = podcastNode.getAttribute("rssUrl");
+				String url = podcastNode.getAttribute("rssUrl"); //$NON-NLS-1$
 				if (url==null || url.length()==0) {
 					throw new ConfigException(MessageFormat.format("No RSS url given for podcast ''{0}''",genericPodcast.getId()));
 				}
@@ -161,7 +161,7 @@ public class ConfigReader extends XMLParser {
 				}
 
 
-				String sformat= podcastNode.getAttribute("format");
+				String sformat= podcastNode.getAttribute("format"); //$NON-NLS-1$
 				if (sformat==null || sformat.length()==0) {
 					throw new ConfigException(MessageFormat.format("No format given for podcast ''{0}''",genericPodcast.getId()));
 				}
