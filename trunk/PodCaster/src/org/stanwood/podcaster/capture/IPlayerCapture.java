@@ -98,7 +98,7 @@ public class IPlayerCapture implements ICaptureStream {
 	}
 
 	private String formatDuration(long captureTime) {
-		return captureTime+" miliseconds";
+		return captureTime+" "+"miliseconds";  //$NON-NLS-1$//$NON-NLS-2$
 	}
 
 	protected void executeWithTimeout(final IPlayerPodcast podcast,final Process proc, final StreamGobbler getiplayerErrorGobbler,final IStreamGobbler piper) throws CaptureException {
