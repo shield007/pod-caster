@@ -3,6 +3,7 @@ package org.stanwood.podcaster.audio;
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Calendar;
 
 import org.apache.commons.logging.Log;
@@ -57,7 +58,7 @@ public class MP4File extends AbstractAudioFile {
 		if (artist==null && copyright == null && title == null && description == null && artworkURL == null) {
 			return;
 		}
-		log.info("Writing metadata to file '"+getFile().getAbsolutePath()+"'");
+		log.info(MessageFormat.format(Messages.getString("MP4File.WritingMetadata"),getFile().getAbsolutePath())); //$NON-NLS-1$
 		try {
 			AudioFile mp4 = AudioFileIO.read(getFile());
 			Tag tag = mp4.getTag();
@@ -78,10 +79,10 @@ public class MP4File extends AbstractAudioFile {
 			if (artworkURL!=null) {
 
 				DownloadedFile coverArt = FileHelper.downloadToTempFile(artworkURL);
-				RandomAccessFile imageFile = new RandomAccessFile(coverArt.getFile(), "r");
+				RandomAccessFile imageFile = new RandomAccessFile(coverArt.getFile(), "r"); //$NON-NLS-1$
 				byte[] imagedata = new byte[(int) imageFile.length()];
 				if (imageFile.read(imagedata)!=imagedata.length) {
-					throw new MetaDataException("Unable to read cover art " + artworkURL.toExternalForm());
+					throw new MetaDataException(MessageFormat.format(Messages.getString("MP4File.UnableReadCoverArt"),artworkURL.toExternalForm())); //$NON-NLS-1$
 				}
 				tag.addField(((Mp4Tag)tag).createArtworkField(imagedata));
 			}

@@ -43,26 +43,26 @@ public class IPlayerCapture implements ICaptureStream {
 	public IAudioFile captureLiveAudioStream(final ConfigReader config,AbstractPodcast pc) throws CaptureException {
 		final File wavOutputFile;
 		try {
-			wavOutputFile = FileHelper.createTempFile("captured", ".wav");
+			wavOutputFile = FileHelper.createTempFile("captured", ".wav"); //$NON-NLS-1$ //$NON-NLS-2$
 			wavOutputFile.delete();
 		} catch (IOException e) {
-			throw new CaptureException("Unable to create temp file",e);
+			throw new CaptureException(Messages.getString("IPlayerCapture.UnableCreateTempFile"),e); //$NON-NLS-1$
 		}
 		File rawFile = capture(config, pc, wavOutputFile);
 		if (log.isDebugEnabled()) {
-			log.debug("Captured "+rawFile+" with size "+rawFile.length());
+			log.debug("Captured "+rawFile+" with size "+rawFile.length()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		log.info(MessageFormat.format("Converting ''{0}'' to wav file ''{1}''...",rawFile,wavOutputFile));
+		log.info(MessageFormat.format(Messages.getString("IPlayerCapture.ConvertingToWav"),rawFile,wavOutputFile)); //$NON-NLS-1$
 		FFMPEG ffmpeg = new FFMPEG(config);
 		try {
 			ffmpeg.raw2Wav(rawFile,wavOutputFile);
 			FileHelper.delete(rawFile);
 		} catch (IOException e) {
-			throw new CaptureException(MessageFormat.format("Unable to delete raw file ''{0}''", rawFile));
+			throw new CaptureException(MessageFormat.format(Messages.getString("IPlayerCapture.UnableDeleteRaw"), rawFile)); //$NON-NLS-1$
 		} catch (FFMPEGException e) {
-			throw new CaptureException(MessageFormat.format("Unable to convert file to wav ''{0}''", rawFile));
+			throw new CaptureException(MessageFormat.format(Messages.getString("IPlayerCapture.UnableConvertToWav"), rawFile)); //$NON-NLS-1$
 		}
-		log.info("Convestion complete");
+		log.info(Messages.getString("IPlayerCapture.ConversionComplete")); //$NON-NLS-1$
 		WavFile result = new WavFile(wavOutputFile);
 		return result;
 	}
@@ -72,11 +72,11 @@ public class IPlayerCapture implements ICaptureStream {
 		GetIPlayer downloader = new GetIPlayer (config);
 		final Process getiplayer = downloader.captureLiveAudioStream(podcast.getEpisodeId());
 
-		final StreamGobbler getiplayerErrorGobbler = new StreamGobbler(getiplayer.getErrorStream(),"getiplayer stderr reader");
+		final StreamGobbler getiplayerErrorGobbler = new StreamGobbler(getiplayer.getErrorStream(),"getiplayer stderr reader"); //$NON-NLS-1$
 		FileOutputStream fs = null;
 		try {
-			File captureFile = FileHelper.createTempFile("capture", ".dat");
-			log.info(MessageFormat.format("Capturing stream to file {0}",captureFile.getAbsolutePath()));
+			File captureFile = FileHelper.createTempFile("capture", ".dat"); //$NON-NLS-1$ //$NON-NLS-2$
+			log.info(MessageFormat.format(Messages.getString("IPlayerCapture.CapturingStreamToFile"),captureFile.getAbsolutePath(),formatDuration(podcast.getCaptureTime()))); //$NON-NLS-1$
 			fs = new FileOutputStream(captureFile);
 
 			final Piper piper = new Piper(getiplayer.getInputStream(), new BufferedOutputStream(fs));
@@ -84,17 +84,21 @@ public class IPlayerCapture implements ICaptureStream {
 			fs.flush();
 			return captureFile;
 		} catch (IOException e) {
-			throw new CaptureException("Unable to capture radio stream",e);
+			throw new CaptureException(Messages.getString("IPlayerCapture.UnableCaptureRadioStream"),e); //$NON-NLS-1$
 		}
 		finally {
 			if (fs!=null) {
 				try {
 					fs.close();
 				} catch (IOException e) {
-					throw new CaptureException("Unable to close stream",e);
+					throw new CaptureException(Messages.getString("IPlayerCapture.UnableCloseStream"),e); //$NON-NLS-1$
 				}
 			}
 		}
+	}
+
+	private String formatDuration(long captureTime) {
+		return captureTime+" miliseconds";
 	}
 
 	protected void executeWithTimeout(final IPlayerPodcast podcast,final Process proc, final StreamGobbler getiplayerErrorGobbler,final IStreamGobbler piper) throws CaptureException {
@@ -104,9 +108,9 @@ public class IPlayerCapture implements ICaptureStream {
 				try {
 					return AbstractExecutable.execute(proc,getiplayerErrorGobbler,piper);
 				} catch (IOException e) {
-					throw new CaptureException("Unable to convert stream to wav",e);
+					throw new CaptureException(Messages.getString("IPlayerCapture.UnableConvertStreamToWav"),e); //$NON-NLS-1$
 				} catch (InterruptedException e) {
-					throw new CaptureException("Unable to convert stream to wav",e);
+					throw new CaptureException(Messages.getString("IPlayerCapture.UnableConvertStreamToWav"),e); //$NON-NLS-1$
 				}
 			}
 		});
@@ -115,15 +119,15 @@ public class IPlayerCapture implements ICaptureStream {
 		es.submit (task);
 		try {
 			task.get(podcast.getCaptureTime(), TimeUnit.MILLISECONDS);
-			log.error("Unable to execute get-iplayer command: " + getiplayerErrorGobbler.getResult());
-			throw new CaptureException("Unexpected exit");
+			log.error(Messages.getString("IPlayerCapture.UnableExecuteGetIplayCommand") + getiplayerErrorGobbler.getResult()); //$NON-NLS-1$
+			throw new CaptureException(Messages.getString("IPlayerCapture.UnexpectedExit")); //$NON-NLS-1$
 		}
 		catch (TimeoutException e) {
 			proc.destroy();
 			getiplayerErrorGobbler.done();
 			piper.done();
 		} catch (InterruptedException e) {
-			throw new CaptureException("Execution interrupted",e);
+			throw new CaptureException(Messages.getString("IPlayerCapture.ExecutionInterrupted"),e); //$NON-NLS-1$
 		} catch (ExecutionException e) {
 			throw new CaptureException(e.getMessage(),e);
 		}

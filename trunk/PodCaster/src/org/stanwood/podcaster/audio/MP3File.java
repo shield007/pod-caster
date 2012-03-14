@@ -3,6 +3,7 @@ package org.stanwood.podcaster.audio;
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.Calendar;
 
 import org.apache.commons.logging.Log;
@@ -101,7 +102,7 @@ public class MP3File extends AbstractAudioFile {
 		if (artist==null && copyright == null && title == null && description == null && artworkURL == null) {
 			return;
 		}
-		log.info("Writing metadata to file '"+getFile().getAbsolutePath()+"'");
+		log.info(MessageFormat.format(Messages.getString("MP3File.UnableWriteMetaData"),getFile().getAbsolutePath())); //$NON-NLS-1$
 		try {
 			org.jaudiotagger.audio.mp3.MP3File mp3 = (org.jaudiotagger.audio.mp3.MP3File)AudioFileIO.read(getFile());
 			Tag tag = mp3.getTag();
@@ -122,10 +123,10 @@ public class MP3File extends AbstractAudioFile {
 			if (artworkURL!=null) {
 				ID3v24Tag v2tag = mp3.getID3v2TagAsv24();
 				DownloadedFile coverArt = FileHelper.downloadToTempFile(artworkURL);
-				RandomAccessFile imageFile = new RandomAccessFile(coverArt.getFile(), "r");
+				RandomAccessFile imageFile = new RandomAccessFile(coverArt.getFile(), "r"); //$NON-NLS-1$
 				byte[] imagedata = new byte[(int) imageFile.length()];
 				if (imageFile.read(imagedata)!=imagedata.length) {
-					throw new MetaDataException("Unable to read cover art " + artworkURL.toExternalForm());
+					throw new MetaDataException(MessageFormat.format(Messages.getString("MP3File.UnableReadCoverArt"),artworkURL.toExternalForm())); //$NON-NLS-1$
 				}
 				v2tag.addField(v2tag.createArtworkField(imagedata,coverArt.getContentType()));
 			}

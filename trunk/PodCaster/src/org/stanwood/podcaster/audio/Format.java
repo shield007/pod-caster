@@ -6,15 +6,15 @@ package org.stanwood.podcaster.audio;
 public enum Format {
 
 	/** A .wav file format */
-	WAV("WAV",".wav","audio/x-wav",WavFile.class),
+	WAV("WAV",".wav","audio/x-wav",WavFile.class),   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	/** A .mp3 file format */
-	MP3("MP3",".mp3","audio/mpeg",MP3File.class),
+	MP3("MP3",".mp3","audio/mpeg",MP3File.class), //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	/** A .mp4 file format */
-	MP4("MP4",".mp4","audio/mpeg",MP4File.class),
+	MP4("MP4",".mp4","audio/mpeg",MP4File.class), //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	/** A .ogg file format */
-	OGG("OGG",".ogg","audio/ogg",OggFile.class),
+	OGG("OGG",".ogg","audio/ogg",OggFile.class), //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 	/** A .flac file format */
-	FLAC("FLAC",".flac","audio/x-flac",FlacFile.class);
+	FLAC("FLAC",".flac","audio/x-flac",FlacFile.class); //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
 	private String name;
 	private String extension;

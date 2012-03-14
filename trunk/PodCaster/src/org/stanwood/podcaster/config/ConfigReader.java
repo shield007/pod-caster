@@ -33,9 +33,9 @@ public class ConfigReader extends XMLParser {
 	private Map<String, String> globalVars = new HashMap<String, String>();
 	private File configDir;
 
-	private String ffmpegPath = "ffmpeg";
-	private String mplayerPath = "mplayer";
-	private String getIPlayerPath = "get-iplayer";
+	private String ffmpegPath = "ffmpeg"; //$NON-NLS-1$
+	private String mplayerPath = "mplayer"; //$NON-NLS-1$
+	private String getIPlayerPath = "get-iplayer"; //$NON-NLS-1$
 
 	private Map<String, AbstractPodcast> podcasts;
 
@@ -63,14 +63,14 @@ public class ConfigReader extends XMLParser {
 
 	private void parsePodcasts(Document rootNode) throws XMLParserException, ConfigException {
 		podcasts=new HashMap<String,AbstractPodcast>();
-		Element podcasterNode = getElement(rootNode, "podcaster");
+		Element podcasterNode = getElement(rootNode, "podcaster"); //$NON-NLS-1$
 		if (podcasterNode!=null) {
-			for (Element podcastNode : selectChildNodes(podcasterNode, "podcast")) {
+			for (Element podcastNode : selectChildNodes(podcasterNode, "podcast")) { //$NON-NLS-1$
 				AbstractPodcast genericPodcast = null;
-				Element typeNode = (Element) selectSingleNode(podcastNode, "radioStream");
+				Element typeNode = (Element) selectSingleNode(podcastNode, "radioStream"); //$NON-NLS-1$
 				if (typeNode!=null) {
 					StreamPodcast podcast = new StreamPodcast(podcastNode.getAttribute("id"));
-					String sURL = typeNode.getAttribute("url");
+					String sURL = typeNode.getAttribute("url"); //$NON-NLS-1$
 					if (sURL==null || sURL.length()==0) {
 						throw new ConfigException(MessageFormat.format("No stream URL for for podcast ''{0}''",podcast.getId()));
 					}

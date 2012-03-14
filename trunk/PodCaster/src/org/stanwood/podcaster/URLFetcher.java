@@ -2,6 +2,7 @@ package org.stanwood.podcaster;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.MessageFormat;
 
 import org.stanwood.podcaster.util.WebFile;
 
@@ -26,18 +27,18 @@ public class URLFetcher {
 		WebFile page = new WebFile(url);
 		String MIME = page.getMIMEType();
 		if (page.getResponseCode()==404) {
-			throw new IOException("Unable to find resource: " + url.toExternalForm());
+			throw new IOException(MessageFormat.format(Messages.getString("URLFetcher.UNABLE_FIND_RESOURCE"),url.toExternalForm())); //$NON-NLS-1$
 		}
 		byte[] content = (byte[]) page.getContent();
 		String strContent = new String(content);
-		if (MIME.equals("audio/x-pn-realaudio")) {
+		if (MIME.equals("audio/x-pn-realaudio")) { //$NON-NLS-1$
 			mediaURL = strContent;
 			playlist = false;
-		} else if (MIME.equals("video/x-ms-asf")) {
+		} else if (MIME.equals("video/x-ms-asf")) { //$NON-NLS-1$
 			mediaURL = url.toExternalForm();
 			playlist = true;
 		} else {
-			throw new IOException(url.toExternalForm() + " - Unsupport MIME type: " + MIME);
+			throw new IOException(MessageFormat.format(Messages.getString("URLFetcher.UNSUPPORTED_MIME_TYPE"), url.toExternalForm(),MIME)); //$NON-NLS-1$
 		}
 	}
 

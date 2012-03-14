@@ -47,9 +47,9 @@ public class ProjectDetails {
 	 */
 	public String getCopyright() {
 		StringBuilder result = new StringBuilder();
-		result.append("Copyright (C) 2011 John-Paul Stanford <dev@stanwood.org.uk>"+FileHelper.LS); 
-		result.append("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>."+FileHelper.LS);
-		result.append("This is free software: you are free to change and redistribute it."+FileHelper.LS); 
+		result.append(Messages.getString("ProjectDetails.Copyright1")+FileHelper.LS); //$NON-NLS-1$
+		result.append(Messages.getString("ProjectDetails.Copyright2")+FileHelper.LS); //$NON-NLS-1$
+		result.append(Messages.getString("ProjectDetails.Copyright3")+FileHelper.LS); //$NON-NLS-1$
 		result.append("There is NO WARRANTY"); //$NON-NLS-1$
 		return result.toString();
 	}
@@ -60,7 +60,7 @@ public class ProjectDetails {
 	 */
 	public List<Author> getAuthors() {
 		List<Author>authors = new ArrayList<Author>();
-		authors.add(new Author("John-Paul Stanford","dev@stanwood.org.uk","Lead developer and project creator")); 
+		authors.add(new Author("John-Paul Stanford","dev@stanwood.org.uk",Messages.getString("ProjectDetails.Title"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return authors;
 	}
 
@@ -77,6 +77,6 @@ public class ProjectDetails {
 	 * @return The project description
 	 */
 	public String getDescription() {
-		return MessageFormat.format("{0} is a application which can capture Internet radio stations and store them locally. It can then add them to a pod cast for downloading onto portal devices. The encoded podcast/media files can have cover art/meta data added to them. ",getTitle()); 
+		return MessageFormat.format(Messages.getString("ProjectDetails.AppDesc"),getTitle()); //$NON-NLS-1$
 	}
 }

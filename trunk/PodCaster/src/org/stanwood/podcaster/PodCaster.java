@@ -38,17 +38,17 @@ public class PodCaster extends AbstractLauncher{
 	private static PrintStream stdout = System.out;
 	private static PrintStream stderr = System.err;
 
-	private final DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss");
+	private final DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss"); //$NON-NLS-1$
 	private String id;
 
 	private static final List<Option> OPTIONS;
-	private final static String PODCAST_ID_OPTION = "p";
+	private final static String PODCAST_ID_OPTION = "p"; //$NON-NLS-1$
 
 	static {
 		OPTIONS = new ArrayList<Option>();
 
-		Option o = new Option(PODCAST_ID_OPTION,"podcast",true,"The ID of the podcast from the configuration");
-		o.setArgName("id");
+		Option o = new Option(PODCAST_ID_OPTION,"podcast",true,Messages.getString("PodCaster.0")); //$NON-NLS-1$ //$NON-NLS-2$
+		o.setArgName("id"); //$NON-NLS-1$
 		o.setRequired(true);
 		OPTIONS.add(o);
 	}
@@ -83,7 +83,7 @@ public class PodCaster extends AbstractLauncher{
 	 * @param exitHandler The exit handler to use
 	 */
 	private PodCaster(IExitHandler exitHandler) {
-		super("podcaster",OPTIONS,exitHandler,stdout,stderr);
+		super("podcaster",OPTIONS,exitHandler,stdout,stderr); //$NON-NLS-1$
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class PodCaster extends AbstractLauncher{
 	protected boolean processOptions(String[] args, CommandLine cmd) {
 		String id = cmd.getOptionValue(PODCAST_ID_OPTION);
 		if (id==null) {
-			log.error("No podcast ID given");
+			log.error(Messages.getString("PodCaster.NoIDGiven")); //$NON-NLS-1$
 			return false;
 		}
 		this.id = id;
@@ -111,24 +111,24 @@ public class PodCaster extends AbstractLauncher{
 	protected boolean run() {
 		AbstractPodcast podcast = getConfig().getPodcast(id);
 		if (podcast==null) {
-			log.error(MessageFormat.format("Unable to find podcast with id ''{0}''", id));
+			log.error(MessageFormat.format(Messages.getString("PodCaster.UnableFindPodcast"), id)); //$NON-NLS-1$
 			return false;
 		}
 		try {
 			Date startDate = new Date();
-			String entryTitle = podcast.getFeedTitle()+" "+DF.format(startDate);
+			String entryTitle = podcast.getFeedTitle()+" "+DF.format(startDate); //$NON-NLS-1$
 
 			ICaptureStream streamCapture = StreamCaptureFactory.getStreamCapture(podcast);
 			IAudioFile audioFile = streamCapture.captureLiveAudioStream(getConfig(),podcast);
 			if (log.isDebugEnabled()) {
-				log.debug("Captured " + audioFile.getFile() + " with size " +audioFile.getFile().length());
+				log.debug("Captured " + audioFile.getFile() + " with size " +audioFile.getFile().length()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			log.info(MessageFormat.format("Converting stream to {0}",podcast.getFormat().getName()));
-			File outputFile = new File(podcast.getRSSFile().getParentFile(),entryTitle.replaceAll(" ","-")+podcast.getFormat().getExtension());
+			log.info(MessageFormat.format(Messages.getString("PodCaster.ConvertingStream"),podcast.getFormat().getName())); //$NON-NLS-1$
+			File outputFile = new File(podcast.getRSSFile().getParentFile(),entryTitle.replaceAll(" ","-")+podcast.getFormat().getExtension()); //$NON-NLS-1$ //$NON-NLS-2$
 
 			String baseUrl = podcast.getRSSURL().toExternalForm();
 			baseUrl = baseUrl.substring(0,baseUrl.lastIndexOf('/'));
-			URL entryUrl = new URL(baseUrl+"/"+outputFile.getName());
+			URL entryUrl = new URL(baseUrl+"/"+outputFile.getName()); //$NON-NLS-1$
 
 			IAudioFile audio = AudioFileConverter.convertAudio(getConfig(),audioFile, podcast.getFormat(),outputFile);
 			if (podcast.getFormat()!=Format.WAV) {
@@ -150,7 +150,7 @@ public class PodCaster extends AbstractLauncher{
 				audio.writeMetaData();
 			}
 			else {
-				log.error(MessageFormat.format("Meta data can't be set on {0} format files",Format.WAV.getName()));
+				log.error(MessageFormat.format(Messages.getString("PodCaster.MetadataCantBeSet"),Format.WAV.getName())); //$NON-NLS-1$
 				return false;
 			}
 
@@ -167,11 +167,11 @@ public class PodCaster extends AbstractLauncher{
 			rss.setDescription(podcast.getFeedDescription());
 
 			if (podcast.getFeedImageURL()!=null) {
-				File feedArtwork = new File(podcast.getRSSFile().getParentFile(),podcast.getFeedTitle().replaceAll(" ","-")+
+				File feedArtwork = new File(podcast.getRSSFile().getParentFile(),podcast.getFeedTitle().replaceAll(" ","-")+ //$NON-NLS-1$ //$NON-NLS-2$
 							                FileHelper.getExtension(podcast.getFeedImageURL().toExternalForm()));
 
 				FileHelper.downloadToFile(podcast.getFeedImageURL(),feedArtwork );
-				URL artURL = new URL(baseUrl+"/"+feedArtwork.getName());
+				URL artURL = new URL(baseUrl+"/"+feedArtwork.getName()); //$NON-NLS-1$
 				rss.setArtwork(artURL);
 			}
 
@@ -184,7 +184,7 @@ public class PodCaster extends AbstractLauncher{
 			log.error(e.getMessage(),e);
 			return false;
 		}
-		log.debug("Audio captured and rss Updated successfully");
+		log.debug(Messages.getString("PodCaster.Success")); //$NON-NLS-1$
 		return true;
 	}
 

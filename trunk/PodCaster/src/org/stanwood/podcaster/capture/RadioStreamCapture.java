@@ -29,7 +29,7 @@ public class RadioStreamCapture implements ICaptureStream {
 			MPlayer mplayer = new MPlayer(config);
 			return mplayer.captureLiveAudioStream(urlFetcher.getMediaUrl(), podcast.getCaptureTime());
 		} catch (IOException e) {
-			throw new CaptureException(MessageFormat.format("Unable to capture stream ''{0}''",podcast.getStreamURL().toExternalForm()),e);
+			throw new CaptureException(MessageFormat.format(Messages.getString("RadioStreamCapture.UnableCaptureStream"),podcast.getStreamURL().toExternalForm()),e); //$NON-NLS-1$
 		}
 	}
 

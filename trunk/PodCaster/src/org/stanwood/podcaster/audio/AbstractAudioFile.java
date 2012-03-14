@@ -2,6 +2,7 @@ package org.stanwood.podcaster.audio;
 
 import java.io.File;
 import java.net.URL;
+import java.text.MessageFormat;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -37,7 +38,7 @@ public abstract class AbstractAudioFile implements IAudioFile {
 	 */
 	@Override
 	public void setTitle(String title) {
-		throw new UnsupportedOperationException("Unable to set metadata on "+getFormat().getName()+" format of file");
+		throw new UnsupportedOperationException(MessageFormat.format(Messages.getString("AbstractAudioFile.UnableSetMetadata"),getFormat().getName())); //$NON-NLS-1$
 	}
 
 	/**
@@ -47,7 +48,7 @@ public abstract class AbstractAudioFile implements IAudioFile {
 	 */
 	@Override
 	public void setArtwork(URL artwork) {
-		throw new UnsupportedOperationException("Unable to set metadata on "+getFormat().getName()+" format of file");
+		throw new UnsupportedOperationException(MessageFormat.format(Messages.getString("AbstractAudioFile.UnableSetMetadata"),getFormat().getName())); //$NON-NLS-1$
 	}
 
 	/**
@@ -57,7 +58,7 @@ public abstract class AbstractAudioFile implements IAudioFile {
 	 */
 	@Override
 	public void setCopyright(String copyright) {
-		throw new UnsupportedOperationException("Unable to set metadata on "+getFormat().getName()+" format of file");
+		throw new UnsupportedOperationException(MessageFormat.format(Messages.getString("AbstractAudioFile.UnableSetMetadata"),getFormat().getName())); //$NON-NLS-1$
 	}
 
 	/**
@@ -67,7 +68,7 @@ public abstract class AbstractAudioFile implements IAudioFile {
 	 */
 	@Override
 	public void setArtist(String artist) {
-		throw new UnsupportedOperationException("Unable to set metadata on "+getFormat().getName()+" format of file");
+		throw new UnsupportedOperationException(MessageFormat.format(Messages.getString("AbstractAudioFile.UnableSetMetadata"),getFormat().getName())); //$NON-NLS-1$
 	}
 
 	/**
@@ -78,7 +79,7 @@ public abstract class AbstractAudioFile implements IAudioFile {
 	@Override
 	public void setDescription(String description)
 	{
-		throw new UnsupportedOperationException("Unable to set metadata on "+getFormat().getName()+" format of file");
+		throw new UnsupportedOperationException(MessageFormat.format(Messages.getString("AbstractAudioFile.UnableSetMetadata"),getFormat().getName())); //$NON-NLS-1$
 	}
 
 	/**
@@ -88,7 +89,7 @@ public abstract class AbstractAudioFile implements IAudioFile {
 	 */
 	@Override
 	public void writeMetaData() throws MetaDataException {
-		throw new UnsupportedOperationException("Unable to set metadata on "+getFormat().getName()+" format of file");
+		throw new UnsupportedOperationException(MessageFormat.format(Messages.getString("AbstractAudioFile.UnableSetMetadata"),getFormat().getName())); //$NON-NLS-1$
 	}
 
 	/**
