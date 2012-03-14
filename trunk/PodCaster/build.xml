@@ -181,7 +181,9 @@
 		<delete includeemptydirs="true" failonerror="false">
 			<fileset dir="${build.dir}" includes="**/*"/>
 			<fileset dir="${test.build.dir}" includes="**/*"/>
-		</delete>
+            <fileset dir="${docs.dir}/userguide" includes="*.pdf"/>
+            <fileset dir="${docs.dir}/userguide/html" includes="*.html"/>            
+		</delete>        
 		<delete dir="${dist.dir}" />
 		<delete dir="${api.docs.dir}" />
 		<delete dir="${cobertura.dir}"/>
@@ -189,10 +191,14 @@
 		<delete file="cobertura.ser" />
 		<delete dir="${fo.dir}"/>
 		<delete dir="${basedir}/docbook"/>
+        <delete file="${basedir}/src/org/stanwood/podcaster/VERSION" />
+        <delete file="${basedir}/VERSION" />
 	</target>
 
 	<target name="jars" description="generate the distribution">
+        <echo message="Build jars for ${ant.project.name} ${project.version}"/> 
 		<echo message="${ant.project.name} ${project.version}" file="${basedir}/src/org/stanwood/podcaster/VERSION" />
+		<echo message="${ant.project.name} ${project.version}" file="${basedir}/VERSION" />
 
 		<jar jarfile="${dist.dir}/${ant.project.name}-${project.version}-src.jar" compress="true">
 			<fileset dir="${src.dir}" />
