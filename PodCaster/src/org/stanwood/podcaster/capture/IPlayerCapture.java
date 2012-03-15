@@ -15,6 +15,8 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.Duration;
+import org.joda.time.format.PeriodFormat;
 import org.stanwood.podcaster.audio.IAudioFile;
 import org.stanwood.podcaster.audio.WavFile;
 import org.stanwood.podcaster.cliutils.FFMPEG;
@@ -97,8 +99,13 @@ public class IPlayerCapture implements ICaptureStream {
 		}
 	}
 
-	private String formatDuration(long captureTime) {
-		return captureTime+" "+"miliseconds";  //$NON-NLS-1$//$NON-NLS-2$
+	/**
+	 * Used to format duration
+	 * @param captureTime The duration to format
+	 * @return The formatted string
+	 */
+	public static String formatDuration(Duration captureTime) {
+		return PeriodFormat.getDefault().print(captureTime.toPeriod());
 	}
 
 	protected void executeWithTimeout(final IPlayerPodcast podcast,final Process proc, final StreamGobbler getiplayerErrorGobbler,final IStreamGobbler piper) throws CaptureException {
@@ -118,7 +125,7 @@ public class IPlayerCapture implements ICaptureStream {
 		ExecutorService es = Executors.newSingleThreadExecutor ();
 		es.submit (task);
 		try {
-			task.get(podcast.getCaptureTime(), TimeUnit.MILLISECONDS);
+			task.get(podcast.getCaptureTime().getMillis(), TimeUnit.MILLISECONDS);
 			log.error(Messages.getString("IPlayerCapture.UnableExecuteGetIplayCommand") + getiplayerErrorGobbler.getResult()); //$NON-NLS-1$
 			throw new CaptureException(Messages.getString("IPlayerCapture.UnexpectedExit")); //$NON-NLS-1$
 		}

@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joda.time.Duration;
 import org.stanwood.podcaster.audio.Format;
 import org.stanwood.podcaster.util.FileHelper;
 import org.stanwood.podcaster.xml.XMLParser;
@@ -84,7 +85,7 @@ public class ConfigReader extends XMLParser {
 						throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.NoCaptureTime"),podcast.getId())); //$NON-NLS-1$
 					}
 					try {
-						podcast.setCaptureTime(Long.parseLong(sTime));
+						podcast.setCaptureTime(new Duration(Long.parseLong(sTime)));
 					}
 					catch (NumberFormatException e) {
 						throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.InvalidCaptureTime"),podcast.getId())); //$NON-NLS-1$
@@ -105,7 +106,7 @@ public class ConfigReader extends XMLParser {
 							throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.NoCaptureTime"),podcast.getId())); //$NON-NLS-1$
 						}
 						try {
-							podcast.setCaptureTime(Long.parseLong(sTime));
+							podcast.setCaptureTime(new Duration(Long.parseLong(sTime)));
 						}
 						catch (NumberFormatException e) {
 							throw new ConfigException(MessageFormat.format(Messages.getString("ConfigReader.InvalidCaptureTime"),podcast.getId())); //$NON-NLS-1$

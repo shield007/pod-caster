@@ -15,9 +15,11 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.Duration;
 import org.stanwood.podcaster.StreamReference;
 import org.stanwood.podcaster.audio.IAudioFile;
 import org.stanwood.podcaster.audio.WavFile;
+import org.stanwood.podcaster.capture.IPlayerCapture;
 import org.stanwood.podcaster.config.ConfigReader;
 import org.stanwood.podcaster.util.AbstractExecutable;
 
@@ -47,7 +49,7 @@ public class MPlayer extends AbstractExecutable {
 	 * @return The audio file that was captured
 	 * @throws MPlayerException Thrown if their is a problem with mplayer
 	 */
-	public IAudioFile captureLiveAudioStream(StreamReference stream,long time) throws  MPlayerException
+	public IAudioFile captureLiveAudioStream(StreamReference stream,Duration time) throws  MPlayerException
 	{
 		File wavOutputFile;
 		try {
@@ -56,7 +58,7 @@ public class MPlayer extends AbstractExecutable {
 			throw new MPlayerException(Messages.getString("MPlayer.2"),e); //$NON-NLS-1$
 		}
 
-		log.info(MessageFormat.format(Messages.getString("MPlayer.CaputingAudio"),stream.getUrl(),wavOutputFile.getAbsolutePath())); //$NON-NLS-1$
+		log.info(MessageFormat.format(Messages.getString("MPlayer.CaputingAudio"),stream.getUrl(),wavOutputFile.getAbsolutePath(),IPlayerCapture.formatDuration(time))); //$NON-NLS-1$
 		List<String> args = new ArrayList<String>();
 		args.add(getConfig().getMPlayerPath());
 		args.add("-nojoystick"); //$NON-NLS-1$
@@ -73,7 +75,7 @@ public class MPlayer extends AbstractExecutable {
 			args.add("-playlist"); //$NON-NLS-1$
 		}
 		args.add(stream.getUrl());
-		executeWithTimeout(args,time);
+		executeWithTimeout(args,time.getMillis());
 		if (wavOutputFile.length()==0) {
 			throw new MPlayerException(Messages.getString("MPlayer.UnableCaptureAudio")); //$NON-NLS-1$
 		}

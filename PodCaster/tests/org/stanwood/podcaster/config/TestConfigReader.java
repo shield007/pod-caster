@@ -122,7 +122,7 @@ public class TestConfigReader {
 		Assert.assertEquals("http://blah.com/podcasts/radio.rss",podcast2.getRSSURL().toExternalForm());
 		Assert.assertEquals(Format.MP3,podcast2.getFormat());
 		Assert.assertEquals("http://www.bbc.co.uk/radio1/wm_asx/aod/radio1_hi.asx",podcast2.getStreamURL().toExternalForm());
-		Assert.assertEquals(10000,podcast2.getCaptureTime());
+		Assert.assertEquals(10000,podcast2.getCaptureTime().getMillis());
 
 		IPlayerPodcast podcast1 = (IPlayerPodcast) configReader.getPodcast("iplayer");
 		Assert.assertNotNull(podcast1);
@@ -137,7 +137,7 @@ public class TestConfigReader {
 		Assert.assertEquals("http://blah.com/podcasts/iplayer.rss",podcast1.getRSSURL().toExternalForm());
 		Assert.assertEquals(Format.FLAC,podcast1.getFormat());
 		Assert.assertEquals("Radio 1",podcast1.getEpisodeId());
-		Assert.assertEquals(10000,podcast1.getCaptureTime());
+		Assert.assertEquals(10000,podcast1.getCaptureTime().getMillis());
 	}
 
 	/**
