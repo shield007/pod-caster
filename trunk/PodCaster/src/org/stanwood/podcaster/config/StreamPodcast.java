@@ -2,13 +2,15 @@ package org.stanwood.podcaster.config;
 
 import java.net.URL;
 
+import org.joda.time.Duration;
+
 /**
  * Used to store info about a podcast that is been streamed from a URL
  */
 public class StreamPodcast extends AbstractPodcast {
 
 	private URL streamURL;
-	private long captureTime;
+	private Duration captureTime;
 
 	/**
 	 * The constructor
@@ -38,7 +40,7 @@ public class StreamPodcast extends AbstractPodcast {
 	 * Used to set the length of time the stream should be captured for
 	 * @param time the length of time the stream should be captured for
 	 */
-	public void setCaptureTime(long time) {
+	public void setCaptureTime(Duration time) {
 		this.captureTime = time;
 	}
 
@@ -46,7 +48,7 @@ public class StreamPodcast extends AbstractPodcast {
 	 * Used to get the length of time the stream should be captured for
 	 * @return the length of time the stream should be captured for
 	 */
-	public long getCaptureTime() {
+	public Duration getCaptureTime() {
 		return captureTime;
 	}
 }

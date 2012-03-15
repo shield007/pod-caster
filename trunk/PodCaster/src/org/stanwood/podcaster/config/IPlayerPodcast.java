@@ -1,12 +1,14 @@
 package org.stanwood.podcaster.config;
 
+import org.joda.time.Duration;
+
 /**
  * This class used to to store information about a BBC IPlayer podcast
  */
 public class IPlayerPodcast extends AbstractPodcast {
 
 	private String episodeId;
-	private long captureTime;
+	private Duration captureTime;
 
 	/**
 	 * The constructor
@@ -36,7 +38,7 @@ public class IPlayerPodcast extends AbstractPodcast {
 	 * Used to set the length of time the stream should be captured for
 	 * @param time the length of time the stream should be captured for
 	 */
-	public void setCaptureTime(long time) {
+	public void setCaptureTime(Duration time) {
 		this.captureTime = time;
 	}
 
@@ -44,7 +46,7 @@ public class IPlayerPodcast extends AbstractPodcast {
 	 * Used to get the length of time the stream should be captured for
 	 * @return the length of time the stream should be captured for
 	 */
-	public long getCaptureTime() {
+	public Duration getCaptureTime() {
 		return captureTime;
 	}
 
