@@ -3,17 +3,17 @@ package org.stanwood.podcaster;
 import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.stanwood.podcaster.audio.AudioFileConverter;
 import org.stanwood.podcaster.audio.Format;
 import org.stanwood.podcaster.audio.IAudioFile;
@@ -38,7 +38,6 @@ public class PodCaster extends AbstractLauncher{
 	private static PrintStream stdout = System.out;
 	private static PrintStream stderr = System.err;
 
-	private final DateFormat DF = new SimpleDateFormat("dd-MM-yyyy.HH-mm-ss"); //$NON-NLS-1$
 	private String id;
 
 	private static final List<Option> OPTIONS;
@@ -109,14 +108,15 @@ public class PodCaster extends AbstractLauncher{
 	 */
 	@Override
 	protected boolean run() {
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd-MM-yyyy.HH-mm-ss"); //$NON-NLS-1$
 		AbstractPodcast podcast = getConfig().getPodcast(id);
 		if (podcast==null) {
 			log.error(MessageFormat.format(Messages.getString("PodCaster.UnableFindPodcast"), id)); //$NON-NLS-1$
 			return false;
 		}
 		try {
-			Date startDate = new Date();
-			String entryTitle = podcast.getFeedTitle()+" "+DF.format(startDate); //$NON-NLS-1$
+			DateTime startDate = new DateTime();
+			String entryTitle = podcast.getFeedTitle()+" "+startDate.toString(fmt); //$NON-NLS-1$
 
 			ICaptureStream streamCapture = StreamCaptureFactory.getStreamCapture(podcast);
 			IAudioFile audioFile = streamCapture.captureLiveAudioStream(getConfig(),podcast);

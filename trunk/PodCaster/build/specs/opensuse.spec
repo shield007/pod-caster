@@ -15,6 +15,7 @@ Requires:       ROME >= 1.0
 Requires:       jaudiotagger >= 2.0.2
 Requires:       log4j >= 1.2.15
 Requires:       jakarta-commons-logging >= 1.0.4
+Requires:       joda-time >= 1.6
 BuildRequires:  jpackage-utils
 BuildRequires:  unzip
 BuildRequires:  ROME >= 1.0
@@ -32,13 +33,13 @@ BuildRequires:  excalibur-avalon-framework
 BuildRequires:  docbook-xsl-stylesheets
 BuildRequires:  docbook_4
 BuildRequires:  libxslt1 >= 1.1.26
+BuildRequires:  joda-time >= 1.6
 Summary:        A application used to create pod casts of radio shows
 Version:        %%version%%
 Release:        1
 License:        GPL
 Group:          Applications/Internet
 URL:            http://code.google.com/p/pod-caster/
-Source:         podcaster-%{version}-src.zip
 Source:         http://pod-caster.googlecode.com/files/%%sourcefile%%
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildArch:      noarch
