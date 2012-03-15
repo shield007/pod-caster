@@ -3,19 +3,20 @@ package org.stanwood.podcaster.rss;
 
 import java.io.File;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 import junit.framework.Assert;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import org.stanwood.podcaster.audio.MP3File;
 import org.stanwood.podcaster.audio.TestAudioConversion;
 import org.stanwood.podcaster.util.FileHelper;
 
 import com.sun.syndication.io.FeedException;
+import com.sun.syndication.io.impl.DateParser;
 
 /**
  * Used to test the class {@link RSSFeed}
@@ -92,8 +93,8 @@ public class TestRSSFeed {
 	 */
 	@Test
 	public void testAddEntry() throws Exception {
-		DateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
-		df.setTimeZone(TimeZone.getTimeZone("GMT"));
+//		DateTimeFormatter fmt = DateTimeFormat.forPattern("EEE, dd MMM yyyy HH:mm:ss zzz");
+		DateTimeFormatter fmt2 = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
 		File rssFile = File.createTempFile("temp", ".xml");
 		rssFile.deleteOnExit();
@@ -107,13 +108,8 @@ public class TestRSSFeed {
 
 		RSSFeed rss = new RSSFeed(rssFile);
 		rss.parse();
-		Date date = df.parse("Sat, 04 Apr 2009 23:00:00 GMT");
 
-		DateFormat UTC = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'"); //$NON-NLS-1$
-		UTC.setTimeZone(TimeZone.getTimeZone("UTC")); //$NON-NLS-1$
-
-		System.out.println(date.toString());
-
+		DateTime date = new DateTime("2009-04-04T21:00:00+00:00");
 
 		rss.addEntry("Funky", new URL("http://www.funky.com/test.mp3"), date, "Funky aduio for all your funky needs", "DJ Funk", mp3);
 
@@ -133,10 +129,10 @@ public class TestRSSFeed {
 		expected.append("      <link>http://www.funky.com/test.mp3</link>"+FileHelper.LS);
 		expected.append("      <description>Funky aduio for all your funky needs</description>"+FileHelper.LS);
 		expected.append("      <enclosure url=\"http://www.funky.com/test.mp3\" length=\"94020\" type=\"audio/mpeg\" />"+FileHelper.LS);
-		expected.append("      <pubDate>"+df.format(date)+"</pubDate>"+FileHelper.LS);
+		expected.append("      <pubDate>"+DateParser.formatRFC822(date.toDate())+"</pubDate>"+FileHelper.LS);
 		expected.append("      <guid>http://www.funky.com/test.mp3</guid>"+FileHelper.LS);
 		expected.append("      <dc:creator>DJ Funk</dc:creator>"+FileHelper.LS);
-		expected.append("      <dc:date>"+UTC.format(date)+"</dc:date>"+FileHelper.LS);
+		expected.append("      <dc:date>"+date.toMutableDateTime(DateTimeZone.UTC).toString(fmt2)+"</dc:date>"+FileHelper.LS);
 		expected.append("    </item>"+FileHelper.LS);
 		expected.append("  </channel>"+FileHelper.LS);
 		expected.append("</rss>"+FileHelper.LS);

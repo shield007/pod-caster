@@ -30,6 +30,7 @@
     <path id="run-time.libs.classpath">
     	<pathelement location="${lib.dir}/jdom.jar"/>
     	<pathelement location="${lib.dir}/ROME.jar"/>
+        <pathelement location="${lib.dir}/joda-time.jar"/>
     	<pathelement location="${lib.dir}/jaudiotagger.jar"/>
         <pathelement location="${lib.dir}/commons-logging.jar"/>
         <pathelement location="${lib.dir}/commons-cli.jar"/>

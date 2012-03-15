@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
 import org.stanwood.podcaster.audio.IAudioFile;
 
 import com.sun.syndication.feed.synd.SyndContent;
@@ -146,14 +146,14 @@ public class RSSFeed {
 	 * @param audioFile The audio file
 	 */
 	@SuppressWarnings("unchecked")
-	public void addEntry(String title, URL link, Date publishDate, String plainDescription, String author,IAudioFile audioFile) {
+	public void addEntry(String title, URL link, DateTime publishDate, String plainDescription, String author,IAudioFile audioFile) {
 		SyndEntry entry = new SyndEntryImpl();
 		if (title != null) {
 			entry.setTitle(title);
 		}
 
 		entry.setLink(link.toExternalForm());
-		entry.setPublishedDate(publishDate);
+		entry.setPublishedDate(publishDate.toDate());
 
 		List<SyndEnclosure> es = new ArrayList<SyndEnclosure>();
 		SyndEnclosure e = new SyndEnclosureImpl();
