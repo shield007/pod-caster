@@ -1,10 +1,11 @@
-* Tue Oct 25 2011 John-Paul Stanford <dev@stanwood.org.uk> - v1.2
+* Thu Mar 15 2012 John-Paul.Stanford <dev@stanwood.org.uk> - v1.2
 - FEATURE: Added support stream from BBC iPlayer via 3rd party tool get_iplayer
 - FEATURE: Less command line options as they are stored in a configuration file
-* Mon Jun 15 2009 John-Paul Stanford <dev@stanwood.org.uk> - v1.1
+- FEATURE: Better user feedback of capture durations
+* Mon Jun 15 2010 John-Paul Stanford <dev@stanwood.org.uk> - v1.1
 - FEATURE: Added support for Flac and OGG audio files in podcasts.
 - Updated code to depened and use version 2.0.2 of jaudiotagger.
- Wed Sep 16 2009 John-Paul Stanford <dev@stanwood.org.uk> - v1.0
+* Wed Sep 16 2009 John-Paul Stanford <dev@stanwood.org.uk> - v1.0
 - BUGFIX: Lots of bug fixes
 - BUGFIX: New unit tests
 * Tue Jul 07 2009 John-Paul.Stanford <dev@stanwood.org.uk> - v0.1
@@ -13,5 +14,3 @@
 - FEATURE: Encodes metadata and cover art into the media files.
 - FEATURE: Create pod cast from captured radio stations.
 - FEATURE: Supports real audio and Microsoft ASF format.
-* Wed Jun 2 2009 John-Paul.Stanford <dev@stanwood.org.uk> - 
- - Project started
