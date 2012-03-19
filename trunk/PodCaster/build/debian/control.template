@@ -1,0 +1,16 @@
+Package: @@name@@
+Version: @@version@@
+Architecture: all
+Maintainer: John-Paul Stanford <dev@stanwood.org.uk>
+Section: unknown
+Homepage: http://code.google.com/p/pod-caster/
+Depends: libjoda-time-java,libcommons-cli-java,libcommons-logging-java,libjdom1-java,librome-java,liblog4j1.2-java,libjaudiotagger-java
+Recommends: sun-java6-jre
+Build-depends: sun-java6-jdk, ant
+Suggests: ant, sun-java6-jdk
+Priority: optional
+Installed-Size: @@deb.installed.size@@
+Description: A application used to create pod casts of radio shows. 
+ Pod Caster is a application which can capture Internet radio stations and store
+ them locally. It can then add them to a pod cast for downloading onto portal
+ devices. The encoded podcast/media files can have cover art/meta data added to them. 
