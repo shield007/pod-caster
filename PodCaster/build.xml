@@ -328,10 +328,11 @@
 					
 		<calculatesize realsizeproperty="deb.installed.size">
 			<fileset dir="${basedir}/build/scripts/debian/" includes="*"/>
+            <fileset dir="${basedir}/build/shortcuts/" includes="*"/>
 			<fileset file="${userguide.dir}/${ant.project.name}-userguide-${project.version}.pdf"/>
 			<fileset file="${userguide.dir}/html/${ant.project.name}-userguide-${project.version}.html"/>
 			<fileset file="${dist.dir}/${ant.project.name}-${project.version}.jar"/>
-			<fileset file="${basedir}/COPYING"/>
+			<fileset file="${basedir}/COPYING"/>            
 		</calculatesize>
 		
         <copy tofile="${basedir}/build/debian/control" file="${basedir}/build/debian/control.template"/>        
@@ -367,20 +368,24 @@
 				         mode="755"/>
 			
 			<!-- docs -->
-			<datafileset file="." fullpath="usr/share/"/>				
+			<datafileset file="." fullpath="usr/share/"/>
 			<datafileset file="." fullpath="usr/share/doc/"/>
 			<datafileset file="." fullpath="usr/share/doc/${ant.project.name}/"/>
 			
-			<datafileset file="${userguide.dir}/${ant.project.name}-userguide-${project.version}.pdf"					     
-				         prefix="usr/share/doc/${ant.project.name}/"/>					     
-			<datafileset file="${userguide.dir}/html/${ant.project.name}-userguide-${project.version}.html"					     
+			<datafileset file="${userguide.dir}/${ant.project.name}-userguide-${project.version}.pdf"
 				         prefix="usr/share/doc/${ant.project.name}/"/>
-			<datafileset file="${basedir}/COPYING"					     
+			<datafileset file="${userguide.dir}/html/${ant.project.name}-userguide-${project.version}.html"
 				         prefix="usr/share/doc/${ant.project.name}/"/>
+			<datafileset file="${basedir}/COPYING" prefix="usr/share/doc/${ant.project.name}/"/>
+            <datafileset file="." fullpath="usr/share/applications/"/>
+            <datafileset file="${basedir}/build/shortcuts/PodCaster Documentation (HTML).desktop" 
+                         fullpath="usr/share/applications/PodCaster Documentation (HTML).desktop"/>
+            <datafileset file="${basedir}/build/shortcuts/PodCaster Documentation (PDF).desktop" 
+                         fullpath="usr/share/applications/PodCaster Documentation (PDF).desktop"/>
 		
 		    <!-- application -->
 			<datafileset file="." fullpath="usr/share/java/"/>
-			<datafileset file="${dist.dir}/${ant.project.name}-${project.version}.jar"					     
+			<datafileset file="${dist.dir}/${ant.project.name}-${project.version}.jar"
 				         prefix="usr/share/java/"/>
 		</deb>
 		
