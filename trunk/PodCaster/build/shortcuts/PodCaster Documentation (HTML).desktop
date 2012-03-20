@@ -1,0 +1,21 @@
+[Desktop Entry]
+Categories=AudioVideo;Video;TV;
+Comment=PodCaster documentation in HTML format
+Comment[en]=PodCaster documentation in HTML format
+Encoding=UTF-8
+Exec=xdg-open /usr/share/doc/podcaster/userguide.html
+GenericName=PodCaster Documentation (HTML)
+GenericName[en]=PodCaster Documentation (HTML)
+Icon=
+MimeType=
+Name=PodCaster Documentation (HTML)
+Name[en]=PodCaster Documentation (HTML)
+Path=
+ServiceTypes=
+SwallowExec=
+SwallowTitle=
+Terminal=false
+TerminalOptions=
+Type=Application
+X-KDE-SubstituteUID=false
+X-KDE-Username=root
