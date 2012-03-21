@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<shortcuts>
+
+   <programGroup defaultName="PodCaster" location="applications"/>
+
+   <shortcut
+     name="PodCaster Documentation (HTML)"
+     Categories="Application"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="xdg-open"
+     commandLine="$INSTALL_PATH/docs/html/index.html"
+     type="Application"
+     encoding="UTF-8"
+     iconFile="help"
+	 initialState="noShow"
+	 terminal="false"
+     description="The command line documentation in HTML format">     
+   </shortcut>
+
+   <shortcut
+     name="PodCaster Documentation (PDF)"
+     Categories="Application"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="xdg-open"
+     initialState="noShow"   
+     iconFile="help"  
+     commandLine="$INSTALL_PATH/docs/pdf/userguide.pdf"
+     url="$INSTALL_PATH/docs/pdf/userguide.pdf"
+     type="Application"
+     encoding="UTF-8"
+     terminal="false"
+     description="The command line documentation in PDF format">
+   </shortcut>
+
+   <shortcut
+     name="PodCaster Uninstall"
+     Categories="Application"
+     programGroup="yes"
+     desktop="no"
+     applications="no"
+     startMenu="no"
+     startup="no"
+     target="$INSTALL_PATH/bin/podcaster-java"
+     commandLine="-jar &quot;$INSTALL_PATH/uninstaller/uninstall.jar&quot;"
+     initialState="noShow"
+     iconFile="trashcan_full"
+     iconIndex="0"
+     type="Application"
+     encoding="UTF-8"
+     terminal="false"
+     description="Uninstaller">
+   </shortcut> 
+</shortcuts>
