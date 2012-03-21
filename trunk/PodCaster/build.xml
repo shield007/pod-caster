@@ -18,6 +18,7 @@
 	<property name="reports.dir" location="${basedir}/reports"/>
 	<property name="docbook.home"    value="${basedir}/docbook/xsl"/>	
 	<property name="fo.dir"          value="${basedir}/fo"/>
+    <property name="installer.dir" location="${basedir}/build/installer"/>
     
 	<!-- Compiler properties -->
 	<property name="javac.source" value="1.6" />
@@ -34,6 +35,9 @@
 	<import file="one-jar-ant-task.xml"/>	
 
 	<!-- Lib classpaths -->
+    <path id="installer.libs.classpath">
+        <fileset dir="${libs.dir}/installer" includes="*.jar" />
+    </path>
 	<path id="run-time.libs.classpath">
 		<fileset dir="${libs.dir}/run-time" includes="*.jar" />
 	</path>
@@ -48,6 +52,10 @@
 		<fileset dir="${libs.dir}/test-time" includes="*.jar" />
         <fileset dir="${libs.dir}/fop" includes="*.jar" />
     </path>
+    
+    <taskdef name="izpack" classname="com.izforge.izpack.ant.IzPackTask">
+        <classpath refid="installer.libs.classpath"/>
+    </taskdef>
 	
 	<!-- Cobeture setup -->
 	<property name="cobertura.dir" value="${basedir}/cobertura" />
@@ -302,9 +310,7 @@
         <delete dir="${fo.dir}"/>
         <delete dir="${basedir}/docbook"/>
         <delete dir="${userguide.dir}/xml-updated"/>
-    </target>			
-
-	<target name="dist" depends="clean,run-tests,javadoc,docs,jars"/>
+    </target>				
 	
 	<target name="compile-anttasks">
 		<mkdir dir="${basedir}/build/anttasks-bin"/>
@@ -392,4 +398,75 @@
 		<delete file="${basedir}/build/debian/control"/>
 		<delete dir="${dist.dir}/debian"/>
 	</target>	
+    
+    <target name="installer" depends="jars">        
+        <!-- Create java installer -->      
+        <izpack input="${basedir}/build/installer/install.xml"
+                output="${dist.dir}/${ant.project.name}-${project.version}-install.jar"
+                installerType="standard"
+                inheritAll="true"
+                basedir="${basedir}/build/installer"
+                compression="deflate"
+                compressionlevel="9"/>
+        
+        <!-- Create Linux Shell Installer -->
+        <tar destfile="${dist.dir}/${ant.project.name}-${project.version}-install.tar">
+            <tarfileset dir="${dist.dir}" preserveLeadingSlashes="true"> 
+                <include name="${ant.project.name}-${project.version}-install.jar"/>
+            </tarfileset>
+        </tar>            
+        <gzip destfile="${dist.dir}/${ant.project.name}-${project.version}-install.tar.gz" src="${dist.dir}/${ant.project.name}-${project.version}-install.tar"/>
+        <delete file="${dist.dir}/${ant.project.name}-${project.version}-install.tar"/>
+        
+        <copy file="${basedir}/build/installer/install.sh.template" tofile="${dist.dir}/install.sh.template"/>      
+        <echo file="${dist.dir}/install.sh.template" append="true" message="PAYLOAD:${line.separator}"/>
+        <replace file="${dist.dir}/install.sh.template">
+            <replacefilter token="@@version@@" value="${project.version}"/>
+            <replacefilter token="@@name@@" value="${ant.project.name}"/>
+            <replacefilter token="@@file@@" value="${ant.project.name}-${project.version}-install.jar"/>
+            <replacefilter token="@@mode@@" value="0"/>
+        </replace>
+        
+        <concat destfile="${dist.dir}/${ant.project.name}-${project.version}-install.sh" binary="yes">
+            <fileset file="${dist.dir}/install.sh.template"/>
+            <fileset file="${dist.dir}/${ant.project.name}-${project.version}-install.tar.gz"/>
+        </concat>
+        <delete file="${dist.dir}/install.sh.template"/>
+        <chmod file="${dist.dir}/${ant.project.name}-${project.version}-install.sh" perm="ugo+rx"/>
+        
+        <!-- Make a native setup.exe out of the installer -->
+        <!--
+        <unzip src="${installer.dir}/installer-wrappers.zip" dest="${dist.dir}"/>       
+        <chmod file="${dist.dir}/wrappers/izpack2exe/izpack2exe.py" perm="ugo+x"/>
+        <chmod file="${dist.dir}/wrappers/izpack2exe/7za" perm="ugo+x"/>
+        <chmod file="${dist.dir}/wrappers/izpack2exe/setup.py" perm="ugo+x"/>
+        <chmod file="${dist.dir}/wrappers/izpack2exe/upx" perm="ugo+x"/>
+        
+        <exec dir="${dist.dir}/wrappers/izpack2exe" executable="./izpack2exe.py" failonerror="true">
+            <arg value="- -file=&quot;${installer.dir}/install.xml&quot;"/>
+        </exec>
+        
+        <zip zipfile="${dist.dir}/${ant.project.name}-${project.version}-install-windows.zip" compress="true">
+            <zipfileset file="${dist.dir}/wrappers/izpack2exe/setup.exe" prefix=""/>
+        </zip>
+        -->
+        
+        <!-- Create a native mac installer -->
+        <!--
+        <copy todir="${dist.dir}/wrappers/izpack2app">
+            <fileset dir="${installer.dir}/Mac-App-Template" includes="**/*"/>
+        </copy>
+        <chmod file="${dist.dir}/wrappers/izpack2app/izpack2app.py" perm="ugo+x"/>
+        <chmod file="${dist.dir}/wrappers/izpack2app/setup.py" perm="ugo+x"/>
+        
+        <exec dir="${dist.dir}/wrappers/izpack2app" executable="./izpack2app.py" failonerror="true">
+            <arg file="${dist.dir}/${ant.project.name}-${project.version}-install.jar"/>
+            <arg file="${dist.dir}/${ant.project.name}-${project.version}-macosx.app"/>
+        </exec>
+        
+        <delete dir="${dist.dir}/wrappers"/>
+        -->
+    </target>
+    
+    <target name="dist" depends="clean,run-tests,javadoc,docs,jars,installer"/>
 </project>
