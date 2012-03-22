@@ -41,7 +41,7 @@ fi
 MAIN=org.stanwood.podcaster.PodCaster
 
 # Libraries location
-LIB_DIR=$SCRIPT_PATH/../../../libs/run-time
+LIB_DIR=$SCRIPT_PATH/../lib
 
 # Launch application.
 CLASSPATH="$SCRIPT_PATH/../../../bin"
