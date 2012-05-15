@@ -34,6 +34,7 @@ BuildRequires:  docbook-xsl-stylesheets
 BuildRequires:  docbook_4
 BuildRequires:  libxslt1 >= 1.1.26
 BuildRequires:  joda-time >= 1.6
+BuildRequires:  xsltproc
 Summary:        A application used to create pod casts of radio shows
 Version:        %%version%%
 Release:        1
