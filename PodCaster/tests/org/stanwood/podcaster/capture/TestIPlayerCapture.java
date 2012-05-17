@@ -7,6 +7,7 @@ import org.junit.Test;
 /**
  * Used to test the iPlayer capture class
  */
+@SuppressWarnings("nls")
 public class TestIPlayerCapture {
 
 	/**
