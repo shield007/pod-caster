@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="libs/run-time/jaudiotagger-2.0.4-20110922.152428-14.jar"/>
 	<classpathentry kind="lib" path="libs/fop/saxon9he.jar"/>
 	<classpathentry kind="lib" path="libs/run-time/joda-time-1.6.jar"/>
+	<classpathentry kind="lib" path="libs/compile-time/annotations.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

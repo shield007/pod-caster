@@ -106,6 +106,7 @@ public class PodCaster extends AbstractLauncher{
 	 * This does the actual work of the tool.
 	 * @return true if successful, otherwise false.
 	 */
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("REC_CATCH_EXCEPTION")
 	@Override
 	protected boolean run() {
 		DateTimeFormatter fmt = DateTimeFormat.forPattern("dd-MM-yyyy.HH-mm-ss"); //$NON-NLS-1$
